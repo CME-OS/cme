@@ -1,0 +1,58 @@
+.splash {
+  background: url("../images/splash-img-2.png") no-repeat;
+}
+
+.title {
+  font-size:   23px;
+  font-weight: bold;
+  color:       #F7780D;
+}
+
+.reviews
+{
+  margin-bottom: 50px;
+}
+
+.review
+{
+  padding:20px;
+  background-color: #fff;
+}
+
+.review-head
+{
+  /*margin-bottom: 0px;*/
+}
+.review-title
+{
+  font-size:17px;
+  font-weight: 500;
+}
+
+.review-user
+{
+  font-weight: 500;
+  font-size:20px;
+  color:#000;
+}
+
+.review-body span{
+}
+
+.quote{
+  font-size:20px;
+  font-weight: bold;
+}
+
+.review blockquote
+{
+  border:0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.review-text
+{
+  font-size:14px !important;
+  line-height: 5px;
+}

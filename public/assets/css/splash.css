@@ -1,0 +1,185 @@
+.splash-form {
+  margin-top: 30px;
+}
+
+.topup-now-btn {
+  width:            100%;
+  height:           81px;
+  background-color: #fff;
+  border-radius:    5px;
+  color:            #F7780D;
+  font-size:        30px;
+  font-weight:      bold;
+  outline:          0;
+  border:           0;
+}
+
+.hero-text {
+  padding: 20px;
+}
+
+.hero-text-line1-md {
+  font-size:   40px;
+  color:       #fff;
+  font-weight: 800;
+}
+
+.hero-text-line2-md {
+  font-size:   35px;
+  height:      45px;
+  color:       #fff;
+  font-weight: 400;
+}
+
+.hero-text-line1-sm {
+  font-size:   30px;
+  color:       #fff;
+  font-weight: 800;
+}
+
+.hero-text-line2-sm {
+  font-size:   20px;
+  height:      35px;
+  color:       #fff;
+  font-weight: 400;
+}
+
+.shiv {
+  height:           5px;
+  border-bottom:    1px solid #ccc;
+  background-color: #DDDDDD;
+  padding:          0;
+}
+
+.intro {
+  margin-top: 50px;
+}
+
+.intro-text {
+}
+
+.intro-title {
+  font-size:   23px;
+  font-weight: bold;
+  color:       #F7780D;
+}
+
+.steps {
+  margin-top: 43px;
+}
+
+.step {
+  font-size: 14px;
+  width:     228px;
+  margin:    0 auto 20px auto;
+}
+
+.step-icon {
+  background-color: black;
+  width:            60px;
+  height:           47px;
+  margin:           0 auto 0 auto;
+}
+
+.step-title {
+  color:       #000;
+  margin-top:  10px;
+  font-weight: 800;
+}
+
+.step-desc {
+  margin-top: 10px;
+}
+
+#step1-icon {
+  width:      76px;
+  height:     49px;
+  background: url("../images/steps-sprite.png") no-repeat 0px 0px;
+}
+
+#step2-icon {
+  width:      60px;
+  height:     49px;
+  background: url("../images/steps-sprite.png") no-repeat -97px 0px;
+}
+
+#step3-icon {
+  width:      48px;
+  height:     49px;
+  background: url("../images/steps-sprite.png") no-repeat -168px 0px;
+}
+
+.networks {
+  background-color: #F2F4F7;
+  padding:          35px;
+  margin-top:       30px;
+}
+
+.networks div {
+  margin: 0 auto 0 auto;
+}
+
+.networks-link {
+  padding: 10px;
+}
+
+.networks-link a {
+  color: #F7780D;
+}
+
+.usps {
+  margin-top:    50px;
+  margin-bottom: 50px;
+}
+
+.usp {
+  font-size: 14px;
+  width:     90%;
+}
+
+.usp-title {
+  color:       #000;
+  font-size:   16px;
+  font-weight: 800;
+  margin-top:  10px;
+}
+
+.usp-body {
+  margin-top: 20px;
+}
+
+.usp li {
+  list-style-image: url("../images/bullet.png");
+  padding:          4px;
+}
+
+.cust-serv {
+  margin-top: 20px;
+}
+
+/*IntlTelInput Hack to customise look*/
+#recipientNumber {
+  width:            100%;
+  height:           65px;
+  background-color: #D8D3DB;
+  border:           4px solid #fff;
+  border-radius:    5px;
+  outline:          0;
+  padding-left:     86px;
+  color:            #000;
+  font-size:        23px;
+}
+
+.flag-dropdown {
+  border-right: 2px solid #fff;
+  width:        79px;
+}
+
+.arrow {
+  left: 40px !important;
+}
+
+.intl-tel-input .country-list {
+  width: 298px;
+}
+

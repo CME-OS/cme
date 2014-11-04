@@ -75,7 +75,7 @@ class CampaignsController extends BaseController
   {
     $id = Input::get('id');
 
-    //build ranges;
+    //build ranges to be consumed through the QueueMessages Command
     $campaign = DB::select(sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id));
     if($campaign)
     {

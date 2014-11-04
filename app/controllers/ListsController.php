@@ -62,37 +62,8 @@ class ListsController extends BaseController
       {
         case 'api':
           $endPoint = Input::get('endpoint');
-          $subscribers = json_decode(file_get_contents($endPoint));
-          $tableName = 'list_' . $listId;
-
-          $columns = array_keys((array)$subscribers[0]);
-          //check if list table exists/
-          if(!Schema::hasTable($tableName))
-          {
-            Schema::create($tableName, function($table) use($columns)
-              {
-                //add other additional columns needed
-                $table->increments('id');
-                $table->unique('email');
-                foreach($columns as $column)
-                {
-                  $table->string($column, 225);
-                }
-                $table->integer('bounced', 0);
-                $table->integer('unsubscribed', 0);
-                $table->integer('test_subscriber', 0);
-                $table->timestamp('date_created');
-              });
-          }
-
-          $write = [];
-          foreach($subscribers as $subscribers)
-          {
-            $write[] = (array)$subscribers;
-          }
-
-          DB::table($tableName)->insert($write);
-
+          $importer = new ApiImporter();
+          $importer->import($endPoint, $listId);
           break;
         default:
           echo "not supported";

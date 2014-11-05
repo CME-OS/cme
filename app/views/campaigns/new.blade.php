@@ -23,7 +23,7 @@
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
-            <option value="<?= $brand->id ?>"><?= $brand->name; ?></option>
+            <option value="<?= $brand->id ?>"><?= $brand->brand_name; ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -53,6 +53,10 @@
         <label for="campaign-send-time">When do you want to send this campaign?</label>
         <input type="text" name="send_time" class="form-control" id="campaign-send-time" placeholder="YYYY-MM-DD HH:MM:SS">
       </div>
+      <div class="well">
+         <p><strong>Available PlaceHolders</strong></p>
+          <div class="placeholders"></div>
+      </div>
     </div>
   </div>
   <button type="submit" class="btn btn-default">Save</button>
@@ -62,5 +66,8 @@
   CKEDITOR.replace(
     'campaign-message'
   );
+</script>
+<script type="text/javascript">
+
 </script>
 @stop

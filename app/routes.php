@@ -59,8 +59,8 @@ Route::post(
 
     $return = array_slice(
       $data,
-      \Illuminate\Support\Facades\Input::get('start'),
-      \Illuminate\Support\Facades\Input::get('limit')
+      \Illuminate\Support\Facades\Input::get('start', 0),
+      \Illuminate\Support\Facades\Input::get('limit', 1000)
     );
     return \Illuminate\Support\Facades\Response::json($return);
   }
@@ -88,3 +88,5 @@ Route::post(
     return \Illuminate\Support\Facades\Response::json($data);
   }
 );
+
+Route::post('/ph', 'CampaignsController@getPlaceHolders');

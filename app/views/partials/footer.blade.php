@@ -14,3 +14,28 @@
 <script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 
+<script type="text/javascript">
+  $('#campaign-list-id').change(function(){
+     var listIdVal = $(this).val();
+     getPlaceHolders(listIdVal);
+  })
+
+  function getPlaceHolders(listIdVal)
+  {
+    if(listIdVal != "")
+    {
+      console.log(listIdVal);
+      $('.placeholders').html("");
+      $.post('/ph', {listId : listIdVal}, function(data){
+        console.log(data);
+        $.each(data, function() {
+          $('.placeholders').append($("<div />").text(this.name));
+        });
+      });
+    }
+  }
+  if($('#campaign-list-id'))
+  {
+    getPlaceHolders($('#campaign-list-id').val());
+  }
+</script>

@@ -2,6 +2,7 @@
 /**
  * @author  oke.ugwu
  */
+use Illuminate\Support\Facades\Log;
 
 class ApiImporter
 {
@@ -39,32 +40,39 @@ class ApiImporter
    */
   private function _getDataFromApi($source)
   {
-    $params   = [
+    $params  = [
       'start' => $this->_start,
       'limit' => $this->_batchSize
     ];
-    $headers  = [
+    $headers = [
       'CME-ID' => md5('$$%%cmeisgreat%%$$')
     ];
-    $data     = false;
-    $response = Requests::post($source, $headers, $params);
-    $contentType = $response->headers->offsetGet('Content-Type');
-    if(in_array($contentType, ['text/json', 'application/json']))
+    $data    = false;
+    try
     {
-      $data = json_decode($response->body, true);
-      if(count($data))
+      $response    = Requests::post($source, $headers, $params);
+      $contentType = $response->headers->offsetGet('Content-Type');
+      if(in_array($contentType, ['text/json', 'application/json']))
       {
-        if($this->_columns == null)
+        $data = json_decode($response->body, true);
+        if(count($data))
         {
-          $this->_columns = array_keys((array)$data[0]);
+          if($this->_columns == null)
+          {
+            $this->_columns = array_keys((array)$data[0]);
+          }
         }
-      }
-      else
-      {
-        $data = false;
-      }
-      $this->_start += $this->_batchSize;
-    };
+        else
+        {
+          $data = false;
+        }
+        $this->_start += $this->_batchSize;
+      };
+    }
+    catch(Exception $e)
+    {
+      Log::error($e->getMessage());
+    }
 
     return $data;
   }

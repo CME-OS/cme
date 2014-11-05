@@ -76,4 +76,15 @@ class ListHelper
       }
     }
   }
+
+  public static function inBuiltFields()
+  {
+    return [
+      'id',
+      'bounced',
+      'unsubscribed',
+      'test_subscriber',
+      'date_created',
+    ];
+  }
 }

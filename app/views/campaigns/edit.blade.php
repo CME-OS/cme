@@ -3,7 +3,7 @@
 <h1 class="page-header">Campaigns
   <small>Manage your campaigns</small>
 </h1>
-<form role="form" action="/campaigns/update" method="post">
+<form role="form" action="/campaigns/update" method="post" id="campaign-form">
   <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
   <h2>Edit Campaign</h2>
 
@@ -26,7 +26,7 @@
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
-            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brand_id) ? 'selected="selected"' : ''; ?>><?= $brand->name; ?></option>
+            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brand_id) ? 'selected="selected"' : ''; ?>><?= $brand->brand_name; ?></option>
           <?php endforeach; ?>
         </select>
       </div>
@@ -56,11 +56,15 @@
         <label for="campaign-send-time">When do you want to send this campaign?</label>
         <input type="text" name="send_time" class="form-control" id="campaign-send-time" placeholder="YYYY-MM-DD HH:MM:SS" value="<?= $campaign->send_time; ?>">
       </div>
+      <div class="well">
+        <p><strong>Available PlaceHolders</strong></p>
+        <div class="placeholders"></div>
+      </div>
     </div>
   </div>
-  <button type="submit" class="btn btn-default">Save</button>
 </form>
-<form action="/campaigns/send">
+<button type="submit" class="btn btn-default pull-left" onclick="$('#campaign-form').submit()">Save</button>
+<form action="/campaigns/send" class="pull-left" style="margin-left:10px;">
   <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
   <button type="submit" class="btn btn-danger">Send</button>
 </form>

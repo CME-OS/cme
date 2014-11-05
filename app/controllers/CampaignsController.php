@@ -34,7 +34,9 @@ class CampaignsController extends BaseController
   public function edit()
   {
     $id       = Route::input('id');
-    $campaign = DB::select(sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id));
+    $campaign = DB::select(
+      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
+    );
     if($campaign)
     {
       $data['campaign'] = $campaign[0];
@@ -48,7 +50,9 @@ class CampaignsController extends BaseController
   public function preview()
   {
     $id       = Route::input('id');
-    $campaign = DB::select(sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id));
+    $campaign = DB::select(
+      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
+    );
     if($campaign)
     {
       echo '<h1>' . $campaign[0]->subject . '</h1>';
@@ -60,9 +64,14 @@ class CampaignsController extends BaseController
   public function update()
   {
     $data = Input::all();
+    $this->_updateCampaign($data);
+    return Redirect::to('/campaigns/edit/' . $data['id']);
+  }
+
+  private function _updateCampaign($data)
+  {
     DB::table('campaigns')->where('id', '=', $data['id'])
       ->update($data);
-    return Redirect::to('/campaigns/edit/' . $data['id']);
   }
 
   public function delete()
@@ -76,13 +85,17 @@ class CampaignsController extends BaseController
     $id = Input::get('id');
 
     //build ranges to be consumed through the QueueMessages Command
-    $campaign = DB::select(sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id));
+    $campaign = DB::select(
+      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
+    );
     if($campaign)
     {
       //get min and max id of campaign list
       $listId    = $campaign[0]->list_id;
       $listTable = 'list_' . $listId;
-      $listInfo  = DB::select(sprintf("SELECT min(id) as minId, max(id) as maxId FROM %s", $listTable));
+      $listInfo  = DB::select(
+        sprintf("SELECT min(id) as minId, max(id) as maxId FROM %s", $listTable)
+      );
       $minId     = $listInfo[0]->minId;
       $maxId     = $listInfo[0]->maxId;
 
@@ -102,9 +115,41 @@ class CampaignsController extends BaseController
       }
 
       //update status of campaign
-      DB::table('campaigns')->where(['id' => $id])->update(['status' => 'queuing']);
+      DB::table('campaigns')->where(['id' => $id])->update(
+        ['status' => 'queuing']
+      );
     }
 
     return Redirect::to("/campaigns");
+  }
+
+  public function getPlaceHolders()
+  {
+    $listId       = Input::get('listId');
+    $tableName    = ListHelper::getTable($listId);
+    $brand        = (array)head(DB::select("SELECT * FROM brands LIMIT 1"));
+    $placeholders = array_keys($brand);
+    if($listId)
+    {
+      $list = (array)head(DB::select("SELECT * FROM $tableName LIMIT 1"));
+
+      $placeholders = array_merge($placeholders, array_keys($list));
+    }
+
+    $final = [];
+    foreach($placeholders as $k => $v)
+    {
+      if(in_array($v, ListHelper::inBuiltFields()))
+      {
+        unset($placeholders[$k]);
+      }
+      else
+      {
+        $final[] = ['name' => "[$v]"];
+      }
+    }
+
+
+    return Response::json($final);
   }
 }

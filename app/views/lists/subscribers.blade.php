@@ -5,9 +5,16 @@
 <div class="row">
   <div class="col-md-12">
     <?php if($subscribers): ?>
-      <form action="">
-        <input type="text" class="form-control" placeholder="Search this List"/>
-      </form>
+      <div class="row">
+        <div class="col-md-6">
+          <form action="">
+            <input type="text" class="form-control" placeholder="Search this List"/>
+          </form>
+        </div>
+        <div class="col-md-2 col-md-offset-4">
+          <?php echo $subscribers->links(); ?>
+        </div>
+      </div>
       <table class="table table-striped">
         <thead>
         <tr>

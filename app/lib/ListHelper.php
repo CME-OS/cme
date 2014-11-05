@@ -20,7 +20,7 @@ class ListHelper
 
   public static function createListTable($listId, $columns)
   {
-    if(isset($columns['email']))
+    if(in_array('email', $columns))
     {
       $tableName = self::getTable($listId);
       Schema::create(
@@ -32,7 +32,7 @@ class ListHelper
           $table->unique('email');
           foreach($columns as $column)
           {
-            $table->string(Str::snake($column), 225);
+            $table->string(Str::slug($column, '_'), 225);
           }
           $table->integer('bounced', 0);
           $table->integer('unsubscribed', 0);
@@ -47,12 +47,33 @@ class ListHelper
     }
   }
 
-  public static function addSubscribers($listId, $subscribers)
+  public static function addSubscribers($listId, array $subscribers)
   {
-    $tableName = self::getTable($listId);
-    if(self::tableExists($listId))
+    if(!empty($subscribers))
     {
-      DB::table($tableName)->insert($subscribers);
+      $tableName = self::getTable($listId);
+      if(self::tableExists($listId))
+      {
+        $batch = [];
+        foreach($subscribers as $subscriber)
+        {
+          $values = array_values($subscriber);
+          foreach($values as $k => $v)
+          {
+            $values[$k] = DB::getPdo()->quote($v);
+          }
+          $batch[] = "(" . implode(",", $values) . ")";
+        }
+
+        DB::insert(
+          sprintf(
+            "INSERT IGNORE INTO %s (%s) VALUES %s",
+            $tableName,
+            implode(',', array_keys($subscribers[0])),
+            implode(',', $batch)
+          )
+        );
+      }
     }
   }
 }

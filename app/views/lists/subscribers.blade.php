@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header"><?= $listName ?> List
+<h1 class="page-header"><?= $list->name ?> List
 </h1>
 <div class="row">
   <div class="col-md-12">
@@ -32,22 +32,23 @@
       </table>
     <?php else: ?>
       <div class="alert alert-info">
-        <p>You do not have any subscribers in <?= $listName ?> list</p>
+        <p>You do not have any subscribers in <?= $list->name ?> list</p>
       </div>
       <h2>Import From API</h2>
       <form role="form" action="/lists/import/api" method="post">
         <div class="form-group">
           <label for="brand-name">Name</label>
-          <input type="hidden" name="listId" value="<?= $listId ?>" >
-          <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php">
+          <input type="hidden" name="listId" value="<?= $list->id ?>">
+          <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php" value="<?= $list->endpoint ?>">
         </div>
         <button type="submit" class="btn btn-default">Import</button>
       </form>
       <h2>Import From CSV</h2>
-      <form role="form" action="/lists/import/csv" method="post">
+      <form role="form" action="/lists/import/csv" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="listId" value="<?= $list->id ?>">
         <div class="form-group">
           <label for="list-csv">CSV File</label>
-          <input type="file" name="logo" id="list-csv">
+          <input type="file" name="listFile" id="list-csv">
         </div>
         <button type="submit" class="btn btn-default">Import</button>
       </form>

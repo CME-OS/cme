@@ -57,6 +57,10 @@ class CsvImporter
       if($this->_columns == null)
       {
         $this->_columns = $data;
+        foreach($this->_columns as $k => $v)
+        {
+          $this->_columns[$k] = Str::slug($v, '_');
+        }
         continue;
       }
       else

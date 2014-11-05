@@ -48,9 +48,10 @@ class ApiImporter
     ];
     $data     = false;
     $response = Requests::post($source, $headers, $params);
-    if($response->headers->getValues('Content-Type') == 'text/json')
+    $contentType = $response->headers->offsetGet('Content-Type');
+    if(in_array($contentType, ['text/json', 'application/json']))
     {
-      $data = json_decode($response->body);
+      $data = json_decode($response->body, true);
       if(count($data))
       {
         if($this->_columns == null)

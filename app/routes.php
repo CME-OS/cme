@@ -42,7 +42,7 @@ Route::get('/queues', 'QueuesController@index');
 
 Route::get('/analytics', 'AnalyticsController@index');
 Route::get('/users', 'UsersController@index');
-Route::get(
+Route::post(
   '/test',
   function ()
   {
@@ -57,11 +57,16 @@ Route::get(
       $data[] = $user;
     }
 
-    return \Illuminate\Support\Facades\Response::json($data);
+    $return = array_slice(
+      $data,
+      \Illuminate\Support\Facades\Input::get('start'),
+      \Illuminate\Support\Facades\Input::get('limit')
+    );
+    return \Illuminate\Support\Facades\Response::json($return);
   }
 );
 
-Route::get(
+Route::post(
   '/test2',
   function ()
   {

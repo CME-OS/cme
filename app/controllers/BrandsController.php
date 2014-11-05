@@ -29,10 +29,10 @@ class BrandsController extends BaseController
   public function campaigns()
   {
     $brandId = Route::input('brandId');
-    $result = DB::select(
+    $data['campaigns'] = DB::select(
       sprintf("SELECT * FROM campaigns WHERE brand_id=%d", $brandId)
     );
 
-    var_dump($result);
+    return View::make('campaigns.list', $data);
   }
 }

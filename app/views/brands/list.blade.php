@@ -14,7 +14,7 @@
           </thead>
           <?php foreach($brands as $brand): ?>
             <tr>
-              <td><?= $brand->name; ?></td>
+              <td><?= $brand->brand_name; ?></td>
               <td><a href="/brands/campaigns/<?= $brand->id; ?>">View Campaigns</a></td>
             </tr>
           <?php endforeach; ?>

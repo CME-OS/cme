@@ -12,3 +12,4 @@
 */
 
 Artisan::add(new QueueMessages);
+Artisan::add(new ListImporter);

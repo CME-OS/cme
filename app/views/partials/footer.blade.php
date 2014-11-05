@@ -2,7 +2,6 @@
   <div>
     <p>&copy; Campaign Made Easy <?= date('Y') ?>  -
       <a href="/terms-and-conditions">Terms and Conditions</a> -
-      <a href="/refund-policy">Refund Policy</a> -
       <a href="/privacy-policy">Privacy Policy</a> -
       <a href="/cookie-policy">Cookie Policy</a>
     </p>

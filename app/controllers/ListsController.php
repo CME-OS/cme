@@ -38,7 +38,7 @@ class ListsController extends BaseController
     if(Schema::hasTable($tableName))
     {
       //if it does, fetch all subscribers and display
-      $subscribers = DB::select(sprintf("SELECT * FROM %s LIMIT 1000", $tableName));
+      $subscribers = DB::table($tableName)->simplePaginate(1000);
       $columns     = array_keys((array)$subscribers[0]);
     }
     //else suggest to user to import users by CSV/API
@@ -63,24 +63,41 @@ class ListsController extends BaseController
     $listId = Input::get('listId');
     if($listId)
     {
+      $source = null;
       switch($type)
       {
         case 'api':
-          $endPoint = Input::get('endpoint');
-          $importer = new ApiImporter();
-          $importer->import($endPoint, $listId);
+          $source = Input::get('endpoint');
           break;
         case 'csv':
+          echo "csv upload";
           if(Input::hasFile('listFile'))
           {
-            $csvFile  = Input::file('listFile');
-            $importer = new CsvImporter();
-            $importer->import($csvFile, $listId);
+            echo "uploading..";
+            $csvFile = Input::file('listFile');
+            $csvFile->move(
+              storage_path() . '/tmp/',
+              $csvFile->getClientOriginalName()
+            );
+            $source = storage_path() .
+              '/tmp/' . $csvFile->getClientOriginalName();
           }
           break;
-        default:
-          echo "not supported";
       }
+
+      if($source)
+      {
+        //queue up
+        $importRequest = [
+          'list_id' => $listId,
+          'type' => $type,
+          'source' => $source
+        ];
+        DB::table('import_queue')->insert($importRequest);
+      }
+
+      //show user a progress bar, or tell them import request has been
+      //queued up
       return Redirect::to('/lists/view/' . $listId);
     }
   }

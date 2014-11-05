@@ -53,6 +53,9 @@ h1 {
   padding:          10px;
   text-align:       center;
   background-color: #F2F5F7;
+  position: absolute;
+  bottom:0;
+  width: 100%;
 }
 
 .footer a {

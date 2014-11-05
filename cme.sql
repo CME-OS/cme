@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.6.16 - MySQL Community Server (GPL)
+-- Server version:               5.1.50-community - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
+-- HeidiSQL Version:             8.3.0.4843
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -20,14 +20,14 @@ USE `cme`;
 DROP TABLE IF EXISTS `brands`;
 CREATE TABLE IF NOT EXISTS `brands` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(225) NOT NULL DEFAULT '0',
-  `sender_email` varchar(225) NOT NULL DEFAULT '0',
-  `sender_name` varchar(225) NOT NULL DEFAULT '0',
-  `website_url` varchar(225) NOT NULL DEFAULT '0',
-  `domain_name` varchar(225) NOT NULL DEFAULT '0',
-  `unsubscribe_url` varchar(225) NOT NULL DEFAULT '0',
-  `logo` varchar(225) NOT NULL DEFAULT '0',
-  `created` int(11) NOT NULL DEFAULT '0',
+  `brand_name` varchar(225) NOT NULL DEFAULT '0',
+  `brand_sender_email` varchar(225) NOT NULL DEFAULT '0',
+  `brand_sender_name` varchar(225) NOT NULL DEFAULT '0',
+  `brand_website_url` varchar(225) NOT NULL DEFAULT '0',
+  `brand_domain_name` varchar(225) NOT NULL DEFAULT '0',
+  `brand_unsubscribe_url` varchar(225) NOT NULL DEFAULT '0',
+  `brand_logo` varchar(225) NOT NULL DEFAULT '0',
+  `brand_created` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `campaigns` (
   `subject` varchar(500) NOT NULL,
   `from` varchar(225) NOT NULL,
   `html_content` text NOT NULL,
-  `text_content` text NOT NULL,
+  `text_content` text,
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `send_time` int(11) NOT NULL,
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS `campaign_events` (
   `campaign_id` int(11) DEFAULT '0',
   `list_id` int(11) DEFAULT '0',
   `subscriber_id` int(11) DEFAULT '0',
-  `event_type` enum('sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
-  `reference` varchar(500) DEFAULT '0',
+  `event_type` enum('failed','sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
+  `reference` varchar(500) DEFAULT NULL,
   `time` int(11) DEFAULT '0',
   PRIMARY KEY (`event_id`),
   KEY `campaign_id` (`campaign_id`),
@@ -82,7 +82,21 @@ CREATE TABLE IF NOT EXISTS `campaign_queue` (
   `time` int(11) DEFAULT NULL,
   `locked_by` varchar(225) DEFAULT NULL,
   `processed` int(11) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Campaign send queue, when a campaign is sent, it queued here until it is picked up by ranger processors to create ranges';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Campaign send queue, when a campaign is sent, it queued here';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table cme.import_queue
+DROP TABLE IF EXISTS `import_queue`;
+CREATE TABLE IF NOT EXISTS `import_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `list_id` int(11) NOT NULL DEFAULT '0',
+  `type` enum('api','csv','file') NOT NULL,
+  `source` varchar(225) DEFAULT NULL,
+  `locked_by` varchar(225) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 

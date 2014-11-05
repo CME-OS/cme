@@ -68,7 +68,12 @@ class QueueMessages extends Command
           $queueRequest = $result[0];
 
           //grab the campaign
-          $campaign = DB::select(sprintf("SELECT * FROM campaigns WHERE id=%d", $queueRequest->campaign_id));
+          $campaign = DB::select(
+            sprintf(
+              "SELECT * FROM campaigns WHERE id=%d",
+              $queueRequest->campaign_id
+            )
+          );
           $campaign = $campaign[0];
 
           //process list in chunks
@@ -103,15 +108,14 @@ class QueueMessages extends Command
                 {
                   $placeHolders[$c] = "[$c]";
                 }
-
                 //add brand attributes as placeholders too
-                $result = DB::select(
+                $result  = DB::select(
                   sprintf(
                     "SELECT * FROM brands WHERE id=%d",
                     $campaign->brand_id
                   )
                 );
-                $brand = $result[0];
+                $brand   = $result[0];
                 $columns = array_keys((array)$brand);
                 foreach($columns as $c)
                 {
@@ -125,8 +129,18 @@ class QueueMessages extends Command
               $text = $campaign->text_content;
               foreach($placeHolders as $prop => $placeHolder)
               {
-                $html = str_replace($placeHolder, $subscriber->$prop, $html);
-                $text = str_replace($placeHolder, $subscriber->$prop, $text);
+                $replace = false;
+                if(property_exists($subscriber, $prop))
+                {
+                  $replace = $subscriber->$prop;
+                }
+                elseif(property_exists($brand, $prop))
+                {
+                  $replace = $brand->$prop;
+                }
+
+                $html = str_replace($placeHolder, $replace, $html);
+                $text = str_replace($placeHolder, $replace, $text);
               }
 
               //write to message queue

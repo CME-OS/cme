@@ -62,14 +62,14 @@ class ListHelper
           {
             $values[$k] = DB::getPdo()->quote($v);
           }
-          $batch[] = "(" . implode(",", $values) . ")";
+          $batch[] = "(" . implode(",", $values) . ", '" . date('Y-m-d H:i:s') . "')";
         }
 
         DB::insert(
           sprintf(
             "INSERT IGNORE INTO %s (%s) VALUES %s",
             $tableName,
-            implode(',', array_keys($subscribers[0])),
+            implode(',', array_keys($subscribers[0])) . ', date_created',
             implode(',', $batch)
           )
         );

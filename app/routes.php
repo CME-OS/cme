@@ -50,7 +50,7 @@ Route::post(
     $data = [];
     for($i = 0; $i <= 10; $i++)
     {
-      $user['email']      = "test$i@example.com";
+      $user['email']      = "cme_test$i@mailinator.com";
       $user['first_name'] = "First$i";
       $user['last_name']  = "Last$i";
 

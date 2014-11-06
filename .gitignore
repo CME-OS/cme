@@ -8,4 +8,4 @@ composer.lock
 Thumbs.db
 .idea
 *.pid
-/tmp
+/app/storage/tmp

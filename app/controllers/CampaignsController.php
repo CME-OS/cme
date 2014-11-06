@@ -25,6 +25,7 @@ class CampaignsController extends BaseController
   public function add()
   {
     $data            = Input::all();
+    $data['send_time'] = strtotime($data['send_time']);
     $data['created'] = time();
     DB::table('campaigns')->insert($data);
 
@@ -34,12 +35,15 @@ class CampaignsController extends BaseController
   public function edit()
   {
     $id       = Route::input('id');
-    $campaign = DB::select(
-      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
+    $campaign = head(
+      DB::select(
+        sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
+      )
     );
     if($campaign)
     {
-      $data['campaign'] = $campaign[0];
+      $campaign->send_time = date('Y-m-d H:i:s', $campaign->send_time);
+      $data['campaign'] = $campaign;
       $data['brands']   = DB::select("SELECT * FROM brands");
       $data['lists']    = DB::select("SELECT * FROM lists");
     }
@@ -64,6 +68,7 @@ class CampaignsController extends BaseController
   public function update()
   {
     $data = Input::all();
+    $data['send_time'] = strtotime($data['send_time']);
     $this->_updateCampaign($data);
     return Redirect::to('/campaigns/edit/' . $data['id']);
   }

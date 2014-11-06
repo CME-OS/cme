@@ -52,3 +52,12 @@
     getPlaceHolders($('#campaign-list-id').val());
   }
 </script>
+<script type="text/javascript" src="/assets/datetimepicker/js/datetimepicker.min.js"></script>
+<script>
+  $(function() {
+    $('#datetimepicker').datetimepicker({
+      useSeconds: true,
+      useCurrent: true
+    });
+  });
+</script>

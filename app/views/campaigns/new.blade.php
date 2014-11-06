@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+<link rel="stylesheet" href="/assets/datetimepicker/css/datetimepicker.min.css"/>
 <h1 class="page-header">Campaigns
   <small>Manage your campaigns</small>
 </h1>
@@ -51,7 +52,12 @@
       </div>
       <div class="form-group">
         <label for="campaign-send-time">When do you want to send this campaign?</label>
-        <input type="text" name="send_time" class="form-control" id="campaign-send-time" placeholder="YYYY-MM-DD HH:MM:SS">
+        <div id="datetimepicker" class="input-group date">
+          <input type="text" name="send_time" class="form-control" id="campaign-send-time" data-date-format="YYYY-MM-DD hh:mm:ss">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-time"></span>
+          </span>
+        </div>
       </div>
       <div class="well">
          <p><strong>Available PlaceHolders</strong></p>
@@ -66,8 +72,5 @@
   CKEDITOR.replace(
     'campaign-message'
   );
-</script>
-<script type="text/javascript">
-
 </script>
 @stop

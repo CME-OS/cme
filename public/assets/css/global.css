@@ -1,14 +1,9 @@
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
   font-size:   16px;
   font-weight: 300;
   font:        "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   color:       #A2A2A2;
-  margin-bottom: 60px;
+  background-color: #F2F5F7;
 }
 
 strong {
@@ -48,6 +43,7 @@ h1 {
 .content {
   min-height: 400px;
   padding-bottom: 20px;
+  background-color: #fff;
 }
 
 .white-container {
@@ -65,9 +61,6 @@ h1 {
   padding:          10px;
   text-align:       center;
   background-color: #F2F5F7;
-  position: absolute;
-  bottom:0;
-  width: 100%;
 }
 
 .footer a {

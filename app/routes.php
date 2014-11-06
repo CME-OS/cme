@@ -90,3 +90,4 @@ Route::post(
 );
 
 Route::post('/ph', 'CampaignsController@getPlaceHolders');
+Route::post('/ds', 'CampaignsController@getDefaultSender');

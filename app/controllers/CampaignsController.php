@@ -149,7 +149,23 @@ class CampaignsController extends BaseController
       }
     }
 
-
     return Response::json($final);
+  }
+
+  public function getDefaultSender()
+  {
+    $brandId = Input::get('brandId');
+    $brand   = head(
+      DB::select(
+        sprintf(
+          "SELECT brand_sender_email, brand_sender_name
+           FROM brands WHERE id=%d",
+          $brandId
+        )
+      )
+    );
+
+    $sender = $brand->brand_sender_name . ' <' . $brand->brand_sender_email . '>';
+    return Response::json($sender);
   }
 }

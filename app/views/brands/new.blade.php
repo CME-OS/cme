@@ -6,6 +6,9 @@
 <div class="row">
   <div class="col-md-6">
     <h2>Add a Brand</h2>
+
+    @include('partials.errors')
+
     <form role="form" action="/brands/add" method="post">
       <div class="form-group">
         <label for="brand-name">Name</label>

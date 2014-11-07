@@ -1,9 +1,5 @@
 <?php
-/**
- * @author luke.rodham
- */
-
-namespace Cme\Base\Validation;
+namespace Cme\Base;
 
 use Illuminate\Validation\Factory as Validator;
 use Cme\Base\Exceptions\FormValidationException;

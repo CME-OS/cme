@@ -1,7 +1,7 @@
 <?php
 namespace Cme\Brands\Validation;
 
-use Cme\Base\Validation\BaseValidation;
+use Cme\Base\BaseValidation;
 
 class AddBrandValidation extends BaseValidation
 {

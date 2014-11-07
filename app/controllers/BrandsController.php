@@ -23,12 +23,11 @@ class BrandsController extends BaseController
     $data = Input::all();
     DB::table('brands')->insert($data);
 
-    return Redirect::to('/brands');
+    return Redirect::route('brands');
   }
 
-  public function campaigns()
+  public function campaigns($brandId)
   {
-    $brandId = Route::input('brandId');
     $data['campaigns'] = DB::select(
       sprintf("SELECT * FROM campaigns WHERE brand_id=%d", $brandId)
     );

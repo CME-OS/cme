@@ -3,74 +3,77 @@
  * @author luke.rodham
  */
 
-namespace MyTechJob\Validation;
+namespace Cme\Base\Validation;
 
 use Illuminate\Validation\Factory as Validator;
-use MyTechJob\Exceptions\FormValidationException;
+use Cme\Base\Exceptions\FormValidationException;
 
 class BaseValidation
 {
-    /**
-     * @var \Illuminate\Validation\Validator
-     */
-    private $validation;
+  /**
+   * @var \Illuminate\Validation\Validator
+   */
+  private $validation;
 
-    /**
-     * @var Validator
-     */
-    private $validator;
+  /**
+   * @var Validator
+   */
+  private $validator;
 
-    public function __construct(Validator $validator)
+  public function __construct(Validator $validator)
+  {
+    $this->validator = $validator;
+  }
+
+  /**
+   * @param array $formData
+   *
+   * @throws \Cme\Base\Exceptions\FormValidationException
+   * @return $this
+   */
+  public function validate(array $formData)
+  {
+    $this->validation = $this->validator->make(
+      $formData,
+      $this->getValidationRules(),
+      $this->getCustomMessages()
+    );
+
+    if ($this->validation->fails())
     {
-        $this->validator = $validator;
+      throw new FormValidationException(
+        'Validation Failed', $this->getValidationErrors()
+      );
     }
 
-    /**
-     * @param array $formData
-     *
-     * @throws \MyTechJob\Exceptions\FormValidationException
-     * @return $this
-     */
-    public function validate(array $formData)
-    {
-        $this->validation = $this->validator->make(
-            $formData,
-            $this->getValidationRules(),
-            $this->getCustomMessages()
-        );
+    return true;
+  }
 
-        if ($this->validation->fails()) {
-            throw new FormValidationException('Validation Failed', $this->getValidationErrors());
-        }
+  /**
+   * Get the validation rules array.
+   *
+   * @return array
+   */
+  public function getValidationRules()
+  {
+    return $this->rules;
+  }
 
-        return true;
-    }
+  /**
+   * Get the custom messages array
+   *
+   * @return array
+   */
+  private function getCustomMessages()
+  {
+    return isset($this->customMessages) ? $this->customMessages : [];
+  }
 
-    /**
-     * Get the validation rules array.
-     *
-     * @return array
-     */
-    public function getValidationRules()
-    {
-        return $this->rules;
-    }
-
-    /**
-     * Get the custom messages array
-     *
-     * @return array
-     */
-    private function getCustomMessages()
-    {
-        return isset($this->customMessages) ? $this->customMessages : [];
-    }
-
-    /**
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function getValidationErrors()
-    {
-        return $this->validation->errors();
-    }
+  /**
+   * @return \Illuminate\Support\MessageBag
+   */
+  public function getValidationErrors()
+  {
+    return $this->validation->errors();
+  }
 } 

@@ -44,13 +44,20 @@ class ListsController extends BaseController
     $id        = Route::input('id');
     $tableName = ListHelper::getTable($id);
     //check if list table exists/
-    $subscribers = [];
+    $subscribers = false;
     $columns     = [];
     if(Schema::hasTable($tableName))
     {
       //if it does, fetch all subscribers and display
       $subscribers = DB::table($tableName)->simplePaginate(1000);
-      $columns     = array_keys((array)$subscribers[0]);
+      if(count($subscribers))
+      {
+        $columns = array_keys(head($subscribers));
+      }
+      else
+      {
+        $subscribers = false;
+      }
     }
     //else suggest to user to import users by CSV/API
 

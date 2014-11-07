@@ -13,3 +13,4 @@
 
 Artisan::add(new QueueMessages);
 Artisan::add(new ListImporter);
+Artisan::add(new ListRefresher);

@@ -143,6 +143,12 @@ class QueueMessages extends Command
                 $text = str_replace($placeHolder, $replace, $text);
               }
 
+              //append pixel to html content, so we can track opens
+              $domain   = Config::get('app.domain');
+              $pixelUrl = "http://" . $domain . "/trackOpen/" . $campaign->id
+                . "_" . $campaign->list_id . "_" . $subscriber->id;
+              $html .= '<img src="' . $pixelUrl . '" />';
+
               //write to message queue
               $message = [
                 'subject'       => $campaign->subject,
@@ -168,9 +174,9 @@ class QueueMessages extends Command
           DB::table('ranges')
             ->where(
               [
-                'list_id'     => $queueRequest->list_id,
-                'campaign_id' => $queueRequest->campaign_id,
-                'start'       => $queueRequest->start
+              'list_id'     => $queueRequest->list_id,
+              'campaign_id' => $queueRequest->campaign_id,
+              'start'       => $queueRequest->start
               ]
             )
             ->delete();

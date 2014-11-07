@@ -39,6 +39,9 @@ Route::get('/campaigns/send', 'CampaignsController@send');
 //queues
 Route::get('/queues', 'QueuesController@index');
 
+//analytics
+Route::get('/trackOpen/{source}', 'AnalyticsController@trackOpen');
+
 
 Route::get('/analytics', 'AnalyticsController@index');
 Route::get('/users', 'UsersController@index');

@@ -9,6 +9,17 @@ class ListsController extends BaseController
   public function index()
   {
     $result = DB::select("SELECT * FROM lists");
+    foreach($result as $k => $list)
+    {
+      $size      = 0;
+      $tableName = ListHelper::getTable($list->id);
+      //check if list table exists/
+      if(Schema::hasTable($tableName))
+      {
+        $size = DB::table($tableName)->count();
+      }
+      $result[$k]->size = $size;
+    }
 
     $data['lists'] = $result;
 
@@ -31,7 +42,7 @@ class ListsController extends BaseController
   public function view()
   {
     $id        = Route::input('id');
-    $tableName = 'list_' . $id;
+    $tableName = ListHelper::getTable($id);
     //check if list table exists/
     $subscribers = [];
     $columns     = [];

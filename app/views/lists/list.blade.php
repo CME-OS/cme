@@ -9,12 +9,14 @@
           <thead>
           <tr>
             <th>Name</th>
+            <th>Size</th>
             <th></th>
           </tr>
           </thead>
           <?php foreach($lists as $list): ?>
             <tr>
               <td><?= $list->name; ?></td>
+              <td><?= number_format($list->size, 0); ?></td>
               <td><a href="/lists/view/<?= $list->id; ?>">View</a></td>
             </tr>
           <?php endforeach; ?>

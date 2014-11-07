@@ -108,6 +108,9 @@ CREATE TABLE IF NOT EXISTS `lists` (
   `name` varchar(225) NOT NULL DEFAULT '0',
   `description` varchar(225) NOT NULL DEFAULT '0',
   `endpoint` varchar(225) DEFAULT NULL,
+  `refresh_interval` int(11) DEFAULT NULL,
+  `last_refresh_time` int(11) DEFAULT NULL,
+  `locked_by` varchar(225) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

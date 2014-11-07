@@ -34,6 +34,10 @@ class ListsController extends BaseController
   public function add()
   {
     $data   = Input::all();
+    if((int)$data['refresh_interval'] == 0)
+    {
+      unset($data['refresh_interval']);
+    }
     $listId = DB::table('lists')->insertGetId($data);
 
     return Redirect::to('/lists/view/' . $listId);

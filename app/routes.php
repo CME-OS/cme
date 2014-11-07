@@ -1,43 +1,35 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Application Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
-|
-*/
-
-Route::get('/', 'HomeController@index');
+Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 //brands
-Route::get('/brands', 'BrandsController@index');
-Route::get('/brands/new', 'BrandsController@neww');
-Route::post('/brands/add', 'BrandsController@add');
-Route::get('/brands/campaigns/{brandId}', 'BrandsController@campaigns');
+Route::get('/brands', ['as' => 'brands', 'uses' => 'BrandsController@index']);
+Route::get('/brands/new', ['as' => 'brands.new', 'uses' => 'BrandsController@neww']);
+Route::get('/brands/campaigns/{brandId}', ['as' => 'brands.campaigns', 'uses' => 'BrandsController@campaigns']);
+
+Route::post('/brands/add', ['as' => 'brands.add.post', 'uses' => 'BrandsController@add']);
 
 //lists
-Route::get('/lists', 'ListsController@index');
-Route::get('/lists/new', 'ListsController@neww');
-Route::post('/lists/add', 'ListsController@add');
-Route::get('/lists/view/{id}', 'ListsController@view');
-Route::post('/lists/import/{type}', 'ListsController@import');
+Route::get('/lists', ['as' => 'lists', 'uses' => 'ListsController@index']);
+Route::get('/lists/new', ['as' => 'lists.new', 'uses' => 'ListsController@neww']);
+Route::get('/lists/view/{id}', ['as' => 'lists.view', 'uses' => 'ListsController@view']);
+
+Route::post('/lists/add', ['as' => 'lists.new.post', 'uses' => 'ListsController@add']);
+Route::post('/lists/import/{type}', ['as' => 'lists.import.post', 'uses' => 'ListsController@import']);
 
 //campaigns
-Route::get('/campaigns', 'CampaignsController@index');
-Route::get('/campaigns/new', 'CampaignsController@neww');
-Route::post('/campaigns/add', 'CampaignsController@add');
-Route::get('/campaigns/edit/{id}', 'CampaignsController@edit');
-Route::get('/campaigns/delete/{id}', 'CampaignsController@delete');
-Route::post('/campaigns/update', 'CampaignsController@update');
-Route::get('/campaigns/preview/{id}', 'CampaignsController@preview');
-Route::get('/campaigns/send', 'CampaignsController@send');
+Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'CampaignsController@index']);
+Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'CampaignsController@neww']);
+Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'CampaignsController@edit']);
+Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'CampaignsController@delete']);
+Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'CampaignsController@preview']);
+Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'CampaignsController@send']);
+
+Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'CampaignsController@add']);
+Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'CampaignsController@update']);
 
 //queues
-Route::get('/queues', 'QueuesController@index');
+Route::get('/queues', ['as' => 'queues', 'uses' => 'QueuesController@index']);
 
 //analytics
 Route::get('/trackOpen/{source}', 'AnalyticsController@trackOpen');

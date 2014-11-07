@@ -147,7 +147,7 @@ class QueueMessages extends Command
               $domain   = Config::get('app.domain');
               $pixelUrl = "http://" . $domain . "/trackOpen/" . $campaign->id
                 . "_" . $campaign->list_id . "_" . $subscriber->id;
-              $html .= '<img src="' . $pixelUrl . '" />';
+              $html .= '<img src="' . $pixelUrl . '" style="display:none;" />';
 
               //write to message queue
               $message = [

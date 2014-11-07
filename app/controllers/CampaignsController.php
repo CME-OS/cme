@@ -19,45 +19,47 @@ class CampaignsController extends BaseController
   {
     $data['brands'] = DB::select("SELECT * FROM brands");
     $data['lists']  = DB::select("SELECT * FROM lists");
+
     return View::make('campaigns.new', $data);
   }
 
   public function add()
   {
-    $data            = Input::all();
+    $data              = Input::all();
     $data['send_time'] = strtotime($data['send_time']);
-    $data['created'] = time();
+    $data['created']   = time();
     DB::table('campaigns')->insert($data);
 
     return Redirect::to('/campaigns');
   }
 
-  public function edit()
+  public function edit($id)
   {
-    $id       = Route::input('id');
     $campaign = head(
       DB::select(
         sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
       )
     );
-    if($campaign)
+
+    if ($campaign)
     {
       $campaign->send_time = date('Y-m-d H:i:s', $campaign->send_time);
-      $data['campaign'] = $campaign;
-      $data['brands']   = DB::select("SELECT * FROM brands");
-      $data['lists']    = DB::select("SELECT * FROM lists");
+      $data['campaign']    = $campaign;
+      $data['brands']      = DB::select("SELECT * FROM brands");
+      $data['lists']       = DB::select("SELECT * FROM lists");
+
+      return View::make('campaigns.edit', $data);
     }
 
-    return View::make('campaigns.edit', $data);
+    return Redirect::route('campaigns');
   }
 
-  public function preview()
+  public function preview($id)
   {
-    $id       = Route::input('id');
     $campaign = DB::select(
       sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
     );
-    if($campaign)
+    if ($campaign)
     {
       echo '<h1>' . $campaign[0]->subject . '</h1>';
       echo $campaign[0]->html_content;
@@ -67,9 +69,10 @@ class CampaignsController extends BaseController
 
   public function update()
   {
-    $data = Input::all();
+    $data              = Input::all();
     $data['send_time'] = strtotime($data['send_time']);
     $this->_updateCampaign($data);
+
     return Redirect::to('/campaigns/edit/' . $data['id']);
   }
 
@@ -93,7 +96,7 @@ class CampaignsController extends BaseController
     $campaign = DB::select(
       sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
     );
-    if($campaign)
+    if ($campaign)
     {
       //get min and max id of campaign list
       $listId    = $campaign[0]->list_id;
@@ -105,7 +108,7 @@ class CampaignsController extends BaseController
       $maxId     = $listInfo[0]->maxId;
 
       //build ranges
-      for($i = $minId; $i <= $maxId; $i++)
+      for ($i = $minId; $i <= $maxId; $i++)
       {
         $start = $i;
         $end   = $i = $i + 1000;
@@ -120,7 +123,7 @@ class CampaignsController extends BaseController
         {
           DB::table('ranges')->insert($range);
         }
-        catch(Exception $e)
+        catch (Exception $e)
         {
           Log::error($e->getMessage());
         }
@@ -141,7 +144,7 @@ class CampaignsController extends BaseController
     $tableName    = ListHelper::getTable($listId);
     $brand        = (array)head(DB::select("SELECT * FROM brands LIMIT 1"));
     $placeholders = array_keys($brand);
-    if($listId)
+    if ($listId)
     {
       $list = (array)head(DB::select("SELECT * FROM $tableName LIMIT 1"));
 
@@ -149,9 +152,9 @@ class CampaignsController extends BaseController
     }
 
     $final = [];
-    foreach($placeholders as $k => $v)
+    foreach ($placeholders as $k => $v)
     {
-      if(in_array($v, ListHelper::inBuiltFields()))
+      if (in_array($v, ListHelper::inBuiltFields()))
       {
         unset($placeholders[$k]);
       }
@@ -178,6 +181,7 @@ class CampaignsController extends BaseController
     );
 
     $sender = $brand->brand_sender_name . ' <' . $brand->brand_sender_email . '>';
+
     return Response::json($sender);
   }
 }

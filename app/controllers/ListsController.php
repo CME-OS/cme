@@ -44,19 +44,15 @@ class ListsController extends BaseController
     $id        = Route::input('id');
     $tableName = ListHelper::getTable($id);
     //check if list table exists/
-    $subscribers = false;
+    $subscribers = [];
     $columns     = [];
     if(Schema::hasTable($tableName))
     {
       //if it does, fetch all subscribers and display
-      $subscribers = DB::table($tableName)->simplePaginate(1000);
-      if(count($subscribers))
+      if(DB::table($tableName)->count())
       {
-        $columns = array_keys(head($subscribers));
-      }
-      else
-      {
-        $subscribers = false;
+        $subscribers = DB::table($tableName)->simplePaginate(1000);
+        $columns = array_keys((array)$subscribers->offSetGet(1));
       }
     }
     //else suggest to user to import users by CSV/API
@@ -108,8 +104,8 @@ class ListsController extends BaseController
         //queue up
         $importRequest = [
           'list_id' => $listId,
-          'type' => $type,
-          'source' => $source
+          'type'    => $type,
+          'source'  => $source
         ];
         DB::table('import_queue')->insert($importRequest);
       }

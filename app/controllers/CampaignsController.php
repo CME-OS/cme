@@ -116,7 +116,14 @@ class CampaignsController extends BaseController
           'end'         => $end,
           'created'     => time()
         ];
-        DB::table('ranges')->insert($range);
+        try
+        {
+          DB::table('ranges')->insert($range);
+        }
+        catch(Exception $e)
+        {
+          Log::error($e->getMessage());
+        }
       }
 
       //update status of campaign

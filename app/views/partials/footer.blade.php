@@ -57,7 +57,8 @@
   $(function() {
     $('#datetimepicker').datetimepicker({
       useSeconds: true,
-      useCurrent: true
+      useCurrent: true,
+      format : 'YYYY-MM-DD H:mm:ss'
     });
   });
 </script>

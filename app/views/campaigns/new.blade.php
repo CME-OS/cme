@@ -53,7 +53,7 @@
       <div class="form-group">
         <label for="campaign-send-time">When do you want to send this campaign?</label>
         <div id="datetimepicker" class="input-group date">
-          <input type="text" name="send_time" class="form-control" id="campaign-send-time" data-date-format="YYYY-MM-DD hh:mm:ss">
+          <input type="text" name="send_time" class="form-control" id="campaign-send-time">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-time"></span>
           </span>

@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.1.50-community - MySQL Community Server (GPL)
+-- Server version:               5.6.16 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4843
+-- HeidiSQL Version:             8.3.0.4694
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -38,18 +38,18 @@ CREATE TABLE IF NOT EXISTS `brands` (
 DROP TABLE IF EXISTS `campaigns`;
 CREATE TABLE IF NOT EXISTS `campaigns` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subject` varchar(500) NOT NULL,
-  `from` varchar(225) NOT NULL,
-  `html_content` text NOT NULL,
-  `text_content` text,
+  `subject` varchar(500) CHARACTER SET latin1 NOT NULL,
+  `from` varchar(225) CHARACTER SET latin1 NOT NULL,
+  `html_content` text CHARACTER SET latin1 NOT NULL,
+  `text_content` text CHARACTER SET latin1,
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `send_time` int(11) NOT NULL,
   `send_priority` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Queuing','Queued','Sent') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Queuing','Queued','Sent') CHARACTER SET latin1 NOT NULL DEFAULT 'Pending',
   `created` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `campaign_events` (
   `campaign_id` int(11) DEFAULT '0',
   `list_id` int(11) DEFAULT '0',
   `subscriber_id` int(11) DEFAULT '0',
-  `event_type` enum('failed','sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
+  `event_type` enum('failed','queued','sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
   `reference` varchar(500) DEFAULT NULL,
   `time` int(11) DEFAULT '0',
   PRIMARY KEY (`event_id`),
@@ -121,26 +121,26 @@ CREATE TABLE IF NOT EXISTS `lists` (
 DROP TABLE IF EXISTS `message_queue`;
 CREATE TABLE IF NOT EXISTS `message_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subject` varchar(500) NOT NULL,
-  `from` varchar(225) NOT NULL,
-  `to` varchar(225) DEFAULT NULL,
-  `html_content` text NOT NULL,
-  `text_content` text NOT NULL,
+  `subject` varchar(500) CHARACTER SET latin1 NOT NULL,
+  `from` varchar(225) CHARACTER SET latin1 NOT NULL,
+  `to` varchar(225) CHARACTER SET latin1 DEFAULT NULL,
+  `html_content` text CHARACTER SET latin1 NOT NULL,
+  `text_content` text CHARACTER SET latin1 NOT NULL,
   `subscriber_id` int(11) NOT NULL DEFAULT '0',
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `campaign_id` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Sent','Failed') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Sent','Failed') CHARACTER SET latin1 NOT NULL DEFAULT 'Pending',
   `send_time` int(11) DEFAULT NULL,
   `send_priority` int(11) DEFAULT NULL,
-  `locked_by` varchar(225) DEFAULT NULL,
+  `locked_by` varchar(225) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `campaign_id` (`campaign_id`),
   KEY `brand_id` (`brand_id`),
   KEY `list_id` (`list_id`),
   KEY `status` (`status`),
   KEY `locked_by` (`locked_by`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- Data exporting was unselected.
 

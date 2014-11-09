@@ -11,5 +11,6 @@
 <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="/assets/css/global.css"/>
 <link rel="stylesheet" href="/assets/css/style.css"/>
+<link rel="stylesheet" href="/assets/css/xcharts.css"/>
 <link rel="icon" href="/assets/images/fav.png">
 

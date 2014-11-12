@@ -156,7 +156,7 @@ class QueueMessages extends Command
               $message = [
                 'subject'       => $campaign->subject,
                 'from_name'     => $fromName,
-                'from_email'    => trim($fromEmail, '><'),
+                'from_email'    => trim($fromEmail, '<>'),
                 'to'            => $subscriber->email,
                 'html_content'  => $html,
                 'text_content'  => $text,

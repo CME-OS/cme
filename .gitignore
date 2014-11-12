@@ -9,3 +9,4 @@ Thumbs.db
 .idea
 *.pid
 /app/storage/tmp
+/app/storage/monit

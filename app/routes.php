@@ -32,7 +32,8 @@ Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'Ca
 Route::get('/queues', ['as' => 'queues', 'uses' => 'QueuesController@index']);
 
 //analytics
-Route::get('/trackOpen/{source}', 'AnalyticsController@trackOpen');
+Route::get('/track/open/{source}', 'AnalyticsController@trackOpen');
+Route::get('/track/unsubscribe/{source}/{redirect}', 'AnalyticsController@trackUnsubscribe');
 
 
 Route::get('/analytics', 'AnalyticsController@index');

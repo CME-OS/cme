@@ -136,16 +136,31 @@ class QueueMessages extends Command
                 }
                 elseif(property_exists($brand, $prop))
                 {
-                  $replace = $brand->$prop;
+                  if($prop == 'brand_unsubscribe_url')
+                  {
+                    $replace = $this->_getUnsubscribeUrl(
+                      $brand->$prop,
+                      $campaign->id,
+                      $campaign->list_id,
+                      $subscriber->id
+                    );
+                  }
+                  else
+                  {
+                    $replace = $brand->$prop;
+                  }
                 }
 
-                $html = str_replace($placeHolder, $replace, $html);
-                $text = str_replace($placeHolder, $replace, $text);
+                if($replace !== false)
+                {
+                  $html = str_replace($placeHolder, $replace, $html);
+                  $text = str_replace($placeHolder, $replace, $text);
+                }
               }
 
               //append pixel to html content, so we can track opens
               $domain   = Config::get('app.domain');
-              $pixelUrl = "http://" . $domain . "/trackOpen/" . $campaign->id
+              $pixelUrl = "http://" . $domain . "/track/open/" . $campaign->id
                 . "_" . $campaign->list_id . "_" . $subscriber->id;
               $html .= '<img src="' . $pixelUrl
                 . '" style="display:none;" height="1" width="1" />';
@@ -202,6 +217,15 @@ class QueueMessages extends Command
       }
       while($result);
     }
+  }
+
+  private function _getUnsubscribeUrl($url, $campaignId, $listId, $subscriberId)
+  {
+    $domain = Config::get('app.domain');
+    $url    = "http://" . $domain . "/track/unsubscribe/" . $campaignId
+      . "_" . $listId . "_" . $subscriberId . "/" . base64_encode($url);
+
+    return $url;
   }
 
   /**

@@ -8,9 +8,7 @@ class CampaignsController extends BaseController
 {
   public function index()
   {
-    $data = [
-      'campaigns' => DB::select("SELECT * FROM campaigns")
-    ];
+    $data['campaigns'] = CMECampaign::all();
 
     return View::make('campaigns.list', $data);
   }

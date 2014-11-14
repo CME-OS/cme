@@ -185,6 +185,16 @@ class QueueMessages extends Command
               Log::debug("Queuing message for " . $subscriber->email);
               DB::table('message_queue')->insert($message);
 
+              //add to campaign events table
+              $event = [
+                'campaign_id'   => $campaign->id,
+                'list_id'       => $queueRequest->list_id,
+                'subscriber_id' => $subscriber->id,
+                'event_type'    => 'queued',
+                'time'          => time()
+              ];
+              DB::table('campaign_events')->insert($event);
+
               $lastId = $subscriber->id;
             }
           }

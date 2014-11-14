@@ -37,7 +37,7 @@
     });
   }
 
-  if($('#campaign-list-id'))
+  if(document.getElementById('campaign-list-id'))
   {
     $('#campaign-brand-id').change(function(){
       var brandIdVal = $(this).val();

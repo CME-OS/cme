@@ -8,9 +8,7 @@ class CampaignsController extends BaseController
 {
   public function index()
   {
-    $data = [
-      'campaigns' => DB::select("SELECT * FROM campaigns")
-    ];
+    $data['campaigns'] = CMECampaign::all();
 
     return View::make('campaigns.list', $data);
   }
@@ -35,12 +33,7 @@ class CampaignsController extends BaseController
 
   public function edit($id)
   {
-    $campaign = head(
-      DB::select(
-        sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
-      )
-    );
-
+    $campaign = CMECampaign::find($id);
     if ($campaign)
     {
       $campaign->send_time = date('Y-m-d H:i:s', $campaign->send_time);
@@ -56,13 +49,11 @@ class CampaignsController extends BaseController
 
   public function preview($id)
   {
-    $campaign = DB::select(
-      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
-    );
+    $campaign = CMECampaign::find($id);
     if ($campaign)
     {
-      echo '<h1>' . $campaign[0]->subject . '</h1>';
-      echo $campaign[0]->html_content;
+      echo '<h1>' . $campaign->subject . '</h1>';
+      echo $campaign->html_content;
       die;
     }
   }
@@ -93,13 +84,11 @@ class CampaignsController extends BaseController
     $id = Input::get('id');
 
     //build ranges to be consumed through the QueueMessages Command
-    $campaign = DB::select(
-      sprintf("SELECT * FROM %s WHERE id=%d", 'campaigns', $id)
-    );
+    $campaign = CMECampaign::find($id);
     if ($campaign)
     {
       //get min and max id of campaign list
-      $listId    = $campaign[0]->list_id;
+      $listId    = $campaign->list_id;
       $listTable = 'list_' . $listId;
       $listInfo  = DB::select(
         sprintf("SELECT min(id) as minId, max(id) as maxId FROM %s", $listTable)

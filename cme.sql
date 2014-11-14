@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.6.16 - MySQL Community Server (GPL)
--- Server OS:                    Win32
--- HeidiSQL Version:             8.3.0.4694
+-- Host:                         naijalol.com
+-- Server version:               5.1.69 - Source distribution
+-- Server OS:                    redhat-linux-gnu
+-- HeidiSQL Version:             8.3.0.4843
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -122,8 +122,9 @@ DROP TABLE IF EXISTS `message_queue`;
 CREATE TABLE IF NOT EXISTS `message_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` varchar(500) CHARACTER SET latin1 NOT NULL,
-  `from` varchar(225) CHARACTER SET latin1 NOT NULL,
-  `to` varchar(225) CHARACTER SET latin1 DEFAULT NULL,
+  `from_name` varchar(225) CHARACTER SET latin1 NOT NULL,
+  `from_email` varchar(225) NOT NULL,
+  `to` varchar(225) DEFAULT NULL,
   `html_content` text CHARACTER SET latin1 NOT NULL,
   `text_content` text CHARACTER SET latin1 NOT NULL,
   `subscriber_id` int(11) NOT NULL DEFAULT '0',

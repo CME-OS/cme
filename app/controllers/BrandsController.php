@@ -46,7 +46,7 @@ class BrandsController extends BaseController
   public function campaigns($brandId)
   {
     $brand = CMEBrand::find($brandId);
-    $data['campaigns'] = $brand->campaigns();
+    $data['campaigns'] = $brand->campaigns;
 
     return View::make('campaigns.list', $data);
   }

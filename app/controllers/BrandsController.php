@@ -20,7 +20,7 @@ class BrandsController extends BaseController
 
   public function index()
   {
-    $result = DB::select("SELECT * FROM brands");
+    $result = CMEBrand::all();
 
     $data['brands'] = $result;
 
@@ -45,9 +45,8 @@ class BrandsController extends BaseController
 
   public function campaigns($brandId)
   {
-    $data['campaigns'] = DB::select(
-      sprintf("SELECT * FROM campaigns WHERE brand_id=%d", $brandId)
-    );
+    $brand = CMEBrand::find($brandId);
+    $data['campaigns'] = $brand->campaigns();
 
     return View::make('campaigns.list', $data);
   }

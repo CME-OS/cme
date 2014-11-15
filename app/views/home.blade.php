@@ -11,110 +11,175 @@
       robust
     </p>
   <?php else: ?>
+
     <div class="row">
-      <div class="col-md-6">
-        <h2>Last 24 Hours</h2>
-        <?php foreach($hStats as $campaignId => $dailyStats): ?>
-          <div class="well">
-            <h3><?= $campaignLookUp[$campaignId] ?></h3>
-            <table class="table">
-              <tr>
-                <th>Date</th>
-                <?php foreach($eventTypes as $type): ?>
-                  <th><?= $type ?></th>
-                <?php endforeach ?>
-              </tr>
-              <?php foreach($dailyStats as $day => $eventStats): ?>
-                <tr>
-                  <td><?= $day ?></td>
-                  <?php foreach($eventStats as $count): ?>
-                    <td><?= $count ?></td>
-                  <?php endforeach; ?>
-                </tr>
-              <?php endforeach; ?>
-            </table>
-          </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="col-md-6">
-        <h2>Last 7 Days</h2>
-        <?php foreach($dStats as $campaignId => $dailyStats): ?>
-          <div class="well">
-            <h3><?= $campaignLookUp[$campaignId] ?></h3>
-            <table class="table">
-              <tr>
-                <th>Date</th>
-                <?php foreach($eventTypes as $type): ?>
-                  <th><?= $type ?></th>
-                <?php endforeach ?>
-              </tr>
-              <?php foreach($dailyStats as $day => $eventStats): ?>
-                <tr>
-                  <td><?= $day ?></td>
-                  <?php foreach($eventStats as $count): ?>
-                    <td><?= $count ?></td>
-                  <?php endforeach; ?>
-                </tr>
-              <?php endforeach; ?>
-            </table>
-          </div>
-        <?php endforeach; ?>
+      <h3 class="heading">Last 24H for all Campaigns</h3>
+      <canvas id="hourlyChart" width="500" height="200"></canvas>
 
-      </div>
+      <h3 class="heading">Last Week for all Campaigns</h3>
+      <canvas id="dailyChart" width="500" height="200"></canvas>
     </div>
-  <?php endif; ?>
+  <?php
 
-  <figure style="width: 400px; height: 300px;" id="homechart"></figure>
+  foreach($hStats as $campaignId => $hourStats):
 
-  <script src="/assets/js/d3.min.js"></script>
-  <script src="/assets/js/xcharts.min.js"></script>
-  <script type="text/javascript">var data = {
-      "xScale": "time",
-      "yScale": "linear",
-      "type": "line",
-      "main": [
+    $hourlyDataSets = array();
+    $hourlyXlabels  = array();
+    foreach($hourStats as $hour => $eventHStats):
+      $hourlyXlabels[] = date('H', strtotime($hour));
+      foreach($eventHStats as $hevent => $hcount)
+      {
+        if(!isset($hourlyDataSets[$hevent]))
         {
-          "className": ".pizza",
-          "data": [
-            {
-              "x": "2012-11-05",
-              "y": 1
-            },
-            {
-              "x": "2012-11-06",
-              "y": 6
-            },
-            {
-              "x": "2012-11-07",
-              "y": 13
-            },
-            {
-              "x": "2012-11-08",
-              "y": -3
-            },
-            {
-              "x": "2012-11-09",
-              "y": -4
-            },
-            {
-              "x": "2012-11-10",
-              "y": 9
-            },
-            {
-              "x": "2012-11-11",
-              "y": 6
-            }
-          ]
+          $hourlyDataSets[$hevent] = array();
         }
-      ]
-    };
-    var opts = {
-      "dataFormatX": function (x) { return d3.time.format('%Y-%m-%d').parse(x); },
-      "tickFormatX": function (x) { return d3.time.format('%A')(x); }
-    };
-    var myChart = new xChart('line', data, '#homechart', opts);
+        $hourlyDataSets[$hevent][] = $hcount;
+      }
+    endforeach;
+  endforeach;
+  foreach($dStats as $campaignId => $dailyStats):
+
+    $dailyDataSets = array();
+    $dailyXlabels  = array();
+    foreach($dailyStats as $day => $eventStats):
+      $dailyXlabels[] = date('d/m/y', strtotime($day));
+      foreach($eventStats as $event => $wcount)
+      {
+        if(!isset($dailyDataSets[$event]))
+        {
+          $dailyDataSets[$event] = array();
+        }
+        $dailyDataSets[$event][] = $wcount;
+      }
+    endforeach;
+  endforeach;
+
+  $jsHourlyDataSet = array();
+  $jsdailyDataSet = array();
+
+  $colors = array(
+    'queued'       => 'rgba(151,187,205,1)',
+    'bounced'      => 'rgba(131,137,105,1)',
+    'sent'         => 'rgba(171,187,205,1)',
+    'opened'       => 'rgba(121,117,205,1)',
+    'unsubscribed' => 'rgba(131,167,265,1)',
+    'clicked'      => 'rgba(161,187,105,1)',
+    'failed'       => 'rgba(261,127,105,1)'
+  );
+  foreach($hourlyDataSets as $hevent => $hourData)
+  {
+    $jsHourlyDataSet[] = sprintf(
+      '{
+          label:"%s",
+           fillColor: "rgba(151,187,205,0.2)",
+          strokeColor:          "%s",
+          pointColor:           "%s",
+          pointStrokeColor:     "#fff",
+          pointHighlightFill:   "#fff",
+          pointHighlightStroke: "%s",
+          data: [%s]
+          }',
+      $event,
+      $colors[$hevent],
+      $colors[$hevent],
+      $colors[$hevent],
+      implode(',', $hourData)
+    );
+  }
+
+  foreach($dailyDataSets as $event => $dayData)
+  {
+    $jsdailyDataSet[] = sprintf(
+      '{
+          label:"%s",
+           fillColor: "rgba(151,187,205,0.2)",
+          strokeColor:          "%s",
+          pointColor:           "%s",
+          pointStrokeColor:     "#fff",
+          pointHighlightFill:   "#fff",
+          pointHighlightStroke: "%s",
+          data: [%s]
+          }',
+      $event,
+      $colors[$event],
+      $colors[$event],
+      $colors[$event],
+      implode(',', $dayData)
+    );
+  }
 
 
-  </script>
+  ?>
+
+    <script src="/assets/js/chartjs.min.js"></script>
+    <script type="text/javascript">
+      var horlydata = {
+        labels:   [<?php echo '"' . implode('","', $hourlyXlabels) . '"'; ?>],
+        datasets: [
+          <?php echo implode(',', $jsHourlyDataSet); ?>
+        ]
+      };
+      var dailydata = {
+        labels:   [<?php echo '"' . implode('","', $dailyXlabels) . '"'; ?>],
+        datasets: [
+          <?php echo implode(',', $jsdailyDataSet); ?>
+        ]
+      };
+      var options = {
+        datasetFill:    false,
+        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets{[i].label}){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+      };
+      var ctxH = document.getElementById("hourlyChart").getContext("2d");
+      var hourlyLineChart = new Chart(ctxH).Line(horlydata, options);
+
+      var ctxD= document.getElementById("dailyChart").getContext("2d");
+      var dailyLineChart = new Chart(ctxD).Line(dailydata, options);
+
+      /**var option = {
+
+    ///Boolean - Whether grid lines are shown across the chart
+    scaleShowGridLines : true,
+
+    //String - Colour of the grid lines
+    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+    //Number - Width of the grid lines
+    scaleGridLineWidth : 1,
+
+    //Boolean - Whether the line is curved between points
+    bezierCurve : true,
+
+    //Number - Tension of the bezier curve between points
+    bezierCurveTension : 0.4,
+
+    //Boolean - Whether to show a dot for each point
+    pointDot : true,
+
+    //Number - Radius of each point dot in pixels
+    pointDotRadius : 4,
+
+    //Number - Pixel width of point dot stroke
+    pointDotStrokeWidth : 1,
+
+    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+    pointHitDetectionRadius : 20,
+
+    //Boolean - Whether to show a stroke for datasets
+    datasetStroke : true,
+
+    //Number - Pixel width of dataset stroke
+    datasetStrokeWidth : 2,
+
+    //Boolean - Whether to fill the dataset with a colour
+    datasetFill : true,
+
+    //String - A legend template
+    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets{[i].label
+}){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+};
+       */
+    </script>
+  <?php endif; ?>
 </div>
 @stop

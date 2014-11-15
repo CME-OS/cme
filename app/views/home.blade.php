@@ -1,9 +1,9 @@
 @extends('layouts.default')
 @section('content')
 <div>
-  <h1>Welcome to CME</h1>
 
   <?php if(!$dStats): ?>
+    <h1>Welcome to CME</h1>
     <p class="well">
       CME stands for Campaign Made Easy. CME allows you to manage
       and schedule campaigns across all your brands.
@@ -12,45 +12,50 @@
     </p>
   <?php else: ?>
 
-    <div class="row">
-      <h3 class="heading">Last 24H for all Campaigns</h3>
-      <div id="charthourly" style="height:400px;width:800px; "></div>
-      <h3 class="heading">Last Week for all Campaigns</h3>
-      <div id="chartdaily" style="height:400px;width:800px; "></div>
-    </div>
+    <script src="/assets/js/jqplot/jquery.jqplot.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
+
   <?php
 
+  /**
+  @todo remove unnecessary loopy mess and move to controller
+   **/
+
+  /**building array with date,count for each event*/
+  $hourlyDataSets = array();
   foreach($hStats as $campaignId => $hourStats):
 
-    $hourlyDataSets = array();
     $hourlyXlabels  = array();
     foreach($hourStats as $hour => $eventHStats):
       $hourlyXlabels[] = date('H', strtotime($hour));
       foreach($eventHStats as $hevent => $hcount)
       {
-        if(!isset($hourlyDataSets[$hevent]))
+        if(!isset($hourlyDataSets[$campaignId]))
         {
-          $hourlyDataSets[$hevent] = array();
+          $hourlyDataSets[$campaignId] = array();
         }
-        $hourlyDataSets[$hevent][] = array($hour, $hcount);
+        $hourlyDataSets[$campaignId][$hevent][] = array($hour, $hcount);
       }
     endforeach;
   endforeach;
+  $dailyDataSets = array();
   foreach($dStats as $campaignId => $dailyStats):
 
-    $dailyDataSets = array();
     foreach($dailyStats as $day => $eventStats):
       foreach($eventStats as $event => $wcount)
       {
-        if(!isset($dailyDataSets[$event]))
+        if(!isset($dailyDataSets[$campaignId]))
         {
-          $dailyDataSets[$event] = array();
+          $dailyDataSets[$campaignId][$event] = array();
         }
-        $dailyDataSets[$event][] = array($day, $wcount);
+        $dailyDataSets[$campaignId][$event][] = array($day, $wcount);
       }
     endforeach;
   endforeach;
 
+  /*events line colors*/
   $colors = array(
     'sent'=>'#3EB8FA',
     'queued'=>'#F7CD23',
@@ -60,9 +65,13 @@
     'bounced'=>'#F08800',
     'unsubscribed'=>'#F0E000'
   );
+
+  /**foreach capaign we build the javascript data and output the 2 chart*/
+  foreach($campaignLookUp as $cid=>$name)
+  {
   $out = '';
   $hourlySeriesOptions = array();
-  foreach($hourlyDataSets as $ev=>$data)
+  foreach($hourlyDataSets[$cid] as $ev=>$data)
   {
     $hourlySeriesOptions []= sprintf("
     {
@@ -80,7 +89,7 @@
 
   $out = '';
   $dailySeriesOptions = array();
-  foreach($dailyDataSets as $ev=>$data)
+  foreach($dailyDataSets[$cid] as $ev=>$data)
   {
     $dailySeriesOptions[] = sprintf("
     {
@@ -100,13 +109,20 @@
   $dataDaily =  trim($out, ',');
 
     ?>
-       <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/js/jqplot/jquery.jqplot.js"></script>
-    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
-    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.cursor.min.js"></script>
-    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
+    <div class="row-fluid">
+      <h2 class="heading">Campaign: <?php echo $name;?></h2>
+      <h3 class="heading col-md-6">Last 24H</h3>
+      <h3 class="heading col-md-6">Last Week</h3>
+      <div class="col-md-6">
+      <div id="charthourly-<?php echo $cid;?>"  style="height:400px; "></div>
+      </div>
+      <div class="col-md-6" class="col-md-6" >
+      <div id="chartdaily-<?php echo $cid;?>" style="height:400px; "></div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
     <script type="text/javascript">
-      $.jqplot('charthourly',
+      $.jqplot('charthourly-<?php echo $cid;?>',
         [
           <?php echo $dataHourly; ?>
         ],
@@ -141,10 +157,8 @@
         },
         legend: {
           show: true,
-          location: 'ne',     // compass direction, nw, n, ne, e, se, s, sw, w.
-          xoffset: 12,        // pixel offset of the legend box from the x (or x2) axis.
-          yoffset: 12        // pixel offset of the legend box from the y (or y2) axis.
-        },
+          location: 'ne'      // compass direction, nw, n, ne, e, se, s, sw, w.
+          },
           grid: {
             drawGridLines: true,        // wether to draw lines across the grid or not.
             gridLineColor: '#cccccc',    // *Color of the grid lines.
@@ -156,7 +170,7 @@
           }
       }
       );
-      $.jqplot('chartdaily',
+      $.jqplot('chartdaily-<?php echo $cid;?>',
 
                [
                  <?php echo $dataDaily; ?>
@@ -206,6 +220,8 @@
         }
       );
     </script>
-  <?php endif; ?>
+  <?php }//end campaign loop
+
+  endif; ?>
 </div>
 @stop

@@ -12,5 +12,6 @@
 <link rel="stylesheet" href="/assets/css/global.css"/>
 <link rel="stylesheet" href="/assets/css/style.css"/>
 <link rel="stylesheet" href="/assets/css/jquery.jqplot.css"/>
+<script src="/assets/js/jquery.min.js"></script>
 <link rel="icon" href="/assets/images/fav.png">
 

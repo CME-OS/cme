@@ -64,7 +64,8 @@ class HomeController extends BaseController
       }
     }
 
-    $campaignLookUp         = DB::table('campaigns')->lists('subject', 'id');
+    /**@todo order by created or send time!?*/
+    $campaignLookUp         = DB::table('campaigns')->orderBy('created', 'desc')->lists('subject', 'id');
     $data['eventTypes']     = $eventTypes;
     $data['dStats']         = $dStats;
     $data['hStats']         = $hStats;

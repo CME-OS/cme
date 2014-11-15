@@ -57,13 +57,13 @@
 
   /*events line colors*/
   $colors = array(
-    'sent'=>'#3EB8FA',
-    'queued'=>'#F7CD23',
-    'opened'=>'#2DEBC1',
-    'clicked'=>'#40C752',
-    'failed' => '#CC3830',
-    'bounced'=>'#F08800',
-    'unsubscribed'=>'#F0E000'
+    'sent'=>'#4d4766',
+    'queued'=>'#05649a',
+    'opened'=>'#00abbd',
+    'clicked'=>'#9bca3c',
+    'failed' => '#cc0000',
+    'bounced'=>'#ff5a00',
+    'unsubscribed'=>'#e91365'
   );
 
   /**foreach capaign we build the javascript data and output the 2 chart*/

@@ -127,6 +127,7 @@
           <?php echo $dataHourly; ?>
         ],
         {
+          animate: true,
           seriesDefaults: {
             lineWidth: 1.5, // Width of the line in pixels.
             shadow: false
@@ -146,6 +147,14 @@
         yaxis:{
             tickOptions:{
             },min:0
+          }
+        },
+          rendererOptions: {
+          // Speed up the animation a little bit.
+          // This is a number of milliseconds.
+          // Default for bar series is 3000.
+          animation: {
+            speed: 2500
           }
         },
         highlighter: {
@@ -194,6 +203,15 @@
             },min:0
           }
         },
+          animate: true,
+          rendererOptions: {
+            // Speed up the animation a little bit.
+            // This is a number of milliseconds.
+            // Default for bar series is 3000.
+            animation: {
+              speed: 2500
+            }
+          },
          highlighter: {
            show: true,
            sizeAdjust: 7.5

@@ -11,7 +11,6 @@
 <?php if(App::environment() == 'production'): ?>
 <!-- Google Analytics Code Here -->
 <?php endif; ?>
-<script src="/assets/js/jquery.min.js"></script>
 <script src="/assets/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">

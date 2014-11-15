@@ -14,10 +14,9 @@
 
     <div class="row">
       <h3 class="heading">Last 24H for all Campaigns</h3>
-      <canvas id="hourlyChart" width="500" height="200"></canvas>
-
+      <div id="charthourly" style="height:400px;width:800px; "></div>
       <h3 class="heading">Last Week for all Campaigns</h3>
-      <canvas id="dailyChart" width="500" height="200"></canvas>
+      <div id="chartdaily" style="height:400px;width:800px; "></div>
     </div>
   <?php
 
@@ -33,152 +32,179 @@
         {
           $hourlyDataSets[$hevent] = array();
         }
-        $hourlyDataSets[$hevent][] = $hcount;
+        $hourlyDataSets[$hevent][] = array($hour, $hcount);
       }
     endforeach;
   endforeach;
   foreach($dStats as $campaignId => $dailyStats):
 
     $dailyDataSets = array();
-    $dailyXlabels  = array();
     foreach($dailyStats as $day => $eventStats):
-      $dailyXlabels[] = date('d/m/y', strtotime($day));
       foreach($eventStats as $event => $wcount)
       {
         if(!isset($dailyDataSets[$event]))
         {
           $dailyDataSets[$event] = array();
         }
-        $dailyDataSets[$event][] = $wcount;
+        $dailyDataSets[$event][] = array($day, $wcount);
       }
     endforeach;
   endforeach;
 
-  $jsHourlyDataSet = array();
-  $jsdailyDataSet = array();
-
   $colors = array(
-    'queued'       => 'rgba(151,187,205,1)',
-    'bounced'      => 'rgba(131,137,105,1)',
-    'sent'         => 'rgba(171,187,205,1)',
-    'opened'       => 'rgba(121,117,205,1)',
-    'unsubscribed' => 'rgba(131,167,265,1)',
-    'clicked'      => 'rgba(161,187,105,1)',
-    'failed'       => 'rgba(261,127,105,1)'
+    'sent'=>'#3EB8FA',
+    'queued'=>'#F7CD23',
+    'opened'=>'#2DEBC1',
+    'clicked'=>'#40C752',
+    'failed' => '#CC3830',
+    'bounced'=>'#F08800',
+    'unsubscribed'=>'#F0E000'
   );
-  foreach($hourlyDataSets as $hevent => $hourData)
+  $out = '';
+  $hourlySeriesOptions = array();
+  foreach($hourlyDataSets as $ev=>$data)
   {
-    $jsHourlyDataSet[] = sprintf(
-      '{
-          label:"%s",
-           fillColor: "rgba(151,187,205,0.2)",
-          strokeColor:          "%s",
-          pointColor:           "%s",
-          pointStrokeColor:     "#fff",
-          pointHighlightFill:   "#fff",
-          pointHighlightStroke: "%s",
-          data: [%s]
-          }',
-      $event,
-      $colors[$hevent],
-      $colors[$hevent],
-      $colors[$hevent],
-      implode(',', $hourData)
-    );
+    $hourlySeriesOptions []= sprintf("
+    {
+             label: '%s',      // label to use in the legend for this line.
+             color: '%s'       // CSS color spec to use for the line.  Determined automatically.
+    }", $ev,$colors[$ev]);
+    $out.='[';
+    foreach($data as $d)
+    {
+      $out .= json_encode($d).',';
+    }
+    $out = trim($out, ',').'],'."\n";
   }
+  $dataHourly =  trim($out, ',');
 
-  foreach($dailyDataSets as $event => $dayData)
+  $out = '';
+  $dailySeriesOptions = array();
+  foreach($dailyDataSets as $ev=>$data)
   {
-    $jsdailyDataSet[] = sprintf(
-      '{
-          label:"%s",
-           fillColor: "rgba(151,187,205,0.2)",
-          strokeColor:          "%s",
-          pointColor:           "%s",
-          pointStrokeColor:     "#fff",
-          pointHighlightFill:   "#fff",
-          pointHighlightStroke: "%s",
-          data: [%s]
-          }',
-      $event,
-      $colors[$event],
-      $colors[$event],
-      $colors[$event],
-      implode(',', $dayData)
+    $dailySeriesOptions[] = sprintf("
+    {
+             label: '%s',      // label to use in the legend for this line.
+             color: '%s'       // CSS color spec to use for the line.  Determined automatically.
+    }",
+      $ev,
+      $colors[$ev]
     );
+    $out.='[';
+    foreach($data as $d)
+    {
+      $out .= json_encode($d).',';
+    }
+    $out = trim($out, ',').'],'."\n";
   }
+  $dataDaily =  trim($out, ',');
 
-
-  ?>
-
-    <script src="/assets/js/chartjs.min.js"></script>
+    ?>
+       <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/jqplot/jquery.jqplot.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.cursor.min.js"></script>
+    <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.dateAxisRenderer.min.js"></script>
     <script type="text/javascript">
-      var horlydata = {
-        labels:   [<?php echo '"' . implode('","', $hourlyXlabels) . '"'; ?>],
-        datasets: [
-          <?php echo implode(',', $jsHourlyDataSet); ?>
-        ]
-      };
-      var dailydata = {
-        labels:   [<?php echo '"' . implode('","', $dailyXlabels) . '"'; ?>],
-        datasets: [
-          <?php echo implode(',', $jsdailyDataSet); ?>
-        ]
-      };
-      var options = {
-        datasetFill:    false,
-        legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets{[i].label}){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-      };
-      var ctxH = document.getElementById("hourlyChart").getContext("2d");
-      var hourlyLineChart = new Chart(ctxH).Line(horlydata, options);
+      $.jqplot('charthourly',
+        [
+          <?php echo $dataHourly; ?>
+        ],
+        {
+          seriesDefaults: {
+            lineWidth: 1.5, // Width of the line in pixels.
+            shadow: false
+            },
+         series:[
+          <?php echo implode(',', $hourlySeriesOptions); ?>
+        ],
+       axes:{
+        xaxis:{
+              //this force to show all 0 to 24
+          ticks:["<?php echo implode('","', $hourlyXlabels); ?>"],
+          renderer:$.jqplot.DateAxisRenderer,
+            tickOptions:{
+            formatString:'%H'
+          }
+        },
+        yaxis:{
+            tickOptions:{
+            },min:0
+          }
+        },
+        highlighter: {
+          show: true,
+            sizeAdjust: 7.5
+        },
+        cursor: {
+          show: false
+        },
+        legend: {
+          show: true,
+          location: 'ne',     // compass direction, nw, n, ne, e, se, s, sw, w.
+          xoffset: 12,        // pixel offset of the legend box from the x (or x2) axis.
+          yoffset: 12        // pixel offset of the legend box from the y (or y2) axis.
+        },
+          grid: {
+            drawGridLines: true,        // wether to draw lines across the grid or not.
+            gridLineColor: '#cccccc',    // *Color of the grid lines.
+            background: '#ffffff',      // CSS color spec for background color of grid.
+            borderColor: '#999999',     // CSS color spec for border around grid.
+            borderWidth: 1.0,           // pixel width of border around grid.
+            shadow: false                // draw a shadow for grid.
 
-      var ctxD= document.getElementById("dailyChart").getContext("2d");
-      var dailyLineChart = new Chart(ctxD).Line(dailydata, options);
+          }
+      }
+      );
+      $.jqplot('chartdaily',
 
-      /**var option = {
+               [
+                 <?php echo $dataDaily; ?>
+               ],{
+          seriesDefaults: {
+            lineWidth: 1.5, // Width of the line in pixels.
+            shadow: false
+          },
+          series:[
+            <?php echo implode(',', $dailySeriesOptions); ?>
+          ],
+          axes:{
+          xaxis:{
+            renderer:$.jqplot.DateAxisRenderer,
+            tickOptions:{
+              formatString:'%b&nbsp;%#d'
+            }
+          },
+          yaxis:{
+            tickOptions:{
+            },min:0
+          }
+        },
+         highlighter: {
+           show: true,
+           sizeAdjust: 7.5
+         },
+         cursor: {
+           show: false
+         },
+          legend: {
+            show: true,
+            location: 'ne',     // compass direction, nw, n, ne, e, se, s, sw, w.
+            xoffset: 12,        // pixel offset of the legend box from the x (or x2) axis.
+            yoffset: 12        // pixel offset of the legend box from the y (or y2) axis.
+          },
 
-    ///Boolean - Whether grid lines are shown across the chart
-    scaleShowGridLines : true,
+               grid: {
+        drawGridLines: true,        // wether to draw lines across the grid or not.
+          gridLineColor: '#cccccc',    // *Color of the grid lines.
+        background: '#ffffff',      // CSS color spec for background color of grid.
+          borderColor: '#999999',     // CSS color spec for border around grid.
+          borderWidth: 1.0,           // pixel width of border around grid.
+          shadow: false                // draw a shadow for grid.
 
-    //String - Colour of the grid lines
-    scaleGridLineColor : "rgba(0,0,0,.05)",
-
-    //Number - Width of the grid lines
-    scaleGridLineWidth : 1,
-
-    //Boolean - Whether the line is curved between points
-    bezierCurve : true,
-
-    //Number - Tension of the bezier curve between points
-    bezierCurveTension : 0.4,
-
-    //Boolean - Whether to show a dot for each point
-    pointDot : true,
-
-    //Number - Radius of each point dot in pixels
-    pointDotRadius : 4,
-
-    //Number - Pixel width of point dot stroke
-    pointDotStrokeWidth : 1,
-
-    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
-    pointHitDetectionRadius : 20,
-
-    //Boolean - Whether to show a stroke for datasets
-    datasetStroke : true,
-
-    //Number - Pixel width of dataset stroke
-    datasetStrokeWidth : 2,
-
-    //Boolean - Whether to fill the dataset with a colour
-    datasetFill : true,
-
-    //String - A legend template
-    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets{[i].label
-}){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-
-};
-       */
+      }
+        }
+      );
     </script>
   <?php endif; ?>
 </div>

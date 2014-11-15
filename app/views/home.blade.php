@@ -145,9 +145,12 @@
           }
         },
         yaxis:{
-            tickOptions:{
-            },min:0
-          }
+          tickOptions:{
+            formatString:'%d'
+          },
+          min: 0,
+          tickInterval: 1
+        }
         },
           rendererOptions: {
           // Speed up the animation a little bit.
@@ -200,8 +203,10 @@
           },
           yaxis:{
             tickOptions:{
-            },min:0
-          }
+              formatString:'%d'
+            },min: 0,
+            tickInterval: 1
+          }i
         },
           animate: true,
           rendererOptions: {

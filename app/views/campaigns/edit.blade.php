@@ -69,10 +69,20 @@
     </div>
   </div>
 </form>
+<div class="well">
+<form action="/campaigns/test" class="form-inline" method="post">
+  <label for="campaign-test">Test Me:</label>
+  <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
+  <input type="text" name="test_email" class="form-control" id="campaign-test" value="">
+  <input type="submit" class="btn btn-primary" value="Send"/>
+</form>
+</div>
 <button type="submit" class="btn btn-default pull-left" onclick="$('#campaign-form').submit()">Save</button>
 <form action="/campaigns/send" class="pull-left" style="margin-left:10px;">
-  <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
-  <button type="submit" class="btn btn-danger">Send</button>
+  <div class="input-group">
+    <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
+    <button type="submit" class="btn btn-danger">Send</button>
+  </div>
 </form>
 <script src="/assets/ckeditor/ckeditor.js"></script>
 <script>

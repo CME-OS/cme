@@ -25,6 +25,7 @@ Route::group(['before' => 'auth'], function(){
     Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'CampaignsController@delete']);
     Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'CampaignsController@preview']);
     Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'CampaignsController@send']);
+    Route::post('/campaigns/test', ['as' => 'campaign.test', 'uses' => 'CampaignsController@test']);
 
     Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'CampaignsController@add']);
     Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'CampaignsController@update']);

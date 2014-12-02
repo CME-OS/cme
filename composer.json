@@ -18,7 +18,7 @@
       "app/tests/TestCase.php"
     ],
     "psr-4": {
-      "Cme\\": "app/cme"
+      "Cme\\": "app/Cme"
     }
   },
   "scripts":           {

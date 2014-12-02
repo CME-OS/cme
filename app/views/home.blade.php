@@ -71,41 +71,49 @@
   {
   $out = '';
   $hourlySeriesOptions = array();
-  foreach($hourlyDataSets[$cid] as $ev=>$data)
+  if(isset($hourlyDataSets[$cid]))
   {
-    $hourlySeriesOptions []= sprintf("
+    foreach($hourlyDataSets[$cid] as $ev=>$data)
     {
-             label: '%s',      // label to use in the legend for this line.
-             color: '%s'       // CSS color spec to use for the line.  Determined automatically.
-    }", $ev,$colors[$ev]);
-    $out.='[';
-    foreach($data as $d)
-    {
-      $out .= json_encode($d).',';
+      $hourlySeriesOptions []= sprintf("
+      {
+               label: '%s',      // label to use in the legend for this line.
+               color: '%s'       // CSS color spec to use for the line.  Determined automatically.
+      }", $ev,$colors[$ev]);
+      $out.='[';
+      foreach($data as $d)
+      {
+        $out .= json_encode($d).',';
+      }
+      $out = trim($out, ',').'],'."\n";
     }
-    $out = trim($out, ',').'],'."\n";
   }
+
   $dataHourly =  trim($out, ',');
 
   $out = '';
   $dailySeriesOptions = array();
-  foreach($dailyDataSets[$cid] as $ev=>$data)
+  if(isset($dailyDataSets[$cid]))
   {
-    $dailySeriesOptions[] = sprintf("
+    foreach($dailyDataSets[$cid] as $ev=>$data)
+    {
+      $dailySeriesOptions[] = sprintf("
     {
              label: '%s',      // label to use in the legend for this line.
              color: '%s'       // CSS color spec to use for the line.  Determined automatically.
     }",
-      $ev,
-      $colors[$ev]
-    );
-    $out.='[';
-    foreach($data as $d)
-    {
-      $out .= json_encode($d).',';
+        $ev,
+        $colors[$ev]
+      );
+      $out.='[';
+      foreach($data as $d)
+      {
+        $out .= json_encode($d).',';
+      }
+      $out = trim($out, ',').'],'."\n";
     }
-    $out = trim($out, ',').'],'."\n";
   }
+
   $dataDaily =  trim($out, ',');
 
     ?>
@@ -206,7 +214,7 @@
               formatString:'%d'
             },min: 0,
             tickInterval: 1
-          }i
+          }
         },
           animate: true,
           rendererOptions: {

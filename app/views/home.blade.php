@@ -2,15 +2,23 @@
 @section('content')
 <div>
 
-  <?php if(!$dStats): ?>
-    <h1>Welcome to CME</h1>
-    <p class="well">
-      CME stands for Campaign Made Easy. CME allows you to manage
-      and schedule campaigns across all your brands.
-      CME is designed for high volume campaigns and is very
-      robust
-    </p>
-  <?php else: ?>
+  @if(!$dStats)
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Welcome to CME</h1>
+
+            <p>
+              CME stands for Campaign Made Easy. CME allows you to manage
+              and schedule campaigns across all your brands.
+              CME is designed for high volume campaigns and is very
+              robust
+            </p>
+        </div>
+    </div>
+
+
+  @else
 
     <script src="/assets/js/jqplot/jquery.jqplot.js"></script>
     <script type="text/javascript" src="/assets/js/jqplot/plugins/jqplot.highlighter.min.js"></script>
@@ -251,8 +259,8 @@
         }
       );
     </script>
-  <?php }//end campaign loop
+  <?php }//end campaign loop ?>
 
-  endif; ?>
+  @endif
 </div>
 @stop

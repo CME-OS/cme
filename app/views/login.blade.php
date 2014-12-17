@@ -4,27 +4,44 @@
   @include('partials.head')
 </head>
 <body>
-<div>
-  <h1 class="text-center">Welcome to CME - Please Login</h1>
+    <div class="login">
+        <div class="row">
+            <div class="col-sm-4">
+                <img src="/assets/img/main-logo.png" alt=""/>
+            </div>
 
-  <div class="row">
-    <div class="col-md-4 col-md-offset-4">
-      <div class="well well-sm">
-        <form action="/login" role="form" method="post" style="width:300px;" class="center-block">
-          <div class="form-group">
-            <label for="username">User Name</label>
-            <input type="text" name="email" class="form-control" id="username"
-                   placeholder="User Name">
-          </div>
-          <div class="form-group">
-            <label for="sender-name">Password</label>
-            <input type="password" name="password" class="form-control"
-                   id="password" placeholder="Password">
-          </div>
-          <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-      </div>
+            <div class="col-sm-8">
+                <h3>Login to your account!</h3>
+                <?php //var_dump($message);die; ?>
+                @if($message = Session::get('message', false))
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @endif
+
+                {{ Form::open(['route' => 'login']) }}
+
+                    <div class='form-group'>
+                        {{ Form::label('email', 'Email:') }}
+                        {{ Form::text('email', null, ['class' => 'form-control']) }}
+                    </div>
+
+                    <div class='form-group'>
+                        {{ Form::label('password', 'Password:') }}
+                        {{ Form::password('password', ['class' => 'form-control']) }}
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Login!</button>
+                    </div>
+
+                {{ Form::close() }}
+
+                <p><a href="">Forgotten Password?</a></p>
+            </div>
+        </div>
+
     </div>
-  </div>
-</div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+    <script>$.backstretch("https://unsplash.imgix.net/reserve/nE6neNVdRPSIasnmePZe_IMG_1950.jpg");
+</script>
 </body>

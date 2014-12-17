@@ -10,3 +10,5 @@ Thumbs.db
 *.pid
 /app/storage/tmp
 /app/storage/monit
+/node_modules
+/.sass-cache

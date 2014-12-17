@@ -1,10 +1,16 @@
 @extends('layouts.default')
 @section('content')
-  <h1 class="page-header">Brands <small>Manage your brands</small></h1>
+  <h1>Brands <small>Manage your brands</small></h1>
+
+  <hr/>
+  
   <div class="row">
-    <div class="col-md-6">
-      <?php if($brands): ?>
-        <a href="/brands/new">Add a brand</a>
+    <div class="col-sm-12">
+
+      @if($brands)
+
+        <p><a href="/brands/new">Add a brand</a></p>
+        <br/>
         <table class="table table-striped">
           <thead>
           <tr>
@@ -20,11 +26,12 @@
           <?php endforeach; ?>
         </table>
 
-      <?php else: ?>
+      @else
         <div class="alert alert-info">
           <p>You do not have any brands in CME. <a href="/brands/new">Add your first brand now</a></p>
         </div>
-      <?php endif; ?>
+      @endif
+
     </div>
   </div>
 @stop

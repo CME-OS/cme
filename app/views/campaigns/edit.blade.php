@@ -7,10 +7,39 @@
     <h1>Edit Campaign <small>{{ $campaign->subject }}</small></h1>
     <hr>
 
+    <form action="/campaigns/send" id="send-form">
+      <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
+    </form>
+
+    <div class="well">
+      <div class="row">
+          <div class="col-md-4 col-md-offset-8">
+            <div class="row">
+               <div class="col-md-6">
+                 <div class="btn-group pull-right">
+                   <button type="button" class="btn btn-default" id="clone-campaign-btn">Clone</button>
+                   <button type="button" class="btn btn-success" id="save-campaign-btn">Save</button>
+                   <button type="button" class="btn btn-danger" id="send-campaign-btn ">Send</button>
+                 </div>
+               </div>
+              <div class="col-md-6">
+                <form action="/campaigns/test" class="form-inline" method="post">
+                  <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
+                  <input type="text" name="test_email" class="form-control" id="campaign-test" placeholder="Enter email to send test to">
+                  <input type="submit" class="btn btn-primary" value="Test"/>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-sm-12">
 
-        {{ Form::model($campaign, ['route' => 'campaigns.update.post']) }}
+        {{ Form::model($campaign, ['route' => 'campaigns.update.post', 'id' => 'campaign-form']) }}
 
           <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
 
@@ -84,32 +113,6 @@
           </div>
 
         {{ Form::close() }}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="well">
-          <form action="/campaigns/test" class="form-inline" method="post">
-            <label for="campaign-test">Test Me:</label>
-            <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
-            <input type="text" name="test_email" class="form-control" id="campaign-test" value="">
-            <input type="submit" class="btn btn-primary" value="Send"/>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        <button type="submit" class="btn btn-default pull-left" onclick="$('#campaign-form').submit()">Save</button>
-
-        <form action="/campaigns/send" class="pull-left" style="margin-left:10px;">
-          <div class="input-group">
-            <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
-            <button type="submit" class="btn btn-danger">Send</button>
-          </div>
-        </form>
       </div>
     </div>
 

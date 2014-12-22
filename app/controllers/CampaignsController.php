@@ -26,7 +26,8 @@ class CampaignsController extends BaseController
     $data              = Input::all();
     $data['send_time'] = strtotime($data['send_time']);
     $data['created']   = time();
-    DB::table('campaigns')->insert($data);
+
+    CMECampaign::saveData($data);
 
     return Redirect::to('/campaigns');
   }
@@ -62,15 +63,9 @@ class CampaignsController extends BaseController
   {
     $data              = Input::all();
     $data['send_time'] = strtotime($data['send_time']);
-    $this->_updateCampaign($data);
+    CMECampaign::saveData($data);
 
     return Redirect::to('/campaigns/edit/' . $data['id']);
-  }
-
-  private function _updateCampaign($data)
-  {
-    DB::table('campaigns')->where('id', '=', $data['id'])
-      ->update($data);
   }
 
   public function delete()

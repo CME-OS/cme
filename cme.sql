@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
--- Host:                         naijalol.com
--- Server version:               5.1.69 - Source distribution
--- Server OS:                    redhat-linux-gnu
--- HeidiSQL Version:             8.3.0.4843
+-- Host:                         127.0.0.1
+-- Server version:               5.1.50-community - MySQL Community Server (GPL)
+-- Server OS:                    Win32
+-- HeidiSQL Version:             9.1.0.4867
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -11,13 +11,11 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for cme
-DROP DATABASE IF EXISTS `cme`;
 CREATE DATABASE IF NOT EXISTS `cme` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `cme`;
 
 
 -- Dumping structure for table cme.brands
-DROP TABLE IF EXISTS `brands`;
 CREATE TABLE IF NOT EXISTS `brands` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `brand_name` varchar(225) NOT NULL DEFAULT '0',
@@ -28,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `brands` (
   `brand_unsubscribe_url` varchar(225) NOT NULL DEFAULT '0',
   `brand_logo` varchar(225) NOT NULL DEFAULT '0',
   `brand_created` int(11) NOT NULL DEFAULT '0',
+  `brand_deleted_at` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -35,18 +34,17 @@ CREATE TABLE IF NOT EXISTS `brands` (
 
 
 -- Dumping structure for table cme.campaigns
-DROP TABLE IF EXISTS `campaigns`;
 CREATE TABLE IF NOT EXISTS `campaigns` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subject` varchar(500) CHARACTER SET latin1 NOT NULL,
-  `from` varchar(225) CHARACTER SET latin1 NOT NULL,
-  `html_content` text CHARACTER SET latin1 NOT NULL,
-  `text_content` text CHARACTER SET latin1,
+  `subject` varchar(500) NOT NULL,
+  `from` varchar(225) NOT NULL,
+  `html_content` text NOT NULL,
+  `text_content` text,
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `send_time` int(11) NOT NULL,
   `send_priority` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Queuing','Queued','Sent') CHARACTER SET latin1 NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Queuing','Queued','Sent') NOT NULL DEFAULT 'Pending',
   `created` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -55,13 +53,12 @@ CREATE TABLE IF NOT EXISTS `campaigns` (
 
 
 -- Dumping structure for table cme.campaign_events
-DROP TABLE IF EXISTS `campaign_events`;
 CREATE TABLE IF NOT EXISTS `campaign_events` (
   `event_id` int(11) NOT NULL AUTO_INCREMENT,
   `campaign_id` int(11) DEFAULT '0',
   `list_id` int(11) DEFAULT '0',
   `subscriber_id` int(11) DEFAULT '0',
-  `event_type` enum('failed','queued','sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
+  `event_type` enum('queued','failed','sent','opened','bounced','unsubscribed','clicked') DEFAULT NULL,
   `reference` varchar(500) DEFAULT NULL,
   `time` int(11) DEFAULT '0',
   PRIMARY KEY (`event_id`),
@@ -75,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `campaign_events` (
 
 
 -- Dumping structure for table cme.campaign_queue
-DROP TABLE IF EXISTS `campaign_queue`;
 CREATE TABLE IF NOT EXISTS `campaign_queue` (
   `id` int(11) DEFAULT NULL,
   `campaign_id` int(11) DEFAULT NULL,
@@ -88,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `campaign_queue` (
 
 
 -- Dumping structure for table cme.import_queue
-DROP TABLE IF EXISTS `import_queue`;
 CREATE TABLE IF NOT EXISTS `import_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `list_id` int(11) NOT NULL DEFAULT '0',
@@ -102,7 +97,6 @@ CREATE TABLE IF NOT EXISTS `import_queue` (
 
 
 -- Dumping structure for table cme.lists
-DROP TABLE IF EXISTS `lists`;
 CREATE TABLE IF NOT EXISTS `lists` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(225) NOT NULL DEFAULT '0',
@@ -111,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `lists` (
   `refresh_interval` int(11) DEFAULT NULL,
   `last_refresh_time` int(11) DEFAULT NULL,
   `locked_by` varchar(225) DEFAULT NULL,
+  `deleted_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -118,23 +113,22 @@ CREATE TABLE IF NOT EXISTS `lists` (
 
 
 -- Dumping structure for table cme.message_queue
-DROP TABLE IF EXISTS `message_queue`;
 CREATE TABLE IF NOT EXISTS `message_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `subject` varchar(500) CHARACTER SET latin1 NOT NULL,
-  `from_name` varchar(225) CHARACTER SET latin1 NOT NULL,
+  `subject` varchar(500) NOT NULL,
   `from_email` varchar(225) NOT NULL,
+  `from_name` varchar(225) NOT NULL,
   `to` varchar(225) DEFAULT NULL,
-  `html_content` text CHARACTER SET latin1 NOT NULL,
-  `text_content` text CHARACTER SET latin1 NOT NULL,
+  `html_content` text NOT NULL,
+  `text_content` text NOT NULL,
   `subscriber_id` int(11) NOT NULL DEFAULT '0',
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `campaign_id` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Sent','Failed') CHARACTER SET latin1 NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Sent','Failed') NOT NULL DEFAULT 'Pending',
   `send_time` int(11) DEFAULT NULL,
   `send_priority` int(11) DEFAULT NULL,
-  `locked_by` varchar(225) CHARACTER SET latin1 DEFAULT NULL,
+  `locked_by` varchar(225) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `campaign_id` (`campaign_id`),
   KEY `brand_id` (`brand_id`),
@@ -147,7 +141,6 @@ CREATE TABLE IF NOT EXISTS `message_queue` (
 
 
 -- Dumping structure for table cme.ranges
-DROP TABLE IF EXISTS `ranges`;
 CREATE TABLE IF NOT EXISTS `ranges` (
   `list_id` int(11) NOT NULL,
   `campaign_id` int(11) NOT NULL,
@@ -162,15 +155,17 @@ CREATE TABLE IF NOT EXISTS `ranges` (
 
 
 -- Dumping structure for table cme.users
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `username` varchar(50) DEFAULT NULL,
-  `password` varchar(50) DEFAULT NULL,
-  `role` int(11) DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `active` smallint(6) NOT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

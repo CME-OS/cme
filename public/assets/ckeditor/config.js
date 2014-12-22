@@ -4,23 +4,25 @@
  */
 
 CKEDITOR.editorConfig = function( config ) {
-	// Define changes to default configuration here. For example:
+  config.toolbarGroups = [
+    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup', 'colors' ] },
+    { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+    { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+    { name: 'tools' },
+    { name: 'clipboard',   groups: ['mode', 'clipboard', 'undo' ] },
+    { name: 'styles' },
+    { name: 'links'},
+    { name: 'insert' },
+//    { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+//    { name: 'others' },
+//    '/',
+
+//    { name: 'colors' },
+//    { name: 'about' }
+  ];
+  // Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
   config.height = '600px';
-  config.toolbarGroups = [
-    { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-    { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-    { name: 'links' },
-    { name: 'insert' },
-    { name: 'tools' },
-//    { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
-    { name: 'others' },
-    '/',
-    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-    { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-    { name: 'styles' },
-    { name: 'colors' },
-    { name: 'about' }
-  ];
+  config.allowedContent = true;
 };

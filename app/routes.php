@@ -46,6 +46,13 @@ Route::group(['before' => 'auth'], function(){
 
     //users
     Route::get('/users', 'UsersController@index');
+    Route::get('/users/new', ['as' => 'users.new', 'uses' => 'UsersController@neww']);
+    Route::get('/users/view/{id}', ['as' => 'users.view', 'uses' => 'UsersController@view']);
+    Route::get('/users/edit/{id}', ['as' => 'users.edit', 'uses' => 'UsersController@edit']);
+    Route::get('/users/delete/{id}', ['as' => 'users.delete', 'uses' => 'UsersController@delete']);
+
+    Route::post('/users/add', ['as' => 'users.new.post', 'uses' => 'UsersController@add']);
+    Route::post('/users/update', ['as' => 'users.update.post', 'uses' => 'UsersController@update']);
 });
 
 //login

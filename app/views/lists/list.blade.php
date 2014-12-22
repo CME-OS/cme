@@ -20,8 +20,8 @@
               <td>
                 <div class="pull-right">
                 <a href="{{ URL::route('lists.view', $list->id) }}" class="btn btn-default">View</a>
-                <a href="{{ URL::route('lists.view', $list->id) }}" class="btn btn-default">Edit</a>
-                <a href="{{ URL::route('lists.view', $list->id) }}" class="btn btn-default">Delete</a>
+                <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default">Edit</a>
+                <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-default">Delete</a>
                 </div>
               </td>
             </tr>

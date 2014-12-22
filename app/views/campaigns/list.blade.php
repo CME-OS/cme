@@ -28,9 +28,11 @@
               <td><?= $campaign->status; ?></td>
               <td><?= date('d/m/Y H:i:s', $campaign->created); ?></td>
               <td>
-                <a href="{{ URL::route('campaign.edit', $campaign->id) }}">Edit</a> |
-                <a href="{{ URL::route('campaign.preview', $campaign->id) }}">Preview</a> |
-                <a href="{{ URL::route('campaign.delete', $campaign->id) }}">Delete</a>
+                <div class="pull-right">
+                <a href="{{ URL::route('campaign.edit', $campaign->id) }}" class="btn btn-default">Edit</a>
+                <a href="{{ URL::route('campaign.preview', $campaign->id) }}" class="btn btn-default">Preview</a>
+                <a href="{{ URL::route('campaign.delete', $campaign->id) }}" class="btn btn-default">Delete</a>
+                </div>
               </td>
             </tr>
           <?php endforeach; ?>

@@ -6,16 +6,24 @@ Route::group(['before' => 'auth'], function(){
     //brands
     Route::get('/brands', ['as' => 'brands', 'uses' => 'BrandsController@index']);
     Route::get('/brands/new', ['as' => 'brands.new', 'uses' => 'BrandsController@neww']);
+    Route::get('/brands/view/{id}', ['as' => 'brands.view', 'uses' => 'BrandsController@view']);
+    Route::get('/brands/edit/{id}', ['as' => 'brands.edit', 'uses' => 'BrandsController@edit']);
+    Route::get('/brands/delete/{id}', ['as' => 'brands.delete', 'uses' => 'BrandsController@delete']);
+
     Route::get('/brands/campaigns/{brandId}', ['as' => 'brands.campaigns', 'uses' => 'BrandsController@campaigns']);
 
     Route::post('/brands/add', ['as' => 'brands.add.post', 'uses' => 'BrandsController@add']);
+    Route::post('/brands/update', ['as' => 'brands.update.post', 'uses' => 'BrandsController@update']);
 
     //lists
     Route::get('/lists', ['as' => 'lists', 'uses' => 'ListsController@index']);
     Route::get('/lists/new', ['as' => 'lists.new', 'uses' => 'ListsController@neww']);
     Route::get('/lists/view/{id}', ['as' => 'lists.view', 'uses' => 'ListsController@view']);
+    Route::get('/lists/edit/{id}', ['as' => 'lists.edit', 'uses' => 'ListsController@edit']);
+    Route::get('/lists/delete/{id}', ['as' => 'lists.delete', 'uses' => 'ListsController@delete']);
 
     Route::post('/lists/add', ['as' => 'lists.new.post', 'uses' => 'ListsController@add']);
+    Route::post('/lists/update', ['as' => 'lists.update.post', 'uses' => 'ListsController@update']);
     Route::post('/lists/import/{type}', ['as' => 'lists.import.post', 'uses' => 'ListsController@import']);
 
     //campaigns

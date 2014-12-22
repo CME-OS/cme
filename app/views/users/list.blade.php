@@ -1,0 +1,40 @@
+@extends('layouts.default')
+@section('content')
+  <h1 class="page-header">Users <small>Manage your users</small></h1>
+  <div class="row">
+    <div class="col-md-12">
+      <?php if($users): ?>
+        <a href="/users/new">Add a User</a>
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+          </thead>
+          <?php foreach($users as $user): ?>
+            <tr>
+              <td><?= $user->email; ?></td>
+              <td><?= $user->active; ?></td>
+              <td><?= $user->created_at; ?></td>
+              <td>
+                <div class="pull-right">
+                <a href="{{ URL::route('users.view', $user->id) }}" class="btn btn-default">View</a>
+                <a href="{{ URL::route('users.edit', $user->id) }}" class="btn btn-default">Edit</a>
+                <a href="{{ URL::route('users.delete', $user->id) }}" class="btn btn-default">Delete</a>
+                </div>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </table>
+
+      <?php else: ?>
+        <div class="alert alert-info">
+          <p>You do not have any users in CME. <a href="{{ URL::route('users.new') }}">Add your first User now</a></p>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+@stop

@@ -8,7 +8,7 @@ class ListsController extends BaseController
 {
   public function index()
   {
-    $result = DB::select("SELECT * FROM lists");
+    $result = DB::select("SELECT * FROM lists WHERE deleted_at IS NULL");
     foreach($result as $k => $list)
     {
       $size      = 0;
@@ -33,7 +33,7 @@ class ListsController extends BaseController
 
   public function add()
   {
-    $data   = Input::all();
+    $data = Input::all();
     if((int)$data['refresh_interval'] == 0)
     {
       unset($data['refresh_interval']);
@@ -43,9 +43,8 @@ class ListsController extends BaseController
     return Redirect::to('/lists/view/' . $listId);
   }
 
-  public function view()
+  public function view($id)
   {
-    $id        = Route::input('id');
     $tableName = ListHelper::getTable($id);
     //check if list table exists/
     $subscribers = [];
@@ -56,7 +55,7 @@ class ListsController extends BaseController
       if(DB::table($tableName)->count())
       {
         $subscribers = DB::table($tableName)->simplePaginate(1000);
-        $columns = array_keys((array)$subscribers->offSetGet(1));
+        $columns     = array_keys((array)$subscribers->offSetGet(1));
       }
     }
     //else suggest to user to import users by CSV/API
@@ -73,6 +72,34 @@ class ListsController extends BaseController
     {
       return Redirect::to('/lists')->with('msg', 'List does not exist');
     }
+  }
+
+  public function edit($id)
+  {
+    $data['list'] = CMEList::find($id);
+
+    return View::make('lists.edit', $data);
+  }
+
+  public function update()
+  {
+    $data = Input::all();
+    DB::table('lists')->where('id', '=', $data['id'])
+      ->update($data);
+
+    return Redirect::to('/lists/edit/' . $data['id'])->with(
+      'msg',
+      'List has been updated'
+    );
+  }
+
+  public function delete($id)
+  {
+    $data['deleted_at'] = time();
+    DB::table('lists')->where('id', '=', $id)
+      ->update($data);
+
+    return Redirect::to('/lists')->with('msg', 'List has been deleted');
   }
 
   public function import()

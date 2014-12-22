@@ -3,7 +3,7 @@
   <h1>Brands <small>Manage your brands</small></h1>
 
   <hr/>
-  
+
   <div class="row">
     <div class="col-sm-12">
 
@@ -21,14 +21,20 @@
           <?php foreach($brands as $brand): ?>
             <tr>
               <td><?= $brand->brand_name; ?></td>
-              <td><a href="/brands/campaigns/<?= $brand->id; ?>">View Campaigns</a></td>
+              <td>
+                <div class="pull-right">
+                <a href="{{ URL::route('brands.view', $brand->id) }}" class="btn btn-default">View Campaigns</a>
+                <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default">Edit</a>
+                <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-default">Delete</a>
+                </div>
+              </td>
             </tr>
           <?php endforeach; ?>
         </table>
 
       @else
         <div class="alert alert-info">
-          <p>You do not have any brands in CME. <a href="/brands/new">Add your first brand now</a></p>
+          <p>You do not have any brands in CME. <a href="{{ URL::route('brands.new') }}">Add your first brand now</a></p>
         </div>
       @endif
 

@@ -20,7 +20,7 @@ class BrandsController extends BaseController
 
   public function index()
   {
-    $result = CMEBrand::all();
+    $result = CMEBrand::where('brand_deleted_at', '=', 'NULL')->get();
 
     $data['brands'] = $result;
 
@@ -38,9 +38,38 @@ class BrandsController extends BaseController
 
     $this->addBrandValidation->validate($data);
 
+    $data['brand_created'] = time();
     DB::table('brands')->insert($data);
 
     return Redirect::route('brands');
+  }
+
+  public function edit($id)
+  {
+    $data['brand'] = CMEBrand::find($id);
+
+    return View::make('brands.edit', $data);
+  }
+
+  public function update()
+  {
+    $data = Input::all();
+    DB::table('brands')->where('id', '=', $data['id'])
+      ->update($data);
+
+    return Redirect::to('/brands/edit/' . $data['id'])->with(
+      'msg',
+      'Brand has been updated'
+    );
+  }
+
+  public function delete($id)
+  {
+    $data['brand_deleted_at'] = time();
+    DB::table('brands')->where('id', '=', $id)
+      ->update($data);
+
+    return Redirect::to('/brands')->with('msg', 'Brand has been deleted');
   }
 
   public function campaigns($brandId)

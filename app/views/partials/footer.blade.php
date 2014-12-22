@@ -58,5 +58,21 @@
       useCurrent: true,
       format : 'YYYY-MM-DD H:mm:ss'
     });
+
+
+    $('#send-campaign-btn').click(function(){
+      $('#send-form').submit()
+    });
+
+    $('#save-campaign-btn').click(function(){
+      console.log('saving');
+      $('#campaign-form').submit();
+    });
+
+    $('#clone-campaign-btn').click(function(){
+      console.log('clone');
+    });
+
+
   });
 </script>

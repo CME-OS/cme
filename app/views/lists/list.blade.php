@@ -2,7 +2,7 @@
 @section('content')
   <h1 class="page-header">Lists <small>Manage your lists</small></h1>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
       <?php if($lists): ?>
         <a href="/lists/new">Add a list</a>
         <table class="table table-striped">

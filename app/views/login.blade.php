@@ -12,7 +12,6 @@
 
             <div class="col-sm-8">
                 <h3>Login to your account!</h3>
-                <?php //var_dump($message);die; ?>
                 @if($message = Session::get('message', false))
                     <div class="alert alert-danger">{{ $message }}</div>
                 @endif
@@ -42,6 +41,6 @@
     </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
-    <script>$.backstretch("https://unsplash.imgix.net/reserve/nE6neNVdRPSIasnmePZe_IMG_1950.jpg");
+    <script>$.backstretch("https://ununsplash.imgix.net/reserve/oY3ayprWQlewtG7N4OXl_DSC_5225-2.jpg");
 </script>
 </body>

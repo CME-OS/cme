@@ -2,6 +2,8 @@
 /**
  * @author  oke.ugwu
  */
+namespace Cme\Helpers;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -62,7 +64,9 @@ class ListHelper
           {
             $values[$k] = DB::getPdo()->quote($v);
           }
-          $batch[] = "(" . implode(",", $values) . ", '" . date('Y-m-d H:i:s') . "')";
+          $batch[] = "(" . implode(",", $values) . ", '" . date(
+              'Y-m-d H:i:s'
+            ) . "')";
         }
 
         DB::insert(
@@ -86,5 +90,29 @@ class ListHelper
       'test_subscriber',
       'date_created',
     ];
+  }
+
+  public static function getMinMaxIds($listId)
+  {
+    return head(
+      DB::select(
+        sprintf(
+          "SELECT min(id) as minId, max(id) as maxId FROM %s",
+          self::getTable($listId)
+        )
+      )
+    );
+  }
+
+  public static function getRandomSubscriber($listId)
+  {
+    return head(
+      DB::select(
+        sprintf(
+          "SELECT * FROM %s WHERE bounced=0 AND unsubscribed=0 LIMIT 1",
+          self::getTable($listId)
+        )
+      )
+    );
   }
 }

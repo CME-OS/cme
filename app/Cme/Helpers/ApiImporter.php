@@ -2,6 +2,8 @@
 /**
  * @author  oke.ugwu
  */
+namespace Cme\Helpers;
+
 use Illuminate\Support\Facades\Log;
 
 class ApiImporter

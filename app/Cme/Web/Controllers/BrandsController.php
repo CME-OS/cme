@@ -1,7 +1,11 @@
 <?php
+namespace Cme\Web\Controllers;
+
 use Cme\Brands\Validation\AddBrandValidation;
+use Cme\Models\CMEBrand;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 
 class BrandsController extends BaseController
 {
@@ -20,7 +24,7 @@ class BrandsController extends BaseController
 
   public function index()
   {
-    $result = CMEBrand::where('brand_deleted_at', '=', 'NULL')->get();
+    $result = CMEBrand::getAllActive();
 
     $data['brands'] = $result;
 
@@ -74,7 +78,7 @@ class BrandsController extends BaseController
 
   public function campaigns($brandId)
   {
-    $brand = CMEBrand::find($brandId);
+    $brand             = CMEBrand::find($brandId);
     $data['campaigns'] = $brand->campaigns;
 
     return View::make('campaigns.list', $data);

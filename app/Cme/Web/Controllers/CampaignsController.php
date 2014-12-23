@@ -1,8 +1,15 @@
 <?php
+namespace Cme\Web\Controllers;
+
+use Cme\Helpers\ListHelper;
+use Cme\Models\CMEBrand;
+use Cme\Models\CMECampaign;
+use Cme\Models\CMEList;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class CampaignsController extends BaseController
 {
@@ -15,8 +22,8 @@ class CampaignsController extends BaseController
 
   public function neww()
   {
-    $data['brands'] = DB::select("SELECT * FROM brands");
-    $data['lists']  = DB::select("SELECT * FROM lists");
+    $data['brands'] = CMEBrand::getAllActive();
+    $data['lists']  = CMEList::getAllActive();
 
     return View::make('campaigns.new', $data);
   }
@@ -39,8 +46,8 @@ class CampaignsController extends BaseController
     {
       $campaign->send_time = date('Y-m-d H:i:s', $campaign->send_time);
       $data['campaign']    = $campaign;
-      $data['brands']      = DB::select("SELECT * FROM brands");
-      $data['lists']       = DB::select("SELECT * FROM lists");
+      $data['brands']      = CMEBrand::getAllActive();
+      $data['lists']       = CMEList::getAllActive();
 
       return View::make('campaigns.edit', $data);
     }
@@ -83,13 +90,9 @@ class CampaignsController extends BaseController
     if($campaign)
     {
       //get min and max id of campaign list
-      $listId    = $campaign->list_id;
-      $listTable = 'list_' . $listId;
-      $listInfo  = DB::select(
-        sprintf("SELECT min(id) as minId, max(id) as maxId FROM %s", $listTable)
-      );
-      $minId     = $listInfo[0]->minId;
-      $maxId     = $listInfo[0]->maxId;
+      $Ids   = ListHelper::getMinMaxIds($campaign->list_id);
+      $minId = $Ids->minId;
+      $maxId = $Ids->maxId;
 
       //build ranges
       for($i = $minId; $i <= $maxId; $i++)
@@ -97,7 +100,7 @@ class CampaignsController extends BaseController
         $start = $i;
         $end   = $i = $i + 1000;
         $range = [
-          'list_id'     => $listId,
+          'list_id'     => $campaign->list_id,
           'campaign_id' => $id,
           'start'       => $start,
           'end'         => $end,
@@ -107,7 +110,7 @@ class CampaignsController extends BaseController
         {
           DB::table('ranges')->insert($range);
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
           Log::error($e->getMessage());
         }
@@ -127,98 +130,97 @@ class CampaignsController extends BaseController
     $email      = Input::get('test_email');
     $campaignId = Input::get('id');
     $campaign   = CMECampaign::find($campaignId);
-    $listTable  = ListHelper::getTable($campaign->list_id);
 
-    $subscriber = DB::select(
-      sprintf(
-        "SELECT * FROM %s WHERE bounced=0 AND unsubscribed=0 LIMIT 1",
-        $listTable
-      )
-    );
-
-    $subscriber = $subscriber[0];
-
-    $placeHolders = [];
-    $columns      = array_keys((array)$subscriber);
-    foreach($columns as $c)
+    $subscriber = ListHelper::getRandomSubscriber($campaign->list_id);
+    if($subscriber)
     {
-      $placeHolders[$c] = "[$c]";
-    }
-    //add brand attributes as placeholders too
-    $result  = DB::select(
-      sprintf(
-        "SELECT * FROM brands WHERE id=%d",
-        $campaign->brand_id
-      )
-    );
-    $brand   = $result[0];
-    $columns = array_keys((array)$brand);
-    foreach($columns as $c)
-    {
-      $placeHolders[$c] = "[$c]";
-    }
 
-    //parse and compile message (replacing placeholders if any)
-    $html = $campaign->html_content;
-    $text = $campaign->text_content;
-    foreach($placeHolders as $prop => $placeHolder)
-    {
-      $replace = false;
-      if(property_exists($subscriber, $prop))
+      $placeHolders = [];
+      $columns      = array_keys((array)$subscriber);
+      foreach($columns as $c)
       {
-        $replace = $subscriber->$prop;
+        $placeHolders[$c] = "[$c]";
       }
-      elseif(property_exists($brand, $prop))
+      //add brand attributes as placeholders too
+      $result  = DB::select(
+        sprintf(
+          "SELECT * FROM brands WHERE id=%d",
+          $campaign->brand_id
+        )
+      );
+      $brand   = $result[0];
+      $columns = array_keys((array)$brand);
+      foreach($columns as $c)
       {
-        if($prop == 'brand_unsubscribe_url')
+        $placeHolders[$c] = "[$c]";
+      }
+
+      //parse and compile message (replacing placeholders if any)
+      $html = $campaign->html_content;
+      $text = $campaign->text_content;
+      foreach($placeHolders as $prop => $placeHolder)
+      {
+        $replace = false;
+        if(property_exists($subscriber, $prop))
         {
-          $replace = $this->_getUnsubscribeUrl(
-            $brand->$prop,
-            $campaign->id,
-            $campaign->list_id,
-            $subscriber->id
-          );
+          $replace = $subscriber->$prop;
         }
-        else
+        elseif(property_exists($brand, $prop))
         {
-          $replace = $brand->$prop;
+          if($prop == 'brand_unsubscribe_url')
+          {
+            $replace = $this->_getUnsubscribeUrl(
+              $brand->$prop,
+              $campaign->id,
+              $campaign->list_id,
+              $subscriber->id
+            );
+          }
+          else
+          {
+            $replace = $brand->$prop;
+          }
+        }
+
+        if($replace !== false)
+        {
+          $html = str_replace($placeHolder, $replace, $html);
+          $text = str_replace($placeHolder, $replace, $text);
         }
       }
 
-      if($replace !== false)
-      {
-        $html = str_replace($placeHolder, $replace, $html);
-        $text = str_replace($placeHolder, $replace, $text);
-      }
+      //append pixel to html content, so we can track opens
+      $domain   = Config::get('app.domain');
+      $pixelUrl = "http://" . $domain . "/track/open/" . $campaign->id
+        . "_" . $campaign->list_id . "_" . $subscriber->id;
+      $html .= '<img src="' . $pixelUrl
+        . '" style="display:none;" height="1" width="1" />';
+
+      list($fromName, $fromEmail) = explode(' <', $campaign->from);
+
+      //write to message queue
+      $message = [
+        'subject'       => $campaign->subject,
+        'from_name'     => $fromName,
+        'from_email'    => trim($fromEmail, '<>'),
+        'to'            => $email,
+        'html_content'  => $html,
+        'text_content'  => $text,
+        'subscriber_id' => $subscriber->id,
+        'list_id'       => $campaign->list_id,
+        'brand_id'      => $campaign->brand_id,
+        'campaign_id'   => $campaign->id,
+        'send_time'     => strtotime('-365 days'),
+        'send_priority' => 4
+      ];
+      DB::table('message_queue')->insert($message);
+
+      return Redirect::to("/campaigns");
     }
-
-    //append pixel to html content, so we can track opens
-    $domain   = Config::get('app.domain');
-    $pixelUrl = "http://" . $domain . "/track/open/" . $campaign->id
-      . "_" . $campaign->list_id . "_" . $subscriber->id;
-    $html .= '<img src="' . $pixelUrl
-      . '" style="display:none;" height="1" width="1" />';
-
-    list($fromName, $fromEmail) = explode(' <', $campaign->from);
-
-    //write to message queue
-    $message = [
-      'subject'       => $campaign->subject,
-      'from_name'     => $fromName,
-      'from_email'    => trim($fromEmail, '<>'),
-      'to'            => $email,
-      'html_content'  => $html,
-      'text_content'  => $text,
-      'subscriber_id' => $subscriber->id,
-      'list_id'       => $campaign->list_id,
-      'brand_id'      => $campaign->brand_id,
-      'campaign_id'   => $campaign->id,
-      'send_time'     => strtotime('-365 days'),
-      'send_priority' => 4
-    ];
-    DB::table('message_queue')->insert($message);
-
-    return Redirect::to("/campaigns");
+    else
+    {
+      throw new \Exception("Could not get a random subscriber");
+    }
   }
 
   private function _getUnsubscribeUrl($url, $campaignId, $listId, $subscriberId)
@@ -233,12 +235,11 @@ class CampaignsController extends BaseController
   public function getPlaceHolders()
   {
     $listId       = Input::get('listId');
-    $tableName    = ListHelper::getTable($listId);
-    $brand        = (array)head(DB::select("SELECT * FROM brands LIMIT 1"));
+    $brand        = (array)CMEBrand::getAnyBrand();
     $placeholders = array_keys($brand);
     if($listId)
     {
-      $list = (array)head(DB::select("SELECT * FROM $tableName LIMIT 1"));
+      $list = (array)CMEList::getAnySubscriber($listId);
 
       $placeholders = array_merge($placeholders, array_keys($list));
     }

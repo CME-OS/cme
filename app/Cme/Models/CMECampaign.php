@@ -2,14 +2,15 @@
 /**
  * @author  oke.ugwu
  */
+namespace Cme\Models;
 
-class CMECampaign extends Eloquent
+class CMECampaign extends Model
 {
   protected $table = 'campaigns';
 
   public function brand()
   {
-    return $this->belongsTo('CMEBrand');
+    return $this->belongsTo('Cme\Models\CMEBrand');
   }
 
   public static function fields()

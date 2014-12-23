@@ -1,7 +1,12 @@
 <?php
+namespace Cme\Web\Controllers;
+
+use Cme\Models\CMEUser;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class UsersController extends BaseController
 {

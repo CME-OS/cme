@@ -1,7 +1,7 @@
 <?php
+namespace Cme\Web\Controllers;
 
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Route;
 
 class AnalyticsController extends BaseController
 {

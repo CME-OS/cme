@@ -1,4 +1,5 @@
 <?php
+namespace Cme\Web\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;

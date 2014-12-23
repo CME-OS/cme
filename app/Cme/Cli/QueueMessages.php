@@ -1,4 +1,5 @@
 <?php
+namespace Cme\Cli;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;

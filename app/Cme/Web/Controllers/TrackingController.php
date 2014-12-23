@@ -1,4 +1,5 @@
 <?php
+namespace Cme\Web\Controllers;
 
 class TrackingController extends BaseController
 {
@@ -50,5 +51,4 @@ class TrackingController extends BaseController
   {
     echo "boo";
   }
-
 }

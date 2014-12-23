@@ -1,63 +1,63 @@
 <?php
 
 Route::group(['before' => 'auth'], function(){
-    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
+    Route::get('/', ['as' => 'home', 'uses' => 'Cme\Web\Controllers\HomeController@index']);
 
     //brands
-    Route::get('/brands', ['as' => 'brands', 'uses' => 'BrandsController@index']);
-    Route::get('/brands/new', ['as' => 'brands.new', 'uses' => 'BrandsController@neww']);
-    Route::get('/brands/view/{id}', ['as' => 'brands.view', 'uses' => 'BrandsController@view']);
-    Route::get('/brands/edit/{id}', ['as' => 'brands.edit', 'uses' => 'BrandsController@edit']);
-    Route::get('/brands/delete/{id}', ['as' => 'brands.delete', 'uses' => 'BrandsController@delete']);
+    Route::get('/brands', ['as' => 'brands', 'uses' => 'Cme\Web\Controllers\BrandsController@index']);
+    Route::get('/brands/new', ['as' => 'brands.new', 'uses' => 'Cme\Web\Controllers\BrandsController@neww']);
+    Route::get('/brands/view/{id}', ['as' => 'brands.view', 'uses' => 'Cme\Web\Controllers\BrandsController@view']);
+    Route::get('/brands/edit/{id}', ['as' => 'brands.edit', 'uses' => 'Cme\Web\Controllers\BrandsController@edit']);
+    Route::get('/brands/delete/{id}', ['as' => 'brands.delete', 'uses' => 'Cme\Web\Controllers\BrandsController@delete']);
 
-    Route::get('/brands/campaigns/{brandId}', ['as' => 'brands.campaigns', 'uses' => 'BrandsController@campaigns']);
+    Route::get('/brands/campaigns/{brandId}', ['as' => 'brands.campaigns', 'uses' => 'Cme\Web\Controllers\BrandsController@campaigns']);
 
-    Route::post('/brands/add', ['as' => 'brands.add.post', 'uses' => 'BrandsController@add']);
-    Route::post('/brands/update', ['as' => 'brands.update.post', 'uses' => 'BrandsController@update']);
+    Route::post('/brands/add', ['as' => 'brands.add.post', 'uses' => 'Cme\Web\Controllers\BrandsController@add']);
+    Route::post('/brands/update', ['as' => 'brands.update.post', 'uses' => 'Cme\Web\Controllers\BrandsController@update']);
 
     //lists
-    Route::get('/lists', ['as' => 'lists', 'uses' => 'ListsController@index']);
-    Route::get('/lists/new', ['as' => 'lists.new', 'uses' => 'ListsController@neww']);
-    Route::get('/lists/view/{id}', ['as' => 'lists.view', 'uses' => 'ListsController@view']);
-    Route::get('/lists/edit/{id}', ['as' => 'lists.edit', 'uses' => 'ListsController@edit']);
-    Route::get('/lists/delete/{id}', ['as' => 'lists.delete', 'uses' => 'ListsController@delete']);
+    Route::get('/lists', ['as' => 'lists', 'uses' => 'Cme\Web\Controllers\ListsController@index']);
+    Route::get('/lists/new', ['as' => 'lists.new', 'uses' => 'Cme\Web\Controllers\ListsController@neww']);
+    Route::get('/lists/view/{id}', ['as' => 'lists.view', 'uses' => 'Cme\Web\Controllers\ListsController@view']);
+    Route::get('/lists/edit/{id}', ['as' => 'lists.edit', 'uses' => 'Cme\Web\Controllers\ListsController@edit']);
+    Route::get('/lists/delete/{id}', ['as' => 'lists.delete', 'uses' => 'Cme\Web\Controllers\ListsController@delete']);
 
-    Route::post('/lists/add', ['as' => 'lists.new.post', 'uses' => 'ListsController@add']);
-    Route::post('/lists/update', ['as' => 'lists.update.post', 'uses' => 'ListsController@update']);
-    Route::post('/lists/import/{type}', ['as' => 'lists.import.post', 'uses' => 'ListsController@import']);
+    Route::post('/lists/add', ['as' => 'lists.new.post', 'uses' => 'Cme\Web\Controllers\ListsController@add']);
+    Route::post('/lists/update', ['as' => 'lists.update.post', 'uses' => 'Cme\Web\Controllers\ListsController@update']);
+    Route::post('/lists/import/{type}', ['as' => 'lists.import.post', 'uses' => 'Cme\Web\Controllers\ListsController@import']);
 
     //campaigns
-    Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'CampaignsController@index']);
-    Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'CampaignsController@neww']);
-    Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'CampaignsController@edit']);
-    Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'CampaignsController@delete']);
-    Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'CampaignsController@preview']);
-    Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'CampaignsController@send']);
-    Route::post('/campaigns/test', ['as' => 'campaign.test', 'uses' => 'CampaignsController@test']);
+    Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'Cme\Web\Controllers\CampaignsController@index']);
+    Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
+    Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'Cme\Web\Controllers\CampaignsController@edit']);
+    Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'Cme\Web\Controllers\CampaignsController@delete']);
+    Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'Cme\Web\Controllers\CampaignsController@preview']);
+    Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'Cme\Web\Controllers\CampaignsController@send']);
+    Route::post('/campaigns/test', ['as' => 'campaign.test', 'uses' => 'Cme\Web\Controllers\CampaignsController@test']);
 
-    Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'CampaignsController@add']);
-    Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'CampaignsController@update']);
+    Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'Cme\Web\Controllers\CampaignsController@add']);
+    Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'Cme\Web\Controllers\CampaignsController@update']);
 
     //queues
-    Route::get('/queues', ['as' => 'queues', 'uses' => 'QueuesController@index']);
+    Route::get('/queues', ['as' => 'queues', 'uses' => 'Cme\Web\Controllers\QueuesController@index']);
 
     //analytics
-    Route::get('/analytics', 'AnalyticsController@index');
+    Route::get('/analytics', 'Cme\Web\Controllers\AnalyticsController@index');
 
     //users
-    Route::get('/users', 'UsersController@index');
-    Route::get('/users/new', ['as' => 'users.new', 'uses' => 'UsersController@neww']);
-    Route::get('/users/view/{id}', ['as' => 'users.view', 'uses' => 'UsersController@view']);
-    Route::get('/users/edit/{id}', ['as' => 'users.edit', 'uses' => 'UsersController@edit']);
-    Route::get('/users/delete/{id}', ['as' => 'users.delete', 'uses' => 'UsersController@delete']);
+    Route::get('/users', 'Cme\Web\Controllers\UsersController@index');
+    Route::get('/users/new', ['as' => 'users.new', 'uses' => 'Cme\Web\Controllers\UsersController@neww']);
+    Route::get('/users/view/{id}', ['as' => 'users.view', 'uses' => 'Cme\Web\Controllers\UsersController@view']);
+    Route::get('/users/edit/{id}', ['as' => 'users.edit', 'uses' => 'Cme\Web\Controllers\UsersController@edit']);
+    Route::get('/users/delete/{id}', ['as' => 'users.delete', 'uses' => 'Cme\Web\Controllers\UsersController@delete']);
 
-    Route::post('/users/add', ['as' => 'users.new.post', 'uses' => 'UsersController@add']);
-    Route::post('/users/update', ['as' => 'users.update.post', 'uses' => 'UsersController@update']);
+    Route::post('/users/add', ['as' => 'users.new.post', 'uses' => 'Cme\Web\Controllers\UsersController@add']);
+    Route::post('/users/update', ['as' => 'users.update.post', 'uses' => 'Cme\Web\Controllers\UsersController@update']);
 });
 
 //login
-Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
-Route::post('/login', 'LoginController@authenticate');
+Route::get('/login', ['as' => 'login', 'uses' => 'Cme\Web\Controllers\LoginController@login']);
+Route::post('/login', 'Cme\Web\Controllers\LoginController@authenticate');
 
 //tracking
 Route::get('/track/open/{source}', 'TrackingController@trackOpen');

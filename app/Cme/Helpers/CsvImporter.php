@@ -2,6 +2,7 @@
 /**
  * @author  oke.ugwu
  */
+namespace Cme\Helpers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 

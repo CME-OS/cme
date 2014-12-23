@@ -11,6 +11,6 @@
 |
 */
 
-Artisan::add(new QueueMessages);
-Artisan::add(new ListImporter);
-Artisan::add(new ListRefresher);
+Artisan::add(new Cme\Cli\QueueMessages);
+Artisan::add(new Cme\Cli\ListImporter);
+Artisan::add(new Cme\Cli\ListRefresher);

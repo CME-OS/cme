@@ -1,4 +1,7 @@
 <?php
+namespace Cme\Web\Controllers;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends BaseController
 {

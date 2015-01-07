@@ -53,7 +53,6 @@ class ApiImporter
   {
     //get lastId if we have one
     $lastId = $this->_getLastId($listId);
-    echo "sending lastID $lastId" . PHP_EOL;
     $params  = [
       'limit'   => $this->_batchSize,
       'last_id' => $lastId

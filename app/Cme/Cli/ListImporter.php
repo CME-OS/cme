@@ -1,6 +1,8 @@
 <?php
 namespace Cme\Cli;
 
+use Cme\Helpers\ApiImporter;
+use Cme\Helpers\CsvImporter;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;

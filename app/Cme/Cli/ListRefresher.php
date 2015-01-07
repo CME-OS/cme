@@ -2,13 +2,10 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\ApiImporter;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ListRefresher extends Command
+class ListRefresher extends CmeCommand
 {
 
   /**
@@ -42,18 +39,8 @@ class ListRefresher extends Command
    */
   public function fire()
   {
-    $className    = get_class($this);
+    $this->_createPIDFile();
     $instanceName = $this->_getInstanceName();
-    $monitDir     = storage_path() . '/monit/' . $className;
-    $fileName     = $monitDir . '/' . $this->argument('inst') . '.pid';
-    //create log file
-    if(!File::exists($monitDir))
-    {
-      File::makeDirectory($monitDir, $mode = 0777, true);
-    }
-
-    File::put($fileName, getmypid());
-
     while(true)
     {
       $result = DB::select(

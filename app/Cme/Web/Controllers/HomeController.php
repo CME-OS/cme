@@ -1,7 +1,9 @@
 <?php
 namespace Cme\Web\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
 class HomeController extends BaseController
 {
@@ -11,71 +13,52 @@ class HomeController extends BaseController
       'queued',
       'sent',
       'opened',
-      'clicked',
+      /*'clicked',*/
       'failed',
       'bounced',
       'unsubscribed'
     ];
 
-    $dStats = []; //daily stats
-    $hStats = []; //hourly stats
-    $campaigns         = DB::select('SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5');
+    $stats          = []; //daily stats
+    $campaigns      = DB::select('SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5');
+    $campaignLookUp = [];
     foreach($campaigns as $campaign)
     {
-      $endTime = strtotime(date('Y-m-d 23:59:59'));
-      $events  = DB::select(
+      $events = DB::select(
         "SELECT * FROM campaign_events WHERE campaign_id = $campaign->id"
       );
       foreach($events as $event)
       {
-        if(!isset($dStats[$event->campaign_id]))
+        if(!isset($stats[$event->campaign_id]))
         {
-          //build blank slate for daily stats
-          $startTime = $campaign->send_time;
-          for($s = $startTime; $s <= $endTime; $s += 86400)
+          foreach($eventTypes as $type)
           {
-            $day = date('Y-m-d', $s);
-            foreach($eventTypes as $type)
-            {
-              $dStats[$event->campaign_id][$day][$type] = 0;
-            }
-          }
-        }
-        if(!isset($hStats[$event->campaign_id]))
-        {
-          //build blank slate for hourly stats
-          $startTime = strtotime(date('Y-m-d 00:00:00'));
-          for($s = $startTime; $s <= $endTime; $s += 3600)
-          {
-            $hour = date('Y-m-d H:00:00', $s);
-            foreach($eventTypes as $type)
-            {
-              $hStats[$event->campaign_id][$hour][$type] = 0;
-            }
+            $stats[$event->campaign_id][$type] = 0;
           }
         }
 
-        $day = date('Y-m-d', $event->time);
-        if(isset($dStats[$event->campaign_id][$day]))
+        if(isset($stats[$event->campaign_id]))
         {
-          $dStats[$event->campaign_id][$day][$event->event_type]++;
-        }
-
-        $hour = date('Y-m-d H:00:00', $event->time);
-        if(isset($hStats[$event->campaign_id][$hour]))
-        {
-          $hStats[$event->campaign_id][$hour][$event->event_type]++;
+          $stats[$event->campaign_id][$event->event_type]++;
         }
       }
+      $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
+        $stats[$event->campaign_id]['opened'],
+        $stats[$event->campaign_id]['sent']
+      );
+
+      $campaignLookUp[$campaign->id] = $campaign->subject;
     }
 
-    /**@todo order by created or send time!?*/
-    $campaignLookUp         = DB::table('campaigns')->orderBy('created', 'desc')->lists('subject', 'id');
     $data['eventTypes']     = $eventTypes;
-    $data['dStats']         = $dStats;
-    $data['hStats']         = $hStats;
+    $data['stats']          = $stats;
     $data['campaignLookUp'] = $campaignLookUp;
 
-    return View::make('home', $data);
+    return View::make('dashboard.home', $data);
+  }
+
+  private function _percentage($a, $b)
+  {
+    return number_format((($a / $b) * 100), 2).'%';
   }
 }

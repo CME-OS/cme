@@ -43,6 +43,7 @@ Route::group(['before' => 'auth'], function(){
 
     //analytics
     Route::get('/analytics', 'Cme\Web\Controllers\AnalyticsController@index');
+    Route::get('/analytics/{id}', ['as' => 'analytics.view', 'uses' => 'Cme\Web\Controllers\AnalyticsController@index']);
 
     //users
     Route::get('/users', 'Cme\Web\Controllers\UsersController@index');

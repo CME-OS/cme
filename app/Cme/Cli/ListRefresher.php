@@ -13,7 +13,7 @@ class ListRefresher extends CmeCommand
    *
    * @var string
    */
-  protected $name = 'command:list-refresh';
+  protected $name = 'cme:list-refresh';
 
   /**
    * The console command description.

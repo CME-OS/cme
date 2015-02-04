@@ -13,7 +13,7 @@ class QueueMessages extends CmeCommand
    *
    * @var string
    */
-  protected $name = 'command:queue-messages';
+  protected $name = 'cme:queue-messages';
 
   /**
    * The console command description.

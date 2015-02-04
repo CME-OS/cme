@@ -15,7 +15,7 @@ class ListImporter extends CmeCommand
    *
    * @var string
    */
-  protected $name = 'command:list-import';
+  protected $name = 'cme:list-import';
 
   /**
    * The console command description.

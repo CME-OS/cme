@@ -8,6 +8,7 @@ composer.lock
 Thumbs.db
 .idea
 *.pid
+/app/storage/*
 /app/storage/tmp
 /app/storage/monit
 /node_modules

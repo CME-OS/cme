@@ -12,7 +12,10 @@
 
             <div class="col-sm-8">
                 <h3>Login to your account!</h3>
+<<<<<<< HEAD
                 <?php //var_dump($message);die; ?>
+=======
+>>>>>>> master
                 @if($message = Session::get('message', false))
                     <div class="alert alert-danger">{{ $message }}</div>
                 @endif

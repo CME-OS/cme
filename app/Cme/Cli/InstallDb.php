@@ -43,8 +43,6 @@ class InstallDb extends CmeDbCommand
    */
   public function fire()
   {
-    echo "hallo";
-    die;
     $classes = $this->getMigrationClasses();
     foreach($classes as $migrationClass)
     {

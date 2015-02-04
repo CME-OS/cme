@@ -1,11 +1,16 @@
 {
   "name":              "laravel/laravel",
   "description":       "The Laravel Framework.",
-  "keywords":          ["framework", "laravel"],
+  "keywords":          [
+    "framework",
+    "laravel"
+  ],
   "license":           "MIT",
   "require":           {
-    "laravel/framework": "4.2.*",
-    "rmccue/requests":   "1.6.1"
+    "laravel/framework":            "4.2.*",
+    "rmccue/requests":              "1.6.1",
+    "way/generators":               "~2.0",
+    "xethron/migrations-generator": "dev-master"
   },
   "autoload":          {
     "classmap": [
@@ -13,7 +18,7 @@
       "app/database/seeds",
       "app/tests/TestCase.php"
     ],
-    "psr-4": {
+    "psr-4":    {
       "Cme\\": "app/Cme"
     }
   },

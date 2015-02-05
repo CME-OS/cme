@@ -13,6 +13,11 @@ class CMECampaign extends Model
     return $this->belongsTo('Cme\Models\CMEBrand');
   }
 
+  public static function getKeyedListFor($field)
+  {
+    return self::orderBy('id', 'asc')->lists($field, 'id');
+  }
+
   public static function fields()
   {
     return [

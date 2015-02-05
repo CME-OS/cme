@@ -4,8 +4,6 @@
  */
 namespace Cme\Models;
 
-use Cme\Helpers\ListHelper;
-
 class CMECampaignEvent extends Model
 {
   protected $table = 'campaign_events';

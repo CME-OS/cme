@@ -29,6 +29,7 @@ Route::group(['before' => 'auth'], function(){
     //campaigns
     Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'Cme\Web\Controllers\CampaignsController@index']);
     Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
+    Route::post('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
     Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'Cme\Web\Controllers\CampaignsController@edit']);
     Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'Cme\Web\Controllers\CampaignsController@delete']);
     Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'Cme\Web\Controllers\CampaignsController@preview']);
@@ -113,5 +114,6 @@ Route::post(
   }
 );
 
-Route::post('/ph', 'CampaignsController@getPlaceHolders');
-Route::post('/ds', 'CampaignsController@getDefaultSender');
+Route::post('/ph', 'Cme\Web\Controllers\CampaignsController@getPlaceHolders');
+Route::post('/ds', 'Cme\Web\Controllers\CampaignsController@getDefaultSender');
+Route::post('/so', 'Cme\Web\Controllers\CampaignsController@getSegmentOptions');

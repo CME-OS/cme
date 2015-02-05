@@ -2,10 +2,12 @@
 namespace Cme\Web\Controllers;
 
 use Cme\Helpers\ListHelper;
+use Cme\Helpers\ListsSchemaHelper;
 use Cme\Models\CMEBrand;
 use Cme\Models\CMECampaign;
 use Cme\Models\CMEList;
 use \Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
@@ -22,10 +24,43 @@ class CampaignsController extends BaseController
 
   public function neww()
   {
+    $step = Input::get('step');
+    switch($step)
+    {
+      case 1:
+        $stepView = $this->_step2();
+        break;
+      case 2:
+        $stepView = $this->_step3();
+        break;
+      default:
+        $stepView = $this->_step1();
+    }
+    return $stepView;
+  }
+
+  private function _step1()
+  {
     $data['brands'] = CMEBrand::getAllActive();
     $data['lists']  = CMEList::getAllActive();
 
-    return View::make('campaigns.new', $data);
+    return View::make('campaigns.step1', $data);
+  }
+
+  private function _step2()
+  {
+    $data['brands'] = CMEBrand::getAllActive();
+    $data['lists']  = CMEList::getAllActive();
+
+    return View::make('campaigns.step2', $data);
+  }
+
+  private function _step3()
+  {
+    $data['brands'] = CMEBrand::getAllActive();
+    $data['lists']  = CMEList::getAllActive();
+
+    return View::make('campaigns.step3', $data);
   }
 
   public function add()
@@ -276,5 +311,30 @@ class CampaignsController extends BaseController
     $sender = $brand->brand_sender_name . ' <' . $brand->brand_sender_email . '>';
 
     return Response::json($sender);
+  }
+
+  public function getSegmentOptions()
+  {
+    $listId = Input::get('listId');
+
+    $table    = ListHelper::getTable($listId);
+    $response = [
+      'columns'   => ListsSchemaHelper::getColumnNames($table),
+      'operators' => ListsSchemaHelper::getColumnOperators($table),
+      'values'    => ListsSchemaHelper::getColumnValues($table),
+    ];
+
+    return Response::json($response);
+  }
+
+  private function labelArray($array)
+  {
+    $labelledArray = [];
+    foreach($array as $k => $v)
+    {
+      $labelledArray[] = ['value' => $k, 'text' => $v];
+    }
+
+    return $labelledArray;
   }
 }

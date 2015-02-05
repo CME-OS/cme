@@ -15,42 +15,138 @@
 <script src="/assets/js/custom.js"></script>
 <script src="/assets/datetimepicker/js/datetimepicker.min.js"></script>
 <script>
+  window.cme = {};
   function getPlaceHolders(listIdVal)
+  {
+    if(listIdVal != "")
     {
-      if(listIdVal != "")
-      {
-        console.log(listIdVal);
-        $('.placeholders').html("");
-        $.post('/ph', {listId : listIdVal}, function(data){
-          console.log(data);
-          $.each(data, function() {
-            $('.placeholders').append($("<div />").text(this.name));
-          });
+      console.log(listIdVal);
+      $('.placeholders').html("");
+      $.post('/ph', {listId : listIdVal}, function(data){
+        console.log(data);
+        $.each(data, function() {
+          $('.placeholders').append($("<div />").text(this.name));
         });
+      });
+    }
+  }
+
+  function getSegmentOptions(listIdVal)
+  {
+    $.post('/so', {listId : listIdVal}, function(data){
+      var columns = data.columns;
+      window.cme.filterdata = data;
+      generateSelect2('.filter-field', columns);
+      $('.campaign-custom-target').show();
+    });
+  }
+
+  function generateSelect(parentRow, target, data)
+  {
+    var targetX = parentRow.find(target);
+    targetX.empty();
+    buildSelectOptions(targetX, [{value: "", text : "Select"}]);
+    buildSelectOptions(targetX, data);
+    targetX.show();
+  }
+
+  function generateSelect2(target, data)
+  {
+    $(target).empty();
+    buildSelectOptions(target, [{value: "", text : "Select"}]);
+    buildSelectOptions(target, data);
+    $(target).show();
+  }
+
+  function buildSelectOptions(target, data)
+  {
+    $.each(data, function (i, item) {
+      $(target).append($('<option>', {
+        value: item.value,
+        text : item.text
+      }));
+    });
+  }
+
+
+  function getDefaultSender(brandIdVal)
+  {
+    $.post('/ds', {brandId : brandIdVal}, function(data){
+        $('#campaign-from').val(data);
+    });
+  }
+
+  if(document.getElementById('campaign-list-id'))
+  {
+    $('#campaign-brand-id').change(function(){
+      var brandIdVal = $(this).val();
+      getDefaultSender(brandIdVal);
+    });
+
+    $('#campaign-list-id').change(function(){
+      if($('#campaign-list-id').val() != '')
+      {
+        $('#campaign-target-div').show();
+        $('#campaign-target').change(
+          function()
+          {
+            if ($(this).val() == 'custom')
+            {
+              getSegmentOptions($('#campaign-list-id').val());
+            }
+            else
+            {
+              $('.campaign-custom-target').hide();
+            }
+          }
+        );
       }
-    }
+      else
+      {
+        $('#campaign-target-div').hide();
+      }
+    });
 
-    function getDefaultSender(brandIdVal)
-    {
-      $.post('/ds', {brandId : brandIdVal}, function(data){
-          $('#campaign-from').val(data);
-      });
-    }
 
-    if(document.getElementById('campaign-list-id'))
-    {
-      $('#campaign-brand-id').change(function(){
-        var brandIdVal = $(this).val();
-        getDefaultSender(brandIdVal);
-      });
+    $('#add-filter').click(function(e){
+      e.preventDefault();
+      var templateRow = $('.template-row').first().clone();
+      templateRow.removeClass('template-row');
 
-      $('#campaign-list-id').change(function(){
-        var listIdVal = $(this).val();
-        getPlaceHolders(listIdVal);
-      });
+      //need to change row-id
+      var rowId = $('.filter-row').length + 1;
+      templateRow.attr('data-row-id', rowId);
 
-      getPlaceHolders($('#campaign-list-id').val());
-    }
+      //empty select boxes (operator & value)
+      templateRow.find('.filter-operator').empty()
+      templateRow.find('.filter-value').empty()
+
+      $('#filter-table').append(templateRow);
+    });
+
+    $('body').on('click', '.remove-filter', function(){
+       $(this).closest('tr').remove();
+    });
+
+    $('body').on('change', '.filter-field', function(){
+      //find row id
+      var $this = $(this);
+      var row = $($this.closest('tr'));
+      var data = window.cme.filterdata;
+      //check if filterdata is set and get data if needed
+
+      var fieldValue = $this.val();
+      if(fieldValue != "")
+      {
+        var operatorOptions = data.operators[fieldValue];
+        var valueOptions = data.values[fieldValue];
+
+        generateSelect(row, '.filter-operator', operatorOptions);
+        generateSelect(row, '.filter-value', valueOptions);
+      }
+    });
+
+  }
 
   $(function() {
     $('#datetimepicker').datetimepicker({

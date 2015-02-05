@@ -3,13 +3,14 @@ namespace Cme\Web\Controllers;
 
 use Cme\Models\CMECampaign;
 use Cme\Models\CMECampaignEvent;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
 class AnalyticsController extends BaseController
 {
-  public function index($id)
+  public function index()
   {
+    $id = (int)Route::input('id');
     $data['selectedId'] = $id;
     $data['stats']      = $this->_getStats($id);
     $data['campaigns']  = CMECampaign::getKeyedListFor('subject');

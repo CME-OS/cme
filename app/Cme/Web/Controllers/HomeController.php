@@ -19,7 +19,7 @@ class HomeController extends BaseController
       'unsubscribed'
     ];
 
-    $stats          = []; //daily stats
+    $stats          = [];
     $campaigns      = DB::select('SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5');
     $campaignLookUp = [];
     foreach($campaigns as $campaign)
@@ -59,6 +59,11 @@ class HomeController extends BaseController
 
   private function _percentage($a, $b)
   {
-    return number_format((($a / $b) * 100), 2).'%';
+    $result = "~";
+    if($b > 0)
+    {
+      $result = number_format((($a / $b) * 100), 2).'%';
+    }
+    return $result;
   }
 }

@@ -12,7 +12,7 @@ class CMEList extends Model
 
   public static function getAllActive()
   {
-    return self::where('deleted_at', '=', 'NULL')->get();
+    return self::whereNull('deleted_at')->get();
   }
 
   public static function getAnySubscriber($listId)

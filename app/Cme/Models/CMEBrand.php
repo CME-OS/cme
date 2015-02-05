@@ -15,7 +15,7 @@ class CMEBrand extends Model
 
   public static function getAllActive()
   {
-    return self::where('brand_deleted_at', '=', 'NULL')->get();
+    return self::whereNull('brand_deleted_at')->get();
   }
 
   public static function getAnyBrand()

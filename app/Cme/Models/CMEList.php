@@ -5,6 +5,7 @@
 namespace Cme\Models;
 
 use Cme\Helpers\ListHelper;
+use Illuminate\Support\Facades\DB;
 
 class CMEList extends Model
 {

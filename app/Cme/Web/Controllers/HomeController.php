@@ -41,11 +41,13 @@ class HomeController extends BaseController
         {
           $stats[$event->campaign_id][$event->event_type]++;
         }
+
+        $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
+          $stats[$event->campaign_id]['opened'],
+          $stats[$event->campaign_id]['sent']
+        );
       }
-      $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
-        $stats[$event->campaign_id]['opened'],
-        $stats[$event->campaign_id]['sent']
-      );
+
 
       $campaignLookUp[$campaign->id] = $campaign->subject;
     }

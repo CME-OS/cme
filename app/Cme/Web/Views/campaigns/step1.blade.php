@@ -97,26 +97,30 @@
               </td>
             </tr>
             <?php endfor; ?>
-            <?php else: ?>
-            <tr class="filter-row template-row" data-row-id="1">
-              <td>
-                <select name="filters[filter_field][]" class="filter-field">
-                </select>
-              </td>
-              <td>
-                <select name="filters[filter_operator][]" class="filter-operator" style="display: none;">
-                </select>
-              </td>
-              <td>
-                <select name="filters[filter_value][]" class="filter-value" style="display: none;">
-                </select>
-              </td>
-              <td>
-                <p class="btn remove-filter"><i class="glyphicon glyphicon-trash"></i></p>
-              </td>
-            </tr>
             <?php endif; ?>
           </table>
+      </div>
+
+      <div class="filter-template" style="display:none;">
+        <table>
+        <tr class="template-row" data-row-id="1">
+          <td>
+            <select name="filters[filter_field][]" class="filter-field">
+            </select>
+          </td>
+          <td>
+            <select name="filters[filter_operator][]" class="filter-operator" style="display: none;">
+            </select>
+          </td>
+          <td>
+            <select name="filters[filter_value][]" class="filter-value" style="display: none;">
+            </select>
+          </td>
+          <td>
+            <p class="btn remove-filter"><i class="glyphicon glyphicon-trash"></i></p>
+          </td>
+        </tr>
+        </table>
       </div>
 
     </div>

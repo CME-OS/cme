@@ -82,6 +82,14 @@
     });
   }
 
+  function addFirstFilterRow(listIdVal)
+  {
+    var templateRow = $('.template-row').first().clone();
+    templateRow.removeClass('template-row');
+    templateRow.addClass('filter-row');
+    $('#filter-table').append(templateRow);
+    getSegmentOptions(listIdVal);
+  }
 
   function getDefaultSender(brandIdVal)
   {
@@ -105,7 +113,7 @@
         $('#campaign-target').change(function(){
           if ($(this).val() == 'custom')
           {
-            getSegmentOptions(listIdVal);
+            addFirstFilterRow(listIdVal);
           }
           else
           {
@@ -128,18 +136,25 @@
 
     $('#add-filter').click(function(e){
       e.preventDefault();
-      var templateRow = $('.filter-row').first().clone();
-      templateRow.removeClass('template-row');
+      var rowCount = $('.filter-row').length;
+      if(rowCount > 0)
+      {
+        var templateRow = $('.filter-row').first().clone();
 
-      //need to change row-id
-      var rowId = $('.filter-row').length + 1;
-      templateRow.attr('data-row-id', rowId);
+        //need to change row-id
+        var rowId = rowCount + 1;
+        templateRow.attr('data-row-id', rowId);
 
-      //empty select boxes (operator & value)
-      templateRow.find('.filter-operator').empty()
-      templateRow.find('.filter-value').empty()
+        //empty select boxes (operator & value)
+        templateRow.find('.filter-operator').empty()
+        templateRow.find('.filter-value').empty()
 
-      $('#filter-table').append(templateRow);
+        $('#filter-table').append(templateRow);
+      }
+      else
+      {
+        addFirstFilterRow($('#campaign-list-id').val());
+      }
     });
 
     $('body').on('click', '.remove-filter', function(){

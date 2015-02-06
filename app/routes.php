@@ -30,9 +30,11 @@ Route::group(['before' => 'auth'], function(){
     Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'Cme\Web\Controllers\CampaignsController@index']);
     Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
     Route::post('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
+    Route::get('/campaigns/new/{step}', ['as' => 'campaign.new-stepped', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
     Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'Cme\Web\Controllers\CampaignsController@edit']);
     Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'Cme\Web\Controllers\CampaignsController@delete']);
     Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'Cme\Web\Controllers\CampaignsController@preview']);
+    Route::get('/campaigns/content/{id}', ['as' => 'campaign.content', 'uses' => 'Cme\Web\Controllers\CampaignsController@content']);
     Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'Cme\Web\Controllers\CampaignsController@send']);
     Route::post('/campaigns/test', ['as' => 'campaign.test', 'uses' => 'Cme\Web\Controllers\CampaignsController@test']);
 

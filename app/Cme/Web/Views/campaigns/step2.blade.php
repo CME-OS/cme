@@ -5,14 +5,15 @@
   <small>Manage your campaigns</small>
 </h1>
 <form role="form" action="/campaigns/new" method="post">
-  <input type="hidden" name="step" value="2"/>
+  <input type="hidden" name="step" value="3"/>
+  <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
   <h2>Step 2: Compose Campaign</h2>
 
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">
         <label for="brand-name">Subject</label>
-        <input type="text" name="subject" class="form-control" id="campaign-subject" placeholder="Subject">
+        <input type="text" name="subject" class="form-control" id="campaign-subject" value="<?= $campaign->subject ?>">
       </div>
       </div>
   </div>
@@ -20,7 +21,7 @@
     <div class="col-md-6">
       <div class="form-group">
         <label for="sender-name">Message</label>
-        <textarea name="html_content" class="form-control" id="campaign-message" cols="30" rows="10"></textarea>
+        <textarea name="html_content" class="form-control" id="campaign-message" cols="30" rows="10"><?= $campaign->subject ?></textarea>
       </div>
     </div>
     <div class="col-md-6">
@@ -28,17 +29,16 @@
         <p><strong>Available PlaceHolders</strong></p>
         <div class="placeholders">
           <ul>
-            <li>placeholder1</li>
-            <li>placeholder2</li>
-            <li>placeholder3</li>
-            <li>placeholder4</li>
+            <?php foreach($placeholders as $placeholder): ?>
+            <li>[<?= $placeholder ?>]</li>
+            <?php endforeach; ?>
           </ul>
         </div>
       </div>
     </div>
   </div>
-  <button type="submit" class="btn btn-danger">Back</button>
-  <button type="submit" class="btn btn-default">Next</button>
+  <a href="/campaigns/new/1" class="btn btn-default">Back</a>
+  <button type="submit" class="btn btn-success">Next</button>
 </form>
 <script src="/assets/ckeditor/ckeditor.js"></script>
 <script>

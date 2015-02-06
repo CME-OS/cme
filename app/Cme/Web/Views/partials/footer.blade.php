@@ -31,14 +31,28 @@
     }
   }
 
+  function getFilterData(listIdVal)
+  {
+    $.ajax({
+       type: 'POST',
+       url: '/so',
+       data: {listId : listIdVal},
+       success: function(data){
+         window.cme.filterdata = data;
+       },
+       async:false
+    });
+  }
+
   function getSegmentOptions(listIdVal)
   {
-    $.post('/so', {listId : listIdVal}, function(data){
-      var columns = data.columns;
-      window.cme.filterdata = data;
-      generateSelect2('.filter-field', columns);
-      $('.campaign-custom-target').show();
-    });
+    if(!window.cme.filterdata)
+    {
+      getFilterData(listIdVal);
+    }
+    var columns = window.cme.filterdata.columns;
+    generateSelect2('.filter-field', columns);
+    $('.campaign-custom-target').show();
   }
 
   function generateSelect(parentRow, target, data)
@@ -84,33 +98,37 @@
     });
 
     $('#campaign-list-id').change(function(){
-      if($('#campaign-list-id').val() != '')
+      var listIdVal = $('#campaign-list-id').val();
+      if(listIdVal != '')
       {
         $('#campaign-target-div').show();
-        $('#campaign-target').change(
-          function()
+        $('#campaign-target').change(function(){
+          if ($(this).val() == 'custom')
           {
-            if ($(this).val() == 'custom')
-            {
-              getSegmentOptions($('#campaign-list-id').val());
-            }
-            else
-            {
-              $('.campaign-custom-target').hide();
-            }
+            getSegmentOptions(listIdVal);
           }
-        );
+          else
+          {
+            $('.campaign-custom-target').hide();
+          }
+        });
       }
       else
       {
         $('#campaign-target-div').hide();
       }
+
+      if(document.getElementById('placeholders'))
+      {
+        getPlaceHolders(listIdVal)
+      }
+
     });
 
 
     $('#add-filter').click(function(e){
       e.preventDefault();
-      var templateRow = $('.template-row').first().clone();
+      var templateRow = $('.filter-row').first().clone();
       templateRow.removeClass('template-row');
 
       //need to change row-id
@@ -132,9 +150,12 @@
       //find row id
       var $this = $(this);
       var row = $($this.closest('tr'));
-      var data = window.cme.filterdata;
       //check if filterdata is set and get data if needed
-
+      if(!window.cme.filterdata)
+      {
+        getFilterData($('#campaign-list-id').val());
+      }
+      var data = window.cme.filterdata;
       var fieldValue = $this.val();
       if(fieldValue != "")
       {

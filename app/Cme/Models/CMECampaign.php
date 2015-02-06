@@ -7,10 +7,16 @@ namespace Cme\Models;
 class CMECampaign extends Model
 {
   protected $table = 'campaigns';
+  public $timestamps = false;
 
   public function brand()
   {
     return $this->belongsTo('Cme\Models\CMEBrand');
+  }
+
+  public function lists()
+  {
+    return $this->belongsTo('Cme\Models\CMEList', 'list_id');
   }
 
   public static function getKeyedListFor($field)
@@ -31,7 +37,13 @@ class CMECampaign extends Model
       'send_time',
       'send_priority',
       'status',
-      'created'
+      'type',
+      'filters',
+      'created',
+      'frequency',
+      'tested',
+      'previewed',
+      'smtp_provider_id',
     ];
   }
 
@@ -46,12 +58,17 @@ class CMECampaign extends Model
     }
     if(isset($data['id']))
     {
-      DB::table('campaigns')->where('id', '=', $data['id'])
+      self::where('id', '=', $data['id'])
         ->update($data);
     }
     else
     {
-      DB::table('campaigns')->insert($data);
+      if(isset($data['filters']))
+      {
+        $data['filters'] = json_encode($data['filters']);
+      }
+      $data['created'] = time();
+      self::insert($data);
     }
   }
 }

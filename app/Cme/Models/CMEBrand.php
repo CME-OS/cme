@@ -4,6 +4,8 @@
  */
 namespace Cme\Models;
 
+use Illuminate\Support\Facades\DB;
+
 class CMEBrand extends Model
 {
   protected $table = 'brands';

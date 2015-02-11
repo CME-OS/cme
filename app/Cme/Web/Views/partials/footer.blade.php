@@ -110,16 +110,6 @@
       if(listIdVal != '')
       {
         $('#campaign-target-div').show();
-        $('#campaign-target').change(function(){
-          if ($(this).val() == 'custom')
-          {
-            addFirstFilterRow(listIdVal);
-          }
-          else
-          {
-            $('.campaign-custom-target').hide();
-          }
-        });
       }
       else
       {
@@ -131,6 +121,18 @@
         getPlaceHolders(listIdVal)
       }
 
+    });
+
+    $('#campaign-target').change(function(){
+      var listIdVal = $('#campaign-list-id').val();
+      if ($(this).val() == 'custom')
+      {
+        addFirstFilterRow(listIdVal);
+      }
+      else
+      {
+        $('.campaign-custom-target').hide();
+      }
     });
 
 

@@ -35,6 +35,14 @@
                 <div class="col-md-4">
 
                     <div class="form-group">
+                        <label for="campaign-type">What type of campaign is this?</label>
+                        <select name="type" id="campaign-type" class="form-control">
+                            <option value="default">One Off - Send campaign once</option>
+                            <option value="rolling">Rolling - An ongoing campaign sent on a regular interval</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
                         <label for="campaign-brand-id">Which Brand is this
                                                        campaign for?</label>
                         <select name="brand_id" id="campaign-brand-id"
@@ -45,6 +53,15 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="campaign-from">Send Campaign As:</label>
+                        <input type="text" name="from" class="form-control"
+                               id="campaign-from"
+                               placeholder="<name> email@domain.com"
+                               value="<?= $campaign->from; ?>">
+                    </div>
+
 
                     <div class="form-group">
                         <label for="campaign-list-id">Which list should campaign
@@ -58,12 +75,59 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
-                        <label for="campaign-from">Send Campaign As:</label>
-                        <input type="text" name="from" class="form-control"
-                               id="campaign-from"
-                               placeholder="<name> email@domain.com"
-                               value="<?= $campaign->from; ?>">
+                    <div class="form-group" id="campaign-target-div" <?= (!$campaign->list_id)? 'style="display: none;"' : '' ?>>
+                        <label for="campaign-target">Who do you want to?</label>
+                        <select name="target" id="campaign-target" class="form-control">
+                            <option value="all">Send to all subscribers in list</option>
+                            <option value="custom" <?= ($campaign->filters)? 'selected="selected"' : '' ?>>Send to a subset</option>
+                        </select>
+                    </div>
+                    <div class="campaign-custom-target" style="<?= ($campaign->filters == null)? 'display: none;' : '' ?>padding-bottom: 20px;">
+                        <a href="#" id="add-filter">Add new Filter</a>
+                        <table class="table" id="filter-table">
+                            <tr>
+                                <td>Field</td>
+                                <td>Condition</td>
+                                <td>Value</td>
+                                <td></td>
+                            </tr>
+                            <?php if($campaign->filters): ?>
+                            <?php $filters = json_decode($campaign->filters); ?>
+                            <?php $filtersCount = count($filters->filter_field); ?>
+                            <?php for($i = 0; $i < $filtersCount; $i++): ?>
+                            <?php $field = $filters->filter_field[$i]; ?>
+                            <?php $operator = $filters->filter_operator[$i]; ?>
+                            <?php $value = $filters->filter_value[$i]; ?>
+                            <tr class="filter-row" data-row-id="<?= $i+1; ?>">
+                                <td>
+                                    <select name="filters[filter_field][]" class="filter-field" style="width:100px;">
+                                        <option value="">Select</option>
+                                        <?php foreach($filterData['columns'] as $column): ?>
+                                        <option value="<?= $column['value'] ?>" <?= ($field == $column['value'])? 'selected="selected"' : '' ?>><?= $column['text'] ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="filters[filter_operator][]" class="filter-operator">
+                                        <?php foreach($filterData['operators'][$field] as $fieldOperator): ?>
+                                        <option value="<?= $fieldOperator['value'] ?>" <?= ($operator == $fieldOperator['value'])? 'selected="selected"' : '' ?>><?= $fieldOperator['text'] ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select name="filters[filter_value][]" class="filter-value" style="width:100px;">
+                                        <?php foreach($filterData['values'][$field] as $fieldValue): ?>
+                                        <option value="<?= $fieldValue['value'] ?>" <?= ($value == $fieldValue['value'])? 'selected="selected"' : '' ?>><?= $fieldValue['text'] ?></option>
+                                        <?php endforeach ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <p class="btn remove-filter"><i class="glyphicon glyphicon-trash"></i></p>
+                                </td>
+                            </tr>
+                            <?php endfor; ?>
+                            <?php endif; ?>
+                        </table>
                     </div>
 
                     <div class="form-group">
@@ -91,7 +155,16 @@
                         </div>
                     </div>
 
-                    <div class="well">
+                    <div class="form-group">
+                        <label for="campaign-smtp-provider">SMTP Provider:</label>
+                        <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
+                            <option value="0" <?= ($campaign->smtp_provider_id == 0)? 'selected="selected"' : '' ?>>Use Default (AWS 1)</option>
+                            <option value="1" <?= ($campaign->smtp_provider_id == 1)? 'selected="selected"' : '' ?>>AWS 1</option>
+                            <option value="2" <?= ($campaign->smtp_provider_id == 2)? 'selected="selected"' : '' ?>>SendGrid</option>
+                        </select>
+                    </div>
+
+                    <!--<div class="well">
                         <p><strong>Available PlaceHolders</strong></p>
                         <div class="placeholders" id="placeholders">
                             <ul>
@@ -100,7 +173,7 @@
                                 <?php endforeach; ?>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
 
                     <button type="submit" class="btn btn-success">Update</button>
 
@@ -108,6 +181,29 @@
             </div>
 
             {{ Form::close() }}
+
+            <div class="filter-template" style="display:none;">
+                <table>
+                    <tr class="template-row" data-row-id="1">
+                        <td>
+                            <select name="filters[filter_field][]" class="filter-field" style="width: 100px;">
+                            </select>
+                        </td>
+                        <td>
+                            <select name="filters[filter_operator][]" class="filter-operator" style="display: none; width: 100px;;">
+                            </select>
+                        </td>
+                        <td>
+                            <select name="filters[filter_value][]" class="filter-value" style="display: none; width:100px;">
+                            </select>
+                        </td>
+                        <td>
+                            <p class="btn remove-filter"><i class="glyphicon glyphicon-trash"></i></p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 

@@ -131,6 +131,7 @@ class CampaignsController extends BaseController
       $data['brands']       = CMEBrand::getAllActive();
       $data['lists']        = CMEList::getAllActive();
       $data['placeholders'] = $this->_getPlaceHolders($campaign->list_id);
+      $data['filterData']   = $this->_getSegmentOptions($campaign->list_id);
 
       return View::make('campaigns.edit', $data);
     }
@@ -169,6 +170,10 @@ class CampaignsController extends BaseController
     {
       $data['tested']    = 0;
       $data['previewed'] = 0;
+    }
+    if($data['filters'])
+    {
+      $data['filters'] = json_encode($data['filters']);
     }
 
     $data['send_time'] = strtotime($data['send_time']);

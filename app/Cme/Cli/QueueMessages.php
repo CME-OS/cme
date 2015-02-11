@@ -85,13 +85,28 @@ class QueueMessages extends CmeCommand
               if($filters)
               {
                 $filtersCount = count($filters->filter_field);
+                $filterGroups = [];
                 for($i = 0; $i < $filtersCount; $i++)
                 {
                   $field    = $filters->filter_field[$i];
                   $operator = $filters->filter_operator[$i];
                   $value    = $filters->filter_value[$i];
-                  $temp[]   = "`" . $field . "`" . $operator . "'" . $value . "'";
+
+                  $filterGroups[$field][] = "`" . $field . "`" . $operator . "'" . $value . "'";
                 }
+
+                //OR filters in the same group
+                //AND the rest
+                foreach($filterGroups as $field => $group)
+                {
+                  $or = implode(' OR', $group);
+                  if(count($filterGroups[$field]) > 1)
+                  {
+                    $or = "(" . $or . ")";
+                  }
+                  $temp[] = $or;
+                }
+
                 $filterSql = ' AND ' . implode(' AND', $temp);
               }
             }

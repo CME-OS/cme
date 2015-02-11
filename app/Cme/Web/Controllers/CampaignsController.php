@@ -161,7 +161,16 @@ class CampaignsController extends BaseController
 
   public function update()
   {
-    $data              = Input::all();
+    $data     = Input::all();
+    $campaign = CMECampaign::find($data['id']);
+    //if content changed, force user to test & preview campaign as a
+    //safety measure
+    if($campaign->html_content != $data['html_content'])
+    {
+      $data['tested']    = 0;
+      $data['previewed'] = 0;
+    }
+
     $data['send_time'] = strtotime($data['send_time']);
     CMECampaign::saveData($data);
 

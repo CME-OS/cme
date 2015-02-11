@@ -35,7 +35,10 @@ Route::group(['before' => 'auth'], function(){
     Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'Cme\Web\Controllers\CampaignsController@delete']);
     Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'Cme\Web\Controllers\CampaignsController@preview']);
     Route::get('/campaigns/content/{id}', ['as' => 'campaign.content', 'uses' => 'Cme\Web\Controllers\CampaignsController@content']);
-    Route::get('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'Cme\Web\Controllers\CampaignsController@send']);
+    Route::post('/campaigns/send', ['as' => 'campaign.send', 'uses' => 'Cme\Web\Controllers\CampaignsController@send']);
+    Route::post('/campaigns/pause', ['as' => 'campaign.pause', 'uses' => 'Cme\Web\Controllers\CampaignsController@pause']);
+    Route::post('/campaigns/resume', ['as' => 'campaign.resume', 'uses' => 'Cme\Web\Controllers\CampaignsController@resume']);
+    Route::post('/campaigns/abort', ['as' => 'campaign.abort', 'uses' => 'Cme\Web\Controllers\CampaignsController@abort']);
     Route::post('/campaigns/test', ['as' => 'campaign.test', 'uses' => 'Cme\Web\Controllers\CampaignsController@test']);
 
     Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'Cme\Web\Controllers\CampaignsController@add']);

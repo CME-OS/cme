@@ -126,10 +126,10 @@ class CampaignsController extends BaseController
     $campaign = CMECampaign::find($id);
     if($campaign)
     {
-      $campaign->send_time = date('Y-m-d H:i:s', $campaign->send_time);
-      $data['campaign']    = $campaign;
-      $data['brands']      = CMEBrand::getAllActive();
-      $data['lists']       = CMEList::getAllActive();
+      $campaign->send_time  = date('Y-m-d H:i:s', $campaign->send_time);
+      $data['campaign']     = $campaign;
+      $data['brands']       = CMEBrand::getAllActive();
+      $data['lists']        = CMEList::getAllActive();
       $data['placeholders'] = $this->_getPlaceHolders($campaign->list_id);
 
       return View::make('campaigns.edit', $data);
@@ -182,11 +182,65 @@ class CampaignsController extends BaseController
     {
       //update status of campaign
       DB::table('campaigns')->where(['id' => $id])->update(
-        ['status' => 'queuing']
+        ['status' => 'Queuing']
       );
     }
 
-    return Redirect::to("/campaigns");
+    return Redirect::to("/campaigns/preview/" . $id);
+  }
+
+  public function pause()
+  {
+    $id = Input::get('id');
+
+    DB::table('message_queue')
+      ->where(['campaign_id' => $id, 'status' => 'pending'])
+      ->update(
+        ['status' => 'Paused']
+      );
+
+    //update status of campaign
+    DB::table('campaigns')->where(['id' => $id])->update(
+      ['status' => 'Paused']
+    );
+
+    return Redirect::to("/campaigns/preview/" . $id);
+  }
+
+  public function resume()
+  {
+    $id = Input::get('id');
+
+    DB::table('message_queue')
+      ->where(['campaign_id' => $id, 'status' => 'Paused'])
+      ->update(
+        ['status' => 'Pending']
+      );
+
+    //update status of campaign
+    DB::table('campaigns')->where(['id' => $id])->update(
+      ['status' => 'Queued']
+    );
+
+    return Redirect::to("/campaigns/preview/" . $id);
+  }
+
+
+  public function abort()
+  {
+    $id = Input::get('id');
+
+    //delete pending messages from the queue
+    DB::table('message_queue')
+      ->where(['campaign_id' => $id, 'status' => 'pending'])
+      ->delete();
+
+    //update status of campaign
+    DB::table('campaigns')->where(['id' => $id])->update(
+      ['status' => 'Aborted']
+    );
+
+    return Redirect::to("/campaigns/preview/" . $id);
   }
 
   private function _buildQueueRanges($campaignId)

@@ -115,4 +115,18 @@ class ListHelper
       )
     );
   }
+
+  public static function count($listId)
+  {
+    $count = head(
+      DB::select(
+        sprintf(
+          "SELECT count(*) as count FROM %s",
+          self::getTable($listId)
+        )
+      )
+    );
+
+    return $count->count;
+  }
 }

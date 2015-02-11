@@ -42,6 +42,7 @@ class QueueMessages extends CmeCommand
   {
     $this->_createPIDFile();
     $instanceName = $this->_getInstanceName();
+    $lockedCampaign = null;
     while(true)
     {
       do
@@ -56,6 +57,7 @@ class QueueMessages extends CmeCommand
         if($result)
         {
           $queueRequest = $result[0];
+          $lockedCampaign = $queueRequest->campaign_id;
 
           //grab the campaign
           $campaign = DB::select(
@@ -202,15 +204,32 @@ class QueueMessages extends CmeCommand
         }
         else
         {
+          //stick to a campaign until we are done queuing it
+          $campaignCondition = "";
+          if($lockedCampaign !== null)
+          {
+            $campaignCondition = "AND campaign_id = ".$lockedCampaign;
+          }
+
           //lock a row
           $lockedARow = DB::update(
             "UPDATE ranges SET locked_by=?
-            WHERE locked_by IS NULL ORDER BY created ASC LIMIT 1",
+            WHERE locked_by IS NULL $campaignCondition ORDER BY created ASC LIMIT 1",
             [$instanceName]
           );
           if(!$lockedARow)
           {
             $this->info("sleeping for a bit");
+
+            if($lockedCampaign !== null)
+            {
+              DB::table('campaigns')->where(['id' => $lockedCampaign])->update(
+                ['status' => 'Queued']
+              );
+
+              $lockedCampaign = null;
+            }
+
             sleep(5);
           }
         }

@@ -39,7 +39,7 @@
                     </button>
                 </form>
             </div>
-            <?php if($campaign->status == 'Pending' && $campaign->tested > 0): ?>
+            <?php if(in_array($campaign->status, ['Pending', 'Aborted']) && $campaign->tested > 0): ?>
             <form action="/campaigns/send" class="form-inline"
                   method="post">
                 <input type="hidden" name="id"
@@ -48,12 +48,24 @@
                 </button>
             </form>
             <?php endif; ?>
-            <?php if($campaign->status == 'Sending'): ?>
-            <p>
-                <button class="btn btn-warning" id="">Pause Campaign</button>
+            <?php if(in_array($campaign->status, ['Queued', 'Sending', 'Paused'])): ?>
+            <?php $action = ($campaign->status == 'Paused')? 'resume' : 'pause'; ?>
+            <p><form action="/campaigns/<?= $action ?>" class="form-inline"
+                  method="post">
+                <input type="hidden" name="id"
+                       value="<?= $campaign->id ?>"/>
+                <button type="submit" class="btn btn-warning"><?= ucwords($action) ?> Campaign
+                </button>
+            </form>
             </p>
             <p>
-                <button class="btn btn-danger">Abort Campaign</button>
+            <form action="/campaigns/abort" class="form-inline"
+                  method="post">
+                <input type="hidden" name="id"
+                       value="<?= $campaign->id ?>"/>
+                <button type="submit" class="btn btn-danger">Abort Campaign
+                </button>
+            </form>
             </p>
             <?php endif; ?>
             <hr/>
@@ -67,8 +79,8 @@
                     </tr>
                     <tr>
                         <td>Recipients:</td>
-                        <td><?= $campaign->lists->count() ?>
-                            /<?= $campaign->lists->count() ?></td>
+                        <td><?= \Cme\Helpers\ListHelper::count($campaign->list_id) ?>
+                            /<?= \Cme\Helpers\ListHelper::count($campaign->list_id) ?></td>
                     </tr>
                     <tr>
                         <td>Brand:</td>

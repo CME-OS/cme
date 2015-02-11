@@ -259,9 +259,15 @@ class QueueMessages extends CmeCommand
 
             if($lockedCampaign !== null)
             {
-              DB::table('campaigns')->where(['id' => $lockedCampaign])->update(
-                ['status' => 'Queued']
+              $stillQueuing = DB::select(
+                "SELECT * FROM ranges WHERE locked_by IS NOT NULL $campaignCondition LIMIT 1"
               );
+              if(!$stillQueuing)
+              {
+                DB::table('campaigns')->where(['id' => $lockedCampaign])->update(
+                  ['status' => 'Queued']
+                );
+              }
 
               $lockedCampaign = null;
             }

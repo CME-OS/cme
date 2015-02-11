@@ -118,23 +118,6 @@ CREATE TABLE IF NOT EXISTS `lists` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table cme.list_4
-CREATE TABLE IF NOT EXISTS `list_4` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(225) COLLATE utf8_unicode_ci NOT NULL,
-  `first_name` varchar(225) COLLATE utf8_unicode_ci NOT NULL,
-  `last_name` varchar(225) COLLATE utf8_unicode_ci NOT NULL,
-  `bounced` int(11) NOT NULL,
-  `unsubscribed` int(11) NOT NULL,
-  `test_subscriber` int(11) NOT NULL,
-  `date_created` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `list_4_email_unique` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table cme.message_queue
 CREATE TABLE IF NOT EXISTS `message_queue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -148,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `message_queue` (
   `list_id` int(11) NOT NULL DEFAULT '0',
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `campaign_id` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Sent','Failed') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Sent','Failed','Paused') NOT NULL DEFAULT 'Pending',
   `send_time` int(11) DEFAULT NULL,
   `send_priority` int(11) DEFAULT NULL,
   `locked_by` varchar(225) DEFAULT NULL,

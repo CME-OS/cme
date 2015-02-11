@@ -41,7 +41,7 @@ class QueueMessages extends CmeCommand
   public function fire()
   {
     $this->_createPIDFile();
-    $instanceName = $this->_getInstanceName();
+    $instanceName   = $this->_getInstanceName();
     $lockedCampaign = null;
     while(true)
     {
@@ -56,7 +56,7 @@ class QueueMessages extends CmeCommand
 
         if($result)
         {
-          $queueRequest = $result[0];
+          $queueRequest   = $result[0];
           $lockedCampaign = $queueRequest->campaign_id;
 
           //grab the campaign
@@ -76,12 +76,33 @@ class QueueMessages extends CmeCommand
           $placeHolders = null;
           do
           {
+            //check if campaign has got filters
+            $filterSql = "";
+            $temp      = [];
+            if($campaign->filters)
+            {
+              $filters = json_decode($campaign->filters);
+              if($filters)
+              {
+                $filtersCount = count($filters->filter_field);
+                for($i = 0; $i < $filtersCount; $i++)
+                {
+                  $field    = $filters->filter_field[$i];
+                  $operator = $filters->filter_operator[$i];
+                  $value    = $filters->filter_value[$i];
+                  $temp[]   = "`" . $field . "`" . $operator . "'" . $value . "'";
+                }
+                $filterSql = ' AND ' . implode(' AND', $temp);
+              }
+            }
+
             Log::debug("Fetching Subscribers");
             $subscribers = DB::select(
               sprintf(
                 "SELECT * FROM %s WHERE id > %d
                  AND id BETWEEN %d AND %d
                  AND bounced=0 AND unsubscribed=0
+                 $filterSql
                  LIMIT 1000",
                 $listTable,
                 $lastId,
@@ -195,9 +216,9 @@ class QueueMessages extends CmeCommand
           DB::table('ranges')
             ->where(
               [
-              'list_id'     => $queueRequest->list_id,
-              'campaign_id' => $queueRequest->campaign_id,
-              'start'       => $queueRequest->start
+                'list_id'     => $queueRequest->list_id,
+                'campaign_id' => $queueRequest->campaign_id,
+                'start'       => $queueRequest->start
               ]
             )
             ->delete();
@@ -208,7 +229,7 @@ class QueueMessages extends CmeCommand
           $campaignCondition = "";
           if($lockedCampaign !== null)
           {
-            $campaignCondition = "AND campaign_id = ".$lockedCampaign;
+            $campaignCondition = "AND campaign_id = " . $lockedCampaign;
           }
 
           //lock a row

@@ -171,9 +171,13 @@ class CampaignsController extends BaseController
       $data['tested']    = 0;
       $data['previewed'] = 0;
     }
-    if($data['filters'])
+    if(isset($data['filters']))
     {
       $data['filters'] = json_encode($data['filters']);
+    }
+    else
+    {
+      $data['filters'] = null;
     }
 
     $data['send_time'] = strtotime($data['send_time']);

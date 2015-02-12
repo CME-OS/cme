@@ -2,14 +2,9 @@
 @section('content')
     <link rel="stylesheet"
           href="/assets/datetimepicker/css/datetimepicker.min.css"/>
-    <h1 class="page-header">Campaigns
-        <small>Manage your campaigns</small>
+    <h1 class="page-header"><?= $campaign->subject ?>
+        <small><a href="/campaigns/edit/<?= $campaign->id ?>">edit</a></small>
     </h1>
-
-    <h2><?= $campaign->subject ?> -
-        <small><a href="/campaigns/edit/<?= $campaign->id ?>">edit</a>
-        </small>
-    </h2>
     <div class="row">
         <div class="col-md-8">
             <div class="well" style="min-height:800px;">

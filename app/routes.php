@@ -69,6 +69,7 @@ Route::post('/login', 'Cme\Web\Controllers\LoginController@authenticate');
 //tracking
 Route::get('/track/open/{source}', 'TrackingController@trackOpen');
 Route::get('/track/unsubscribe/{source}/{redirect}', 'TrackingController@trackUnsubscribe');
+Route::get('/track/click/{source}/{redirect}', 'TrackingController@trackClick');
 
 
 

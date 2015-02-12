@@ -1,8 +1,8 @@
 <?php
 namespace Cme\Cli;
 
+use Cme\Helpers\CampaignHelper;
 use Cme\Helpers\FilterHelper;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
@@ -61,13 +61,24 @@ class QueueMessages extends CmeCommand
           $lockedCampaign = $queueRequest->campaign_id;
 
           //grab the campaign
-          $campaign = DB::select(
-            sprintf(
-              "SELECT * FROM campaigns WHERE id=%d",
-              $queueRequest->campaign_id
+          $campaign = head(
+            DB::select(
+              sprintf(
+                "SELECT * FROM campaigns WHERE id=%d",
+                $queueRequest->campaign_id
+              )
             )
           );
-          $campaign = $campaign[0];
+
+          //get the brand
+          $brand = head(
+            DB::select(
+              sprintf(
+                "SELECT * FROM brands WHERE id=%d",
+                $campaign->brand_id
+              )
+            )
+          );
 
           //process list in chunks
           $listTable = 'list_' . $queueRequest->list_id;
@@ -80,7 +91,7 @@ class QueueMessages extends CmeCommand
             //check if campaign has got filters
             if($campaign->filters)
             {
-              $filters = json_decode($campaign->filters);
+              $filters   = json_decode($campaign->filters);
               $filterSql = FilterHelper::buildSql($filters);
               if($filterSql != "")
               {
@@ -105,70 +116,12 @@ class QueueMessages extends CmeCommand
 
             foreach($subscribers as $subscriber)
             {
-              if($placeHolders == null)
-              {
-                Log::debug("Building placeholders");
-                $columns = array_keys((array)$subscriber);
-                foreach($columns as $c)
-                {
-                  $placeHolders[$c] = "[$c]";
-                }
-                //add brand attributes as placeholders too
-                $result  = DB::select(
-                  sprintf(
-                    "SELECT * FROM brands WHERE id=%d",
-                    $campaign->brand_id
-                  )
-                );
-                $brand   = $result[0];
-                $columns = array_keys((array)$brand);
-                foreach($columns as $c)
-                {
-                  $placeHolders[$c] = "[$c]";
-                }
-              }
 
-              //parse and compile message (replacing placeholders if any)
-              Log::debug("Parsing and compiling messages");
-              $html = $campaign->html_content;
-              $text = $campaign->text_content;
-              foreach($placeHolders as $prop => $placeHolder)
-              {
-                $replace = false;
-                if(property_exists($subscriber, $prop))
-                {
-                  $replace = $subscriber->$prop;
-                }
-                elseif(property_exists($brand, $prop))
-                {
-                  if($prop == 'brand_unsubscribe_url')
-                  {
-                    $replace = $this->_getUnsubscribeUrl(
-                      $brand->$prop,
-                      $campaign->id,
-                      $campaign->list_id,
-                      $subscriber->id
-                    );
-                  }
-                  else
-                  {
-                    $replace = $brand->$prop;
-                  }
-                }
-
-                if($replace !== false)
-                {
-                  $html = str_replace($placeHolder, $replace, $html);
-                  $text = str_replace($placeHolder, $replace, $text);
-                }
-              }
-
-              //append pixel to html content, so we can track opens
-              $domain   = Config::get('app.domain');
-              $pixelUrl = "http://" . $domain . "/track/open/" . $campaign->id
-                . "_" . $campaign->list_id . "_" . $subscriber->id;
-              $html .= '<img src="' . $pixelUrl
-                . '" style="display:none;" height="1" width="1" />';
+              $message = CampaignHelper::compileMessage(
+                $campaign,
+                $brand,
+                $subscriber
+              );
 
               list($fromName, $fromEmail) = explode(' <', $campaign->from);
 
@@ -178,8 +131,8 @@ class QueueMessages extends CmeCommand
                 'from_name'     => $fromName,
                 'from_email'    => trim($fromEmail, '<>'),
                 'to'            => $subscriber->email,
-                'html_content'  => $html,
-                'text_content'  => $text,
+                'html_content'  => $message->html,
+                'text_content'  => $message->text,
                 'subscriber_id' => $subscriber->id,
                 'list_id'       => $queueRequest->list_id,
                 'brand_id'      => $campaign->brand_id,
@@ -241,9 +194,11 @@ class QueueMessages extends CmeCommand
               );
               if(!$stillQueuing)
               {
-                DB::table('campaigns')->where(['id' => $lockedCampaign])->update(
-                  ['status' => 'Queued']
-                );
+                DB::table('campaigns')
+                  ->where(['id' => $lockedCampaign])
+                  ->update(
+                    ['status' => 'Queued']
+                  );
               }
 
               $lockedCampaign = null;
@@ -255,15 +210,6 @@ class QueueMessages extends CmeCommand
       }
       while($result);
     }
-  }
-
-  private function _getUnsubscribeUrl($url, $campaignId, $listId, $subscriberId)
-  {
-    $domain = Config::get('app.domain');
-    $url    = "http://" . $domain . "/track/unsubscribe/" . $campaignId
-      . "_" . $listId . "_" . $subscriberId . "/" . base64_encode($url);
-
-    return $url;
   }
 
   /**

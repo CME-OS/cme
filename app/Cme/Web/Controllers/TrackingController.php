@@ -11,11 +11,11 @@ class TrackingController extends BaseController
     {
       DB::table('campaign_events')->insert(
         [
-        'campaign_id'   => $campaignId,
-        'list_id'       => $listId,
-        'subscriber_id' => $subscriberId,
-        'event_type'    => 'opened',
-        'time'          => time()
+          'campaign_id'   => $campaignId,
+          'list_id'       => $listId,
+          'subscriber_id' => $subscriberId,
+          'event_type'    => 'opened',
+          'time'          => time()
         ]
       );
     }
@@ -28,11 +28,11 @@ class TrackingController extends BaseController
     {
       DB::table('campaign_events')->insert(
         [
-        'campaign_id'   => $campaignId,
-        'list_id'       => $listId,
-        'subscriber_id' => $subscriberId,
-        'event_type'    => 'unsubscribed',
-        'time'          => time()
+          'campaign_id'   => $campaignId,
+          'list_id'       => $listId,
+          'subscriber_id' => $subscriberId,
+          'event_type'    => 'unsubscribed',
+          'time'          => time()
         ]
       );
 
@@ -42,9 +42,29 @@ class TrackingController extends BaseController
           ->where('id', '=', $subscriberId)
           ->update(['unsubscribed' => 1]);
       }
-
-      return Redirect::to(base64_decode($redirect));
     }
+
+    return Redirect::to(base64_decode($redirect));
+  }
+
+  public function trackClick($source, $redirect)
+  {
+    list($campaignId, $listId, $subscriberId) = explode('_', $source);
+    $redirectTo = base64_decode($redirect);
+    if($campaignId && $listId && $subscriberId)
+    {
+      DB::table('campaign_events')->insert(
+        [
+          'campaign_id'   => $campaignId,
+          'list_id'       => $listId,
+          'subscriber_id' => $subscriberId,
+          'event_type'    => 'clicked',
+          'reference'     => $redirectTo,
+          'time'          => time()
+        ]
+      );
+    }
+    return Redirect::to($redirectTo);
   }
 
   public function test()

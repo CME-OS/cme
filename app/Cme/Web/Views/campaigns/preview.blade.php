@@ -74,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>Recipients:</td>
-                        <td><?= \Cme\Helpers\ListHelper::count($campaign->list_id) ?>
+                        <td><?= \Cme\Helpers\ListHelper::count($campaign->list_id, $campaign->id) ?>
                             /<?= \Cme\Helpers\ListHelper::count($campaign->list_id) ?></td>
                     </tr>
                     <tr>

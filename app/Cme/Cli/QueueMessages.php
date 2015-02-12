@@ -1,6 +1,7 @@
 <?php
 namespace Cme\Cli;
 
+use Cme\Helpers\FilterHelper;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -77,37 +78,13 @@ class QueueMessages extends CmeCommand
           do
           {
             //check if campaign has got filters
-            $filterSql = "";
-            $temp      = [];
             if($campaign->filters)
             {
               $filters = json_decode($campaign->filters);
-              if($filters)
+              $filterSql = FilterHelper::buildSql($filters);
+              if($filterSql != "")
               {
-                $filtersCount = count($filters->filter_field);
-                $filterGroups = [];
-                for($i = 0; $i < $filtersCount; $i++)
-                {
-                  $field    = $filters->filter_field[$i];
-                  $operator = $filters->filter_operator[$i];
-                  $value    = $filters->filter_value[$i];
-
-                  $filterGroups[$field][] = "`" . $field . "`" . $operator . "'" . $value . "'";
-                }
-
-                //OR filters in the same group
-                //AND the rest
-                foreach($filterGroups as $field => $group)
-                {
-                  $or = implode(' OR', $group);
-                  if(count($filterGroups[$field]) > 1)
-                  {
-                    $or = "(" . $or . ")";
-                  }
-                  $temp[] = $or;
-                }
-
-                $filterSql = ' AND ' . implode(' AND', $temp);
+                $filterSql = ' AND ' . $filterSql;
               }
             }
 

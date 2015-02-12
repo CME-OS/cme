@@ -4,6 +4,7 @@
  */
 namespace Cme\Helpers;
 
+use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
@@ -116,13 +117,25 @@ class ListHelper
     );
   }
 
-  public static function count($listId)
+  public static function count($listId, $campaignId = null)
   {
+    $filterSql = "";
+    if($campaignId !== null)
+    {
+      $campaign = CMECampaign::find($campaignId);
+      if($campaign->filters)
+      {
+        $sql = FilterHelper::buildSql(json_decode($campaign->filters));
+        $filterSql = 'WHERE '.$sql;
+      }
+    }
+
     $count = head(
       DB::select(
         sprintf(
-          "SELECT count(*) as count FROM %s",
-          self::getTable($listId)
+          "SELECT count(*) as count FROM %s %s",
+          self::getTable($listId),
+          $filterSql
         )
       )
     );

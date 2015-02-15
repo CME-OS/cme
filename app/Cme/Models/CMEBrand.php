@@ -12,7 +12,7 @@ class CMEBrand extends Model
 
   public function campaigns()
   {
-    return $this->hasMany('CMECampaign', 'brand_id');
+    return $this->hasMany('Cme\Models\CMECampaign', 'brand_id');
   }
 
   public static function getAllActive()

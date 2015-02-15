@@ -23,7 +23,7 @@
               <td><?= $brand->brand_name; ?></td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('brands.view', $brand->id) }}" class="btn btn-default">View Campaigns</a>
+                <a href="{{ URL::route('brands.campaigns', $brand->id) }}" class="btn btn-default">View Campaigns</a>
                 <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default">Edit</a>
                 <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-default">Delete</a>
                 </div>

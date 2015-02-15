@@ -60,6 +60,17 @@ Route::group(['before' => 'auth'], function(){
 
     Route::post('/users/add', ['as' => 'users.new.post', 'uses' => 'Cme\Web\Controllers\UsersController@add']);
     Route::post('/users/update', ['as' => 'users.update.post', 'uses' => 'Cme\Web\Controllers\UsersController@update']);
+
+    //SMTP Providers
+    Route::get('/smtp-providers', ['as' => 'smtp-providers', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@index']);
+    Route::get('/smtp-providers/new', ['as' => 'smtp-providers.new', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@neww']);
+    Route::get('/smtp-providers/view/{id}', ['as' => 'smtp-providers.view', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@view']);
+    Route::get('/smtp-providers/edit/{id}', ['as' => 'smtp-providers.edit', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@edit']);
+    Route::get('/smtp-providers/default/{id}', ['as' => 'smtp-providers.default', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@setDefault']);
+    Route::get('/smtp-providers/delete/{id}', ['as' => 'smtp-providers.delete', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@delete']);
+
+    Route::post('/smtp-providers/add', ['as' => 'smtp-providers.add.post', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@add']);
+    Route::post('/smtp-providers/update', ['as' => 'smtp-providers.update.post', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@update']);
 });
 
 //login

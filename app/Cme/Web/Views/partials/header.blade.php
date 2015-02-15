@@ -47,6 +47,7 @@
           <li><a href="/queues">Queues</a></li>
           <li><a href="/analytics">Analytics</a></li>
           <li><a href="/users">Users</a></li>
+          <li><a href="/smtp-providers">SMTP Providers</a></li>
       </ul>
 
     </div><!-- /.navbar-collapse -->

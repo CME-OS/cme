@@ -88,15 +88,12 @@ class QueueMessages extends CmeCommand
           $placeHolders = null;
           do
           {
-            //check if campaign has got filters
-            if($campaign->filters)
+
+            $filters   = json_decode($campaign->filters);
+            $filterSql = FilterHelper::buildSql($filters);
+            if($filterSql != "")
             {
-              $filters   = json_decode($campaign->filters);
-              $filterSql = FilterHelper::buildSql($filters);
-              if($filterSql != "")
-              {
-                $filterSql = ' AND ' . $filterSql;
-              }
+              $filterSql = ' AND ' . $filterSql;
             }
 
             Log::debug("Fetching Subscribers");

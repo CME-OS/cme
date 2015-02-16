@@ -23,7 +23,7 @@
 
           <?php foreach($campaigns as $campaign): ?>
             <tr>
-              <td><a href="{{ URL::route('campaign.edit', $campaign->id) }}"><?= $campaign->subject; ?></a></td>
+              <td><a href="{{ URL::route('campaign.preview', $campaign->id) }}"><?= $campaign->subject; ?></a></td>
               <td><?= $campaign->brand->brand_name; ?></td>
               <td><?= $campaign->status; ?></td>
               <td><?= date('d/m/Y H:i:s', $campaign->created); ?></td>

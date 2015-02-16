@@ -65,7 +65,7 @@ class QueueMessages extends CmeCommand
             DB::select(
               sprintf(
                 "SELECT * FROM campaigns WHERE id=%d",
-                $queueRequest->campaign_id
+                $lockedCampaign
               )
             )
           );
@@ -104,7 +104,6 @@ class QueueMessages extends CmeCommand
               sprintf(
                 "SELECT * FROM %s WHERE id > %d
                  AND id BETWEEN %d AND %d
-                 AND bounced=0 AND unsubscribed=0
                  $filterSql
                  LIMIT 1000",
                 $listTable,
@@ -116,42 +115,58 @@ class QueueMessages extends CmeCommand
 
             foreach($subscribers as $subscriber)
             {
+              //check if user is unsubscribed or bounced
+              $unsubscribed = DB::table('unsubscribes')
+                ->where(
+                  [
+                    'email'    => $subscriber->email,
+                    'brand_id' => $campaign->brand_id
+                  ]
+                )
+                ->first();
 
-              $message = CampaignHelper::compileMessage(
-                $campaign,
-                $brand,
-                $subscriber
-              );
+              $bounced = DB::table('bounces')
+                ->where('email', '=', $subscriber->email)
+                ->first();
 
-              list($fromName, $fromEmail) = explode(' <', $campaign->from);
+              if(!$unsubscribed && !$bounced)
+              {
+                $message = CampaignHelper::compileMessage(
+                  $campaign,
+                  $brand,
+                  $subscriber
+                );
 
-              //write to message queue
-              $message = [
-                'subject'       => $campaign->subject,
-                'from_name'     => $fromName,
-                'from_email'    => trim($fromEmail, '<>'),
-                'to'            => $subscriber->email,
-                'html_content'  => $message->html,
-                'text_content'  => $message->text,
-                'subscriber_id' => $subscriber->id,
-                'list_id'       => $queueRequest->list_id,
-                'brand_id'      => $campaign->brand_id,
-                'campaign_id'   => $campaign->id,
-                'send_time'     => $campaign->send_time,
-                'send_priority' => $campaign->send_priority
-              ];
-              Log::debug("Queuing message for " . $subscriber->email);
-              DB::table('message_queue')->insert($message);
+                list($fromName, $fromEmail) = explode(' <', $campaign->from);
 
-              //add to campaign events table
-              $event = [
-                'campaign_id'   => $campaign->id,
-                'list_id'       => $queueRequest->list_id,
-                'subscriber_id' => $subscriber->id,
-                'event_type'    => 'queued',
-                'time'          => time()
-              ];
-              DB::table('campaign_events')->insert($event);
+                //write to message queue
+                $message = [
+                  'subject'       => $campaign->subject,
+                  'from_name'     => $fromName,
+                  'from_email'    => trim($fromEmail, '<>'),
+                  'to'            => $subscriber->email,
+                  'html_content'  => $message->html,
+                  'text_content'  => $message->text,
+                  'subscriber_id' => $subscriber->id,
+                  'list_id'       => $queueRequest->list_id,
+                  'brand_id'      => $campaign->brand_id,
+                  'campaign_id'   => $campaign->id,
+                  'send_time'     => $campaign->send_time,
+                  'send_priority' => $campaign->send_priority
+                ];
+                Log::debug("Queuing message for " . $subscriber->email);
+                DB::table('message_queue')->insert($message);
+
+                //add to campaign events table
+                $event = [
+                  'campaign_id'   => $campaign->id,
+                  'list_id'       => $queueRequest->list_id,
+                  'subscriber_id' => $subscriber->id,
+                  'event_type'    => 'queued',
+                  'time'          => time()
+                ];
+                DB::table('campaign_events')->insert($event);
+              }
 
               $lastId = $subscriber->id;
             }

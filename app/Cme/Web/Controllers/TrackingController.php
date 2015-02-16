@@ -1,6 +1,8 @@
 <?php
 namespace Cme\Web\Controllers;
 
+use Cme\Helpers\ListHelper;
+use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
@@ -41,9 +43,27 @@ class TrackingController extends BaseController
 
       if(ListHelper::tableExists($listId))
       {
-        DB::table(ListHelper::getTable($listId))
+        $subscriber = DB::table(ListHelper::getTable($listId))
           ->where('id', '=', $subscriberId)
-          ->update(['unsubscribed' => 1]);
+          ->first();
+
+        $campaign = CMECampaign::find($campaignId);
+
+        $unsubscribed = DB::table('unsubscribes')
+          ->where('email', '=', $subscriber->email)
+          ->first();
+        if(!$unsubscribed)
+        {
+          DB::table('unsubscribes')->insert(
+            [
+              'email'       => $subscriber->email,
+              'brand_id'    => $campaign->brand_id,
+              'campaign_id' => $campaignId,
+              'list_id'     => $listId,
+              'time'        => time()
+            ]
+          );
+        }
       }
     }
 

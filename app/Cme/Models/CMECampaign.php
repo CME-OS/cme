@@ -29,6 +29,11 @@ class CMECampaign extends Model
     return self::orderBy('id', 'asc')->lists($field, 'id');
   }
 
+  public static function getAllActive()
+  {
+    return self::whereNull('deleted_at')->get();
+  }
+
   public static function fields()
   {
     return [
@@ -49,6 +54,7 @@ class CMECampaign extends Model
       'tested',
       'previewed',
       'smtp_provider_id',
+      'deleted_at',
     ];
   }
 

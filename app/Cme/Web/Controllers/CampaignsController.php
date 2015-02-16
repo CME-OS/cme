@@ -8,7 +8,6 @@ use Cme\Models\CMEBrand;
 use Cme\Models\CMECampaign;
 use Cme\Models\CMEList;
 use Cme\Models\CMESmtpProvider;
-use Illuminate\Support\Facades\Config;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -22,7 +21,7 @@ class CampaignsController extends BaseController
 {
   public function index()
   {
-    $data['campaigns'] = CMECampaign::all();
+    $data['campaigns'] = CMECampaign::getAllActive();
 
     return View::make('campaigns.list', $data);
   }
@@ -209,7 +208,13 @@ class CampaignsController extends BaseController
   public function delete()
   {
     $id = Route::input('id');
-    echo "Deleting $id";
+    if(CMECampaign::find($id))
+    {
+      $data['id']         = $id;
+      $data['deleted_at'] = time();
+      CMECampaign::saveData($data);
+    }
+    return Redirect::to('/campaigns');
   }
 
   public function send()

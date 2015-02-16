@@ -158,9 +158,10 @@
                     <div class="form-group">
                         <label for="campaign-smtp-provider">SMTP Provider:</label>
                         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
-                            <option value="0" <?= ($campaign->smtp_provider_id == 0)? 'selected="selected"' : '' ?>>Use Default (AWS 1)</option>
-                            <option value="1" <?= ($campaign->smtp_provider_id == 1)? 'selected="selected"' : '' ?>>AWS 1</option>
-                            <option value="2" <?= ($campaign->smtp_provider_id == 2)? 'selected="selected"' : '' ?>>SendGrid</option>
+                            <option value="0">Use Default</option>
+                            <?php foreach($smtpProviders as $provider): ?>
+                            <option value="<?= $provider->id; ?>" <?= (($campaign->smtp_provider_id == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
 

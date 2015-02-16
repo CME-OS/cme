@@ -19,6 +19,11 @@ class CMECampaign extends Model
     return $this->belongsTo('Cme\Models\CMEList', 'list_id');
   }
 
+  public function smtpProvider()
+  {
+    return $this->belongsTo('Cme\Models\CMESmtpProvider', 'smtp_provider_id');
+  }
+
   public static function getKeyedListFor($field)
   {
     return self::orderBy('id', 'asc')->lists($field, 'id');

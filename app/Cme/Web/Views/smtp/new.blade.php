@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header">Brands
-  <small>Manage your brands</small>
+<h1 class="page-header">SMTP Providers
+  <small>Manage your SMTP Providers</small>
 </h1>
 <div class="row">
   <div class="col-md-6">

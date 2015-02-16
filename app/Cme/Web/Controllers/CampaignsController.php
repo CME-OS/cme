@@ -7,6 +7,7 @@ use Cme\Helpers\ListsSchemaHelper;
 use Cme\Models\CMEBrand;
 use Cme\Models\CMECampaign;
 use Cme\Models\CMEList;
+use Cme\Models\CMESmtpProvider;
 use Illuminate\Support\Facades\Config;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
@@ -105,7 +106,8 @@ class CampaignsController extends BaseController
 
   private function _step3($campaignId)
   {
-    $data['campaign'] = CMECampaign::find($campaignId);
+    $data['campaign']      = CMECampaign::find($campaignId);
+    $data['smtpProviders'] = CMESmtpProvider::getAllActive();
 
     return View::make('campaigns.step3', $data);
   }
@@ -127,12 +129,13 @@ class CampaignsController extends BaseController
     $campaign = CMECampaign::find($id);
     if($campaign)
     {
-      $campaign->send_time  = date('Y-m-d H:i:s', $campaign->send_time);
-      $data['campaign']     = $campaign;
-      $data['brands']       = CMEBrand::getAllActive();
-      $data['lists']        = CMEList::getAllActive();
-      $data['placeholders'] = $this->_getPlaceHolders($campaign->list_id);
-      $data['filterData']   = $this->_getSegmentOptions($campaign->list_id);
+      $campaign->send_time   = date('Y-m-d H:i:s', $campaign->send_time);
+      $data['campaign']      = $campaign;
+      $data['brands']        = CMEBrand::getAllActive();
+      $data['lists']         = CMEList::getAllActive();
+      $data['smtpProviders'] = CMESmtpProvider::getAllActive();
+      $data['placeholders']  = $this->_getPlaceHolders($campaign->list_id);
+      $data['filterData']    = $this->_getSegmentOptions($campaign->list_id);
 
       return View::make('campaigns.edit', $data);
     }

@@ -101,7 +101,11 @@
                     </tr>
                     <tr>
                         <td>SMTP Provider:</td>
-                        <td><?php echo $campaign->smtp_provider_id ?></td>
+                        <?php if($campaign->smtpProvider): ?>
+                        <td><?php echo $campaign->smtpProvider->name ?></td>
+                        <?php else: ?>
+                        <td class="text-warning">Not Set</td>
+                        <?php endif; ?>
                     </tr>
                 </table>
             </div>

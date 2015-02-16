@@ -187,6 +187,22 @@ class CampaignsController extends BaseController
     return Redirect::to('/campaigns/preview/' . $data['id']);
   }
 
+  public function copy($id)
+  {
+    $originalCampaign = CMECampaign::find($id);
+
+    $newCampaign            = $originalCampaign->replicate();
+    $newCampaign->subject   = $newCampaign->subject . ' (COPY)';
+    $newCampaign->send_time = null;
+    $newCampaign->tested    = 0;
+    $newCampaign->previewed = 0;
+    $newCampaign->status    = 'Pending';
+
+    $newCampaign->push();
+
+    return Redirect::to('/campaigns');
+  }
+
   public function delete()
   {
     $id = Route::input('id');

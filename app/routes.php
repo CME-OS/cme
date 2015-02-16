@@ -31,6 +31,7 @@ Route::group(['before' => 'auth'], function(){
     Route::get('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
     Route::post('/campaigns/new', ['as' => 'campaign.new', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
     Route::get('/campaigns/new/{step}', ['as' => 'campaign.new-stepped', 'uses' => 'Cme\Web\Controllers\CampaignsController@neww']);
+    Route::get('/campaigns/copy/{id}', ['as' => 'campaign.copy', 'uses'=> 'Cme\Web\Controllers\CampaignsController@copy']);
     Route::get('/campaigns/edit/{id}', ['as' => 'campaign.edit', 'uses'=> 'Cme\Web\Controllers\CampaignsController@edit']);
     Route::get('/campaigns/delete/{id}', ['as' => 'campaign.delete', 'uses' => 'Cme\Web\Controllers\CampaignsController@delete']);
     Route::get('/campaigns/preview/{id}', ['as' => 'campaign.preview', 'uses' => 'Cme\Web\Controllers\CampaignsController@preview']);

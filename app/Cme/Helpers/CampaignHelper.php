@@ -120,4 +120,27 @@ class CampaignHelper
     return "http://" . $domain . "/track/" . $type . "/" . $data['campaignId']
     . "_" . $data['listId'] . "_" . $data['subscriberId'];
   }
+
+  public static function getPriority($priority)
+  {
+    switch($priority)
+    {
+      case 1:
+        $name = "Low";
+        break;
+      case 2:
+        $name = "Normal";
+        break;
+      case 3:
+        $name = "Medium";
+        break;
+      case 4:
+        $name = "High";
+        break;
+      default:
+        $name = "Unknowm";
+    }
+
+    return $name;
+  }
 }

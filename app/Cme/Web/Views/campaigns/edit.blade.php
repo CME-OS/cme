@@ -134,10 +134,10 @@
                         <label for="campaign-priority">Send Priority:</label>
                         <select name="send_priority" id="campaign-priority"
                                 class="form-control">
-                            <option value="2">Normal</option>
-                            <option value="1">Low</option>
-                            <option value="3">Medium</option>
-                            <option value="4">High</option>
+                            <option value="2" <?= ($campaign->send_priority == 2)? 'selected="selected"' : '' ?>>Normal</option>
+                            <option value="1" <?= ($campaign->send_priority == 1)? 'selected="selected"' : '' ?>>Low</option>
+                            <option value="3" <?= ($campaign->send_priority == 3)? 'selected="selected"' : '' ?>>Medium</option>
+                            <option value="4" <?= ($campaign->send_priority == 4)? 'selected="selected"' : '' ?>>High</option>
                         </select>
                     </div>
 

@@ -20,34 +20,45 @@ class HomeController extends BaseController
     ];
 
     $stats          = [];
-    $campaigns      = DB::select('SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5');
+    $campaigns      = DB::select(
+      'SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5'
+    );
     $campaignLookUp = [];
     foreach($campaigns as $campaign)
     {
-      $events = DB::select(
-        "SELECT * FROM campaign_events WHERE campaign_id = $campaign->id"
-      );
-      foreach($events as $event)
+      $lastId = 0;
+      do
       {
-        if(!isset($stats[$event->campaign_id]))
-        {
-          foreach($eventTypes as $type)
-          {
-            $stats[$event->campaign_id][$type] = 0;
-          }
-        }
-
-        if(isset($stats[$event->campaign_id][$event->event_type]))
-        {
-          $stats[$event->campaign_id][$event->event_type]++;
-        }
-
-        $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
-          $stats[$event->campaign_id]['opened'],
-          $stats[$event->campaign_id]['sent']
+        $events = DB::select(
+          "SELECT * FROM campaign_events
+           WHERE event_id > $lastId
+           AND campaign_id = $campaign->id
+           ORDER BY event_id ASC LIMIT 1000"
         );
-      }
+        foreach($events as $event)
+        {
+          if(!isset($stats[$event->campaign_id]))
+          {
+            foreach($eventTypes as $type)
+            {
+              $stats[$event->campaign_id][$type] = 0;
+            }
+          }
 
+          if(isset($stats[$event->campaign_id][$event->event_type]))
+          {
+            $stats[$event->campaign_id][$event->event_type]++;
+          }
+
+          $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
+            $stats[$event->campaign_id]['opened'],
+            $stats[$event->campaign_id]['sent']
+          );
+
+          $lastId = $event->event_id;
+        }
+      }
+      while($events);
 
       $campaignLookUp[$campaign->id] = $campaign->subject;
     }
@@ -64,7 +75,7 @@ class HomeController extends BaseController
     $result = "~";
     if($b > 0)
     {
-      $result = number_format((($a / $b) * 100), 2).'%';
+      $result = number_format((($a / $b) * 100), 2) . '%';
     }
     return $result;
   }

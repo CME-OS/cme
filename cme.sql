@@ -15,6 +15,18 @@ CREATE DATABASE IF NOT EXISTS `cme` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `cme`;
 
 
+-- Dumping structure for table cme.bounces
+CREATE TABLE IF NOT EXISTS `bounces` (
+  `email` varchar(200) NOT NULL,
+  `campaign_id` int(11) DEFAULT NULL,
+  `time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`email`),
+  KEY `campaign_id` (`campaign_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table cme.brands
 CREATE TABLE IF NOT EXISTS `brands` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -44,14 +56,15 @@ CREATE TABLE IF NOT EXISTS `campaigns` (
   `brand_id` int(11) NOT NULL DEFAULT '0',
   `send_time` int(11) DEFAULT NULL,
   `send_priority` int(11) NOT NULL DEFAULT '0',
-  `status` enum('Pending','Queuing','Queued','Sent','Paused','Aborted') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Queuing','Queued','Sending','Sent','Paused','Aborted') NOT NULL DEFAULT 'Pending',
   `type` enum('default','rolling') NOT NULL DEFAULT 'default',
-  `filters` text,
-  `created` int(11) NOT NULL,
   `frequency` int(11) DEFAULT NULL,
+  `filters` text,
   `tested` int(11) NOT NULL DEFAULT '0',
   `previewed` int(11) NOT NULL DEFAULT '0',
   `smtp_provider_id` int(11) DEFAULT NULL,
+  `created` int(11) NOT NULL,
+  `deleted_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -178,7 +191,24 @@ CREATE TABLE IF NOT EXISTS `smtp_providers` (
   `password` varchar(250) NOT NULL DEFAULT '0',
   `port` int(11) NOT NULL DEFAULT '0',
   `default` int(11) NOT NULL DEFAULT '0',
+  `deleted_at` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table cme.unsubscribes
+CREATE TABLE IF NOT EXISTS `unsubscribes` (
+  `email` varchar(200) NOT NULL,
+  `brand_id` int(11) DEFAULT NULL,
+  `campaign_id` int(11) DEFAULT NULL,
+  `list_id` int(11) DEFAULT NULL,
+  `time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`email`),
+  KEY `brand_id` (`brand_id`),
+  KEY `campaign_id` (`campaign_id`),
+  KEY `list_id` (`list_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.

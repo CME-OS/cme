@@ -37,7 +37,7 @@ class HomeController extends BaseController
           }
         }
 
-        if(isset($stats[$event->campaign_id]))
+        if(isset($stats[$event->campaign_id][$event->event_type]))
         {
           $stats[$event->campaign_id][$event->event_type]++;
         }

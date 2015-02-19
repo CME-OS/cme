@@ -63,14 +63,7 @@ class QueueMessages extends CmeCommand
           $lockedCampaign = $queueRequest->campaign_id;
 
           //grab the campaign
-          $campaign = head(
-            DB::select(
-              sprintf(
-                "SELECT * FROM campaigns WHERE id=%d",
-                $lockedCampaign
-              )
-            )
-          );
+          $campaign = CMECampaign::find($lockedCampaign);
 
           //get the brand
           $brand = CMEBrand::find($campaign->brand_id);

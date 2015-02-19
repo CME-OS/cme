@@ -3,6 +3,8 @@ namespace Cme\Cli;
 
 use Cme\Helpers\CampaignHelper;
 use Cme\Helpers\FilterHelper;
+use Cme\Models\CMEBrand;
+use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
@@ -71,14 +73,7 @@ class QueueMessages extends CmeCommand
           );
 
           //get the brand
-          $brand = head(
-            DB::select(
-              sprintf(
-                "SELECT * FROM brands WHERE id=%d",
-                $campaign->brand_id
-              )
-            )
-          );
+          $brand = CMEBrand::find($campaign->brand_id);
 
           //process list in chunks
           $listTable = 'list_' . $queueRequest->list_id;

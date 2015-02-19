@@ -19,3 +19,4 @@ Artisan::add(new Cme\Cli\UninstallDb);
 Artisan::add(new Cme\Cli\DbSnapshot);
 Artisan::add(new Cme\Cli\GenerateMigrationFiles);
 Artisan::add(new Cme\Cli\CreateUser);
+Artisan::add(new Cme\Cli\ProcessBouncedMessages);

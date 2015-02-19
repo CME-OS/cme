@@ -10,7 +10,8 @@
     "laravel/framework":            "4.2.*",
     "rmccue/requests":              "1.6.1",
     "way/generators":               "~2.0",
-    "xethron/migrations-generator": "dev-master"
+    "xethron/migrations-generator": "dev-master",
+    "aws/aws-sdk-php":              "2.7.18"
   },
   "autoload":          {
     "classmap": [

@@ -89,8 +89,11 @@ class CampaignHelper
     foreach($dom->getElementsByTagName('a') as $node)
     {
       $oldHref = $node->getAttribute('href');
-      $newHref = $clickLink . "/" . base64_encode($oldHref);
-      $node->setAttribute('href', $newHref);
+      if($oldHref != '[brand_unsubscribe_url]')
+      {
+        $newHref = $clickLink . "/" . base64_encode($oldHref);
+        $node->setAttribute('href', $newHref);
+      }
     }
     $html = $dom->saveHTML();
 
@@ -104,7 +107,7 @@ class CampaignHelper
       $data['brand_unsubscribe_url'],
       $data
     );
-    $html    = str_replace('[brand_unsubscribe_url]', $replace, $html);
+    $html    = str_replace('%5Bbrand_unsubscribe_url%5D', $replace, $html);
 
     //append pixel to html content, so we can track opens
     $pixelUrl = self::_generateTrackLink('open', $data);

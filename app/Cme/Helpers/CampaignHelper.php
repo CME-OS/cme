@@ -22,7 +22,7 @@ class CampaignHelper
       }
 
       //add brand attributes as placeholders too
-      $columns = array_keys((array)$brand);
+      $columns = array_keys($brand->attributesToArray());
       foreach($columns as $c)
       {
         self::$_placeHolders[$c] = "[$c]";

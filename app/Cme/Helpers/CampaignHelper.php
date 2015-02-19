@@ -35,11 +35,11 @@ class CampaignHelper
     foreach(self::$_placeHolders as $prop => $placeHolder)
     {
       $replace = false;
-      if(property_exists($subscriber, $prop))
+      if(isset($subscriber->$prop))
       {
         $replace = $subscriber->$prop;
       }
-      elseif(property_exists($brand, $prop))
+      elseif(isset($brand->$prop))
       {
         if($prop != 'brand_unsubscribe_url')
         {

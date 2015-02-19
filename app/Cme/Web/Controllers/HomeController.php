@@ -67,6 +67,13 @@ class HomeController extends BaseController
     $data['stats']          = $stats;
     $data['campaignLookUp'] = $campaignLookUp;
 
+    //get total stats
+    $totalStats = DB::select(
+      "SELECT count(*) as total, event_type FROM campaign_events GROUP BY event_type"
+    );
+
+    $data['totalStats'] = $totalStats;
+
     return View::make('dashboard.home', $data);
   }
 

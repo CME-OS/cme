@@ -22,6 +22,23 @@
   <h1>Dashboard</h1>
   <?php ?>
   <div class="row">
+    <div class="col-md-2">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          All Time Total
+        </div>
+        <div class="panel-body">
+          <table class="table table-striped table-hover table-condensed" style="">
+            <?php foreach($totalStats as $event): ?>
+              <tr>
+                <td><?= ucwords($event->event_type) ?> </td>
+                <td><strong><?= $event->total ?></strong></td>
+              </tr>
+            <?php endforeach; ?>
+          </table>
+        </div>
+      </div>
+    </div>
     <?php foreach($stats as $campaignId => $data): ?>
       <div class="col-md-2">
         <div class="panel panel-default">
@@ -31,7 +48,7 @@
             </a>
           </div>
           <div class="panel-body">
-            <table class="table table-striped table-hover table-condensed" style="">
+            <table class="table table-striped table-hover table-condensed" style="font-size:12px;">
               <?php foreach($eventTypes as $type): ?>
                 <tr>
                   <td><?= ucwords($type) ?> </td>

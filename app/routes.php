@@ -132,6 +132,6 @@ Route::post(
   }
 );
 
-Route::post('/ph', 'Cme\Web\Controllers\CampaignsController@getPlaceHolders');
+Route::get('/ph', 'Cme\Web\Controllers\CampaignsController@getPlaceHolders');
 Route::post('/ds', 'Cme\Web\Controllers\CampaignsController@getDefaultSender');
 Route::post('/so', 'Cme\Web\Controllers\CampaignsController@getSegmentOptions');

@@ -211,6 +211,10 @@
     </div>
     </div>
     <div class="clearfix"></div>
+    <script>
+        if(!window.cme){window.cme = {};}
+        window.cme.listId = '<?= $campaign->list_id ?>';
+    </script>
     <script src="/assets/ckeditor/ckeditor.js"></script>
     <script>CKEDITOR.replace('campaign-message');</script>
 @stop

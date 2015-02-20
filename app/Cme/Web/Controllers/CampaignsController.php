@@ -381,8 +381,10 @@ class CampaignsController extends BaseController
     $final        = [];
     foreach($placeholders as $k => $v)
     {
-      $final[] = ['name' => "[$v]"];
+      $final[] = ['value' => "[$v]",'text' => "[$v]", 'label' => "[$v]"];
     }
+
+
 
     return Response::json($final);
   }

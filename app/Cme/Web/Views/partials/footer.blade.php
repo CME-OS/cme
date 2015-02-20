@@ -15,14 +15,18 @@
 <script src="/assets/js/custom.js"></script>
 <script src="/assets/datetimepicker/js/datetimepicker.min.js"></script>
 <script>
-  window.cme = {};
+  if(!window.cme)
+  {
+    window.cme = {};
+  }
   function getPlaceHolders(listIdVal)
   {
     if(listIdVal != "")
     {
+      window.cme.listId = listIdVal;
       console.log(listIdVal);
       $('.placeholders').html("");
-      $.post('/ph', {listId : listIdVal}, function(data){
+      $.get('/ph', {listId : listIdVal}, function(data){
         console.log(data);
         $.each(data, function() {
           $('.placeholders').append($("<div />").text(this.name));

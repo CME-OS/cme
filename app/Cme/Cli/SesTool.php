@@ -190,11 +190,15 @@ class SesTool extends CmeDbCommand
   {
     $sqsClient = SqsClient::factory($this->_awsCredentials);
 
-    $queueUrl = Config::get('cme.sqs_bounce_queue');
+    $sqsQueueUrl = $sqsClient->createQueue(
+      [
+        'QueueName' => 'cmeQueue'
+      ]
+    )->get('QueueUrl');
 
     $result = $sqsClient->receiveMessage(
       [
-        'QueueUrl'            => $queueUrl,
+        'QueueUrl'            => $sqsQueueUrl,
         'MaxNumberOfMessages' => 10
       ]
     );
@@ -254,7 +258,7 @@ class SesTool extends CmeDbCommand
                   {
                     $sqsClient->deleteMessage(
                       [
-                        'QueueUrl'      => $queueUrl,
+                        'QueueUrl'      => $sqsQueueUrl,
                         'ReceiptHandle' => $message['ReceiptHandle']
                       ]
                     );
@@ -270,6 +274,13 @@ class SesTool extends CmeDbCommand
             }
             else
             {
+              $sqsClient->deleteMessage(
+                [
+                  'QueueUrl'      => $sqsQueueUrl,
+                  'ReceiptHandle' => $message['ReceiptHandle']
+                ]
+              );
+
               $type = isset($messageDetails->notificationType) ?
                 ': ' . $messageDetails->notificationType : '';
 

@@ -222,7 +222,7 @@ class SesTool extends CmeDbCommand
               $sourceEmail = $messageDetails->mail->source;
 
               $name       = strstr($sourceEmail, '@', true);
-              $campaignId = null;
+              $campaignId = $listId = $subscriberId = null;
               if(strpos($name, '+') !== false)
               {
                 list($name, $cmeMessageId) = explode('+', $name, 2);
@@ -251,6 +251,19 @@ class SesTool extends CmeDbCommand
                       'time'        => time()
                     ]
                   );
+
+                  if($campaignId && $listId && $subscriberId)
+                  {
+                    //add to campaign events table
+                    $event = [
+                      'campaign_id'   => $campaignId,
+                      'list_id'       => $listId,
+                      'subscriber_id' => $subscriberId,
+                      'event_type'    => 'bounced',
+                      'time'          => time()
+                    ];
+                    DB::table('campaign_events')->insert($event);
+                  }
 
                   $this->info($message['ReceiptHandle']);
                   //remove message

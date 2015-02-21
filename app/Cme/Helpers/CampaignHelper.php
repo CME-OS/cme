@@ -62,7 +62,7 @@ class CampaignHelper
     ];
     $html = self::_insertTrackers($html, $data);
 
-    $message = new \stdClass();
+    $message       = new \stdClass();
     $message->html = $html;
     $message->text = $text;
     return $message;
@@ -80,7 +80,7 @@ class CampaignHelper
   {
     //wrap html in <cme> tags, so we can extract our original content after
     //messing with it in DOM
-    $html = "<cme>".$html."</cme>";
+    $html = "<cme>" . $html . "</cme>";
 
     //find all links in campaign and track them
     $dom = new \DOMDocument();
@@ -145,5 +145,12 @@ class CampaignHelper
     }
 
     return $name;
+  }
+
+  public static function labelSender($email, $label)
+  {
+    $domain = strstr($email, '@');
+    $user   = strstr($email, '@', true);
+    return $user . '+' . $label . $domain;
   }
 }

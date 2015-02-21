@@ -355,7 +355,7 @@ class CampaignsController extends BaseController
         'to'            => $email,
         'html_content'  => $message->html,
         'text_content'  => $message->text,
-        'subscriber_id' => $subscriber->id,
+        'subscriber_id' => 0,
         'list_id'       => $campaign->list_id,
         'brand_id'      => $campaign->brand_id,
         'campaign_id'   => $campaign->id,

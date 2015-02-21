@@ -35,12 +35,27 @@ class SesTool extends CmeDbCommand
   public function __construct()
   {
     parent::__construct();
+
+    $key    = Config::get('cme.aws_key');
+    $secret = Config::get('cme.aws_secret');
+    $region = Config::get('cme.aws_region');
+
+    if(!$key || !$secret || !$region)
+    {
+      echo(
+        "You need to set the following keys in your .env file\n"
+        . " \n - aws_key, \n - aws_secret \n - aws_region"
+      ." \n\nYou can get this from your AWS console online"
+      );
+      die;
+    }
+
     $this->_awsCredentials = array(
       'credentials' => array(
-        'key'    => Config::get('cme.aws_key'),
-        'secret' => Config::get('cme.aws_secret'),
+        'key'    => $key,
+        'secret' => $secret,
       ),
-      'region'      => Config::get('cme.aws_region')
+      'region'      => $region
     );
   }
 

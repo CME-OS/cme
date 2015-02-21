@@ -45,6 +45,17 @@ Route::group(['before' => 'auth'], function(){
     Route::post('/campaigns/add', ['as' => 'campaigns.add.post', 'uses' => 'Cme\Web\Controllers\CampaignsController@add']);
     Route::post('/campaigns/update', ['as' => 'campaigns.update.post', 'uses' => 'Cme\Web\Controllers\CampaignsController@update']);
 
+    //templates
+    Route::get('/templates', ['as' => 'templates', 'uses' => 'Cme\Web\Controllers\TemplatesController@index']);
+    Route::get('/templates/new', ['as' => 'template.new', 'uses' => 'Cme\Web\Controllers\TemplatesController@neww']);
+    Route::get('/templates/view/{id}', ['as' => 'template.view', 'uses' => 'Cme\Web\Controllers\TemplatesController@view']);
+    Route::get('/templates/edit/{id}', ['as' => 'template.edit', 'uses' => 'Cme\Web\Controllers\TemplatesController@edit']);
+    Route::get('/templates/delete/{id}', ['as' => 'template.delete', 'uses' => 'Cme\Web\Controllers\TemplatesController@delete']);
+    Route::get('/templates/preview/{id}', ['as' => 'template.preview', 'uses' => 'Cme\Web\Controllers\TemplatesController@preview']);
+    Route::get('/templates/content/{id}', ['as' => 'template.content', 'uses' => 'Cme\Web\Controllers\TemplatesController@content']);
+    Route::post('/templates/add', ['as' => 'template.add.post', 'uses' => 'Cme\Web\Controllers\TemplatesController@add']);
+    Route::post('/templates/update', ['as' => 'template.update.post', 'uses' => 'Cme\Web\Controllers\TemplatesController@update']);
+
     //queues
     Route::get('/queues', ['as' => 'queues', 'uses' => 'Cme\Web\Controllers\QueuesController@index']);
 

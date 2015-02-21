@@ -36,12 +36,14 @@
               <li><a href="{{ URL::route('lists.new') }}">Create new list</a></li>
             </ul>
           </li>
-            
+
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Campaigns <span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               <li><a href="{{ URL::route('campaigns') }}">Manage campaigns</a></li>
               <li><a href="{{ URL::route('campaign.new') }}">Create new campaign</a></li>
+              <li><a href="{{ URL::route('templates') }}">Manage templates</a></li>
+              <li><a href="{{ URL::route('template.new') }}">Create new template</a></li>
             </ul>
           </li>
           <li><a href="/queues">Queues</a></li>

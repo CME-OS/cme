@@ -366,7 +366,7 @@ class CampaignsController extends BaseController
       $campaign->tested = 1;
       $campaign->save();
 
-      return Redirect::to("/campaigns");
+      return Redirect::to("/campaigns/preview/" . $campaignId);
     }
     else
     {

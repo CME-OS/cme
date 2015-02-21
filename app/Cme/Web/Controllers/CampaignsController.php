@@ -6,6 +6,7 @@ use Cme\Helpers\ListHelper;
 use Cme\Helpers\ListsSchemaHelper;
 use Cme\Models\CMEBrand;
 use Cme\Models\CMECampaign;
+use Cme\Models\CMECampaignEvent;
 use Cme\Models\CMEList;
 use Cme\Models\CMESmtpProvider;
 use \Illuminate\Support\Facades\Input;
@@ -146,6 +147,7 @@ class CampaignsController extends BaseController
   {
     $campaign         = CMECampaign::find($id);
     $data['campaign'] = $campaign;
+    $data['sentEmails'] = CMECampaignEvent::getSentMessages($id);
     return View::make('campaigns.preview', $data);
   }
 

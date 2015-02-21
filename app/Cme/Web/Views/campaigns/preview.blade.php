@@ -16,7 +16,7 @@
         <div class="col-md-4">
             <p style="font-size:16px;">Status: <?= $campaign->status ?></p>
             <?php if($campaign->status == 'Sending'): ?>
-            <p>Sent so far: 50</p>
+            <p>Sent so far: <?= $sentEmails ?></p>
             <?php endif; ?>
 
             <div style="margin-bottom: 10px;">

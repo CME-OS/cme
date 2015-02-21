@@ -8,8 +8,13 @@ class CMECampaignEvent extends Model
 {
   protected $table = 'campaign_events';
 
-  public static function getCampaignEvents($id)
+  public static function getCampaignEvents($campaignId)
   {
-    return self::where('campaign_id', '=', $id)->get();
+    return self::where('campaign_id', '=', $campaignId)->get();
+  }
+
+  public static function getSentMessages($campaignId)
+  {
+    return self::where(['campaign_id' => $campaignId, 'event_type' => 'Sent'])->count();
   }
 }

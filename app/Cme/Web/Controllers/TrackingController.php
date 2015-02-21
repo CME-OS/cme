@@ -5,6 +5,7 @@ use Cme\Helpers\ListHelper;
 use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
 
 class TrackingController extends BaseController
 {
@@ -20,6 +21,7 @@ class TrackingController extends BaseController
           'list_id'       => $listId,
           'subscriber_id' => $subscriberId,
           'event_type'    => 'opened',
+          'reference'     => $this->_getIpAddress(),
           'time'          => time()
         ]
       );
@@ -90,8 +92,15 @@ class TrackingController extends BaseController
     return Redirect::to($redirectTo);
   }
 
-  public function test()
+  private function _getIpAddress()
   {
-    echo "boo";
+    $ip = Request::server(
+      'HTTP_CLIENT_IP',
+      Request::server(
+        'HTTP_X_FORWARDED_FOR',
+        Request::server('REMOTE_ADDR')
+      )
+    );
+    return $ip;
   }
 }

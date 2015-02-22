@@ -14,6 +14,12 @@ class CMETemplate extends Model
     return self::whereNull('deleted_at')->get();
   }
 
+  public static function getKeyedListFor($field)
+  {
+    return self::whereNull('deleted_at')
+      ->orderBy('id', 'asc')->lists($field, 'id');
+  }
+
   public static function fields()
   {
     return [

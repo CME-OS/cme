@@ -83,6 +83,12 @@ Route::group(['before' => 'auth'], function(){
 
     Route::post('/smtp-providers/add', ['as' => 'smtp-providers.add.post', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@add']);
     Route::post('/smtp-providers/update', ['as' => 'smtp-providers.update.post', 'uses' => 'Cme\Web\Controllers\SmtpProvidersController@update']);
+
+    //AJAX
+    Route::get('/ph', 'Cme\Web\Controllers\CampaignsController@getPlaceHolders');
+    Route::post('/ds', 'Cme\Web\Controllers\CampaignsController@getDefaultSender');
+    Route::post('/so', 'Cme\Web\Controllers\CampaignsController@getSegmentOptions');
+    Route::post('/tc', 'Cme\Web\Controllers\CampaignsController@getTemplate');
 });
 
 //login
@@ -142,7 +148,3 @@ Route::post(
     return \Illuminate\Support\Facades\Response::json($data);
   }
 );
-
-Route::get('/ph', 'Cme\Web\Controllers\CampaignsController@getPlaceHolders');
-Route::post('/ds', 'Cme\Web\Controllers\CampaignsController@getDefaultSender');
-Route::post('/so', 'Cme\Web\Controllers\CampaignsController@getSegmentOptions');

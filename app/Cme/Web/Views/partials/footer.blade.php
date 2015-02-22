@@ -190,6 +190,18 @@
 
   }
 
+  if(document.getElementById('campaign-template'))
+  {
+    console.log('Detected campaign template select field');
+    $('#campaign-template').change(function(){
+      //grab the content and paste into the edito
+      var templateIdVal = $(this).val();
+      $.post('/tc', {templateId : templateIdVal}, function(data){
+        CKEDITOR.instances['campaign-message'].setData(data.template)
+      });
+    });
+  }
+
   $(function() {
     $('#datetimepicker').datetimepicker({
       useSeconds: true,

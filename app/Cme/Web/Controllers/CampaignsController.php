@@ -9,6 +9,7 @@ use Cme\Models\CMECampaign;
 use Cme\Models\CMECampaignEvent;
 use Cme\Models\CMEList;
 use Cme\Models\CMESmtpProvider;
+use Cme\Models\CMETemplate;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
@@ -99,6 +100,7 @@ class CampaignsController extends BaseController
   {
     $campaign = CMECampaign::find($campaignId);;
     $data['campaign']     = $campaign;
+    $data['templates']    = CMETemplate::getKeyedListFor('name');
     $data['placeholders'] = $this->_getPlaceHolders($campaign->list_id);
 
     return View::make('campaigns.step2', $data);
@@ -145,8 +147,8 @@ class CampaignsController extends BaseController
 
   public function preview($id)
   {
-    $campaign         = CMECampaign::find($id);
-    $data['campaign'] = $campaign;
+    $campaign           = CMECampaign::find($id);
+    $data['campaign']   = $campaign;
     $data['sentEmails'] = CMECampaignEvent::getSentMessages($id);
     return View::make('campaigns.preview', $data);
   }
@@ -391,10 +393,8 @@ class CampaignsController extends BaseController
     $final        = [];
     foreach($placeholders as $k => $v)
     {
-      $final[] = ['value' => "[$v]",'text' => "[$v]", 'label' => "[$v]"];
+      $final[] = ['value' => "[$v]", 'text' => "[$v]", 'label' => "[$v]"];
     }
-
-
 
     return Response::json($final);
   }
@@ -448,5 +448,17 @@ class CampaignsController extends BaseController
     ];
 
     return $response;
+  }
+
+  public function getTemplate()
+  {
+    $templateId           = Input::get('templateId');
+    $template             = CMETemplate::find($templateId);
+    $response['template'] = "";
+    if($template)
+    {
+      $response['template'] = $template->content;
+    }
+    return Response::json($response);
   }
 }

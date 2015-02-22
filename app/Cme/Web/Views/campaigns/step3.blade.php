@@ -1,14 +1,12 @@
 @extends('layouts.default')
 @section('content')
 <link rel="stylesheet" href="/assets/datetimepicker/css/datetimepicker.min.css"/>
-<h1 class="page-header">Campaigns
-  <small>Manage your campaigns</small>
+<h1 class="page-header">Step 3:
+  <small>Schedule & Prioritize a Campaign</small>
 </h1>
 <form role="form" action="/campaigns/add" method="post">
   <input type="hidden" name="step" value="3"/>
   <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
-  <h2>Step 3: Schedule & Prioritize a Campaign</h2>
-
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">

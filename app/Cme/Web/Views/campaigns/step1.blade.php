@@ -1,12 +1,10 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header">Campaigns
-  <small>Manage your campaigns</small>
+<h1 class="page-header">Step 1:
+  <small>Define Campaign</small>
 </h1>
 <form role="form" action="/campaigns/new" method="post">
   <input type="hidden" name="step" value="2"/>
-  <h2>Step 1: Define Campaign</h2>
-
   <div class="row">
     <div class="col-md-6">
       <div class="form-group">

@@ -38,9 +38,4 @@ class CreateBrandsTable extends Migration {
 		Schema::drop('brands');
 	}
 
-	public function test()
-	{
-		echo "holla!";
-	}
-
 }

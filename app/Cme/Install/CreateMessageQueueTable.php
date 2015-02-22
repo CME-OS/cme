@@ -25,7 +25,7 @@ class CreateMessageQueueTable extends Migration {
 			$table->integer('list_id')->default(0)->index('list_id');
 			$table->integer('brand_id')->default(0)->index('brand_id');
 			$table->integer('campaign_id')->default(0)->index('campaign_id');
-			$table->enum('status', array('Pending','Sent','Failed'))->default('Pending')->index('status');
+			$table->enum('status', array('Pending','Sent','Failed','Paused'))->default('Pending')->index('status');
 			$table->integer('send_time')->nullable();
 			$table->integer('send_priority')->nullable();
 			$table->string('locked_by', 225)->nullable()->index('locked_by');

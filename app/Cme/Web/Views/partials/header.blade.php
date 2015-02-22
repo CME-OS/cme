@@ -51,7 +51,7 @@
           <li><a href="/users">Users</a></li>
           <li><a href="/smtp-providers">SMTP Providers</a></li>
       </ul>
-
+      <p class="navbar-text navbar-right" style="font-size:12px; color:#fff;"><?= Auth::user()->email ?> <a href="/logout" class="navbar-link">Logout</a></p>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

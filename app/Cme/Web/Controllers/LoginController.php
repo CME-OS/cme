@@ -36,4 +36,10 @@ class LoginController extends BaseController
     }
     //return Redirect::route('login');
   }
+
+  public function logout()
+  {
+    Auth::logout();
+    return Redirect::to('/login');
+  }
 }

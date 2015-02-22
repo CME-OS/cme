@@ -93,6 +93,7 @@ Route::group(['before' => 'auth'], function(){
 
 //login
 Route::get('/login', ['as' => 'login', 'uses' => 'Cme\Web\Controllers\LoginController@login']);
+Route::get('/logout', 'Cme\Web\Controllers\LoginController@logout');
 Route::post('/login', 'Cme\Web\Controllers\LoginController@authenticate');
 
 //tracking

@@ -1,13 +1,7 @@
 <?php
 namespace Cme\Cli;
 
-use Cme\Helpers\ApiImporter;
-use Cme\Helpers\CsvImporter;
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\Console\Input\InputArgument;
 
 class UninstallDb extends CmeDbCommand
 {

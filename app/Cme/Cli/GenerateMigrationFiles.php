@@ -1,11 +1,7 @@
 <?php
 namespace Cme\Cli;
 
-use Cme\Helpers\ApiImporter;
-use Cme\Helpers\CsvImporter;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateMigrationFiles extends CmeCommand
 {
@@ -72,8 +68,8 @@ class GenerateMigrationFiles extends CmeCommand
           echo "Generating migration file" . PHP_EOL;
 
           $this->call(
-            'migrate.generate',
-            ['tales' => $table]
+            'migrate:generate',
+            ['tables' => $table]
           );
         }
         //get create code

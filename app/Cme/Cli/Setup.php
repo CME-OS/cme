@@ -46,24 +46,64 @@ class Setup extends CmeDbCommand
     }
     else
     {
-      $this->info("Welcome to CME Setup. This tool will help you install CME on your system");
-      $this->info("Before proceeding please ensure that you have ran composer update");
+      $this->info(
+        "Welcome to CME Setup. This tool will help you install CME on your system"
+      );
+      $this->info(
+        "Before proceeding please ensure that you have ran composer update"
+      );
 
-      $this->info("You are installing CME on " . $this->option('env') . ' Environment');
+      $this->info(
+        "You are installing CME on " . $this->option('env') . ' Environment'
+      );
       $this->info("===================");
       $this->info("=    CME DOMAIN   =");
       $this->info("===================");
-      $domain = $this->ask("Enter CME domain as specified in vhost e.g cme.domain.com: ");
+      $domain = $this->ask(
+        "Enter CME domain as specified in vhost e.g cme.domain.com: "
+      );
 
       $this->info("\n===================");
       $this->info("=   CME DATABASE  =");
       $this->info("===================");
-      $this->info("Before proceeding, please ensure you have created a database for this installation");
-      $this->ask("Press Enter if you have already done this");
-      $dbName     = $this->ask("Enter CME database name. If blank, defaults to cme: ", 'cme');
-      $dbHost     = $this->ask("Enter CME database host. If blank, defaults to localhost: ", 'localhost');
-      $dbUser     = $this->ask("Enter CME database user. If blank, defaults to root: ", 'root');
-      $dbPassword = $this->ask("Enter CME database password. If blank, defaults to no password: ", '');
+      $this->info(
+        "Before proceeding, please ensure you have created a database for this installation"
+      );
+      $this->ask("Press any key if you have already done this");
+
+      $dbDetailsAreWrong = true;
+      do
+      {
+        $dbName     = $this->ask(
+          "Enter CME database name. If blank, defaults to cme: ",
+          'cme'
+        );
+        $dbHost     = $this->ask(
+          "Enter CME database host. If blank, defaults to localhost: ",
+          'localhost'
+        );
+        $dbUser     = $this->ask(
+          "Enter CME database user. If blank, defaults to root: ",
+          'root'
+        );
+        $dbPassword = $this->ask(
+          "Enter CME database password. If blank, defaults to no password: ",
+          ''
+        );
+        //test db connection
+        if(mysql_connect($dbHost, $dbUser, $dbPassword))
+        {
+          $dbDetailsAreWrong = false;
+        }
+        else
+        {
+          $this->error(
+            "I can't seem to connect to your database. " . "Please check that you have entered the right details"
+          );
+          $this->ask("Press any key to retry");
+        }
+      }
+      while($dbDetailsAreWrong);
 
       $this->info("\n===================");
       $this->info("=    CME AWS      =");
@@ -108,7 +148,9 @@ class Setup extends CmeDbCommand
       );
       $this->info("Username: admin");
       $this->info("Password: admin");
-      $this->info("Please make sure you create a different user and delete this one");
+      $this->info(
+        "Please make sure you create a different user and delete this one"
+      );
     }
   }
 

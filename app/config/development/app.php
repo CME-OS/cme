@@ -2,7 +2,7 @@
 
 return array(
   'debug'  => true,
-  'domain' => $_ENV['domain'],
-  'key'    => $_ENV['key'],
-  'cipher' => $_ENV['cipher'],
+  'domain' => isset($_ENV['domain']) ? $_ENV['domain'] : '',
+  'key'    => isset($_ENV['key']) ? $_ENV['key'] : '',
+  'cipher' => isset($_ENV['cipher']) ? $_ENV['cipher'] : '',
 );

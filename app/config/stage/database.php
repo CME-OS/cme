@@ -22,13 +22,13 @@ return array(
 
     'mysql' => array(
       'driver'    => 'mysql',
-      'host'      => $_ENV['mysql.host'],
-      'database'  => $_ENV['mysql.database'],
-      'username'  => $_ENV['mysql.username'],
-      'password'  => $_ENV['mysql.password'],
-      'charset'   => $_ENV['mysql.charset'],
-      'collation' => $_ENV['mysql.collation'],
-      'prefix'    => $_ENV['mysql.prefix'],
+      'host'      => isset($_ENV['mysql.host']) ? $_ENV['mysql.host'] : '',
+      'database'  => isset($_ENV['mysql.database']) ? $_ENV['mysql.database'] : '',
+      'username'  => isset($_ENV['mysql.username']) ? $_ENV['mysql.username'] : '',
+      'password'  => isset($_ENV['mysql.password']) ? $_ENV['mysql.password'] : '',
+      'charset'   => isset($_ENV['mysql.charset']) ? $_ENV['mysql.charset'] : '',
+      'collation' => isset($_ENV['mysql.collation']) ? $_ENV['mysql.collation'] : '',
+      'prefix'    => isset($_ENV['mysql.prefix']) ? $_ENV['mysql.prefix'] : '',
     )
   )
 );

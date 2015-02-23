@@ -352,12 +352,13 @@ class CampaignsController extends BaseController
       list($fromName, $fromEmail) = explode(' <', $campaign->from);
 
       $fromEmail = trim($fromEmail, '<>');
-      $messageId = implode(
+
+      //add label to fromEmail so we can track bounces
+      /*$messageId = implode(
         '.',
         [$campaign->id, $campaign->list_id, $subscriber->id]
       );
-      //add label to fromEmail so we can track bounces
-      $fromEmail = CampaignHelper::labelSender($fromEmail, $messageId);
+      $fromEmail = CampaignHelper::labelSender($fromEmail, $messageId);*/
 
       //write to message queue
       $message = [

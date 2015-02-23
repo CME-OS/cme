@@ -101,7 +101,6 @@ class SesTool extends CmeDbCommand
       //get all verified domains
       $domains = $sesClient->listIdentities(
         array(
-          'IdentityType' => 'Domain',
           'NextToken'    => '',
           'MaxItems'     => 10,
         )

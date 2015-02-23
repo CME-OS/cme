@@ -8,6 +8,7 @@ use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class QueueMessages extends CmeCommand
 {
@@ -125,12 +126,19 @@ class QueueMessages extends CmeCommand
                 list($fromName, $fromEmail) = explode(' <', $campaign->from);
                 $fromEmail = trim($fromEmail, '<>');
 
-                $messageId = implode(
-                  '.',
-                  [$campaign->id, $campaign->list_id, $subscriber->id]
-                );
-                //add label to fromEmail so we can track bounces
-                $fromEmail = CampaignHelper::labelSender($fromEmail, $messageId);
+                $label = $this->option('label-sender');
+                if($label)
+                {
+                  $messageId = implode(
+                    '.',
+                    [$campaign->id, $campaign->list_id, $subscriber->id]
+                  );
+                  //add label to fromEmail so we can track bounces
+                  $fromEmail = CampaignHelper::labelSender(
+                    $fromEmail,
+                    $messageId
+                  );
+                }
 
                 //write to message queue
                 $message = [
@@ -230,6 +238,24 @@ class QueueMessages extends CmeCommand
     return array(
       array('inst', InputArgument::REQUIRED, 'Instance Name'),
     );
+  }
+
+  /**
+   * Get the console command options.
+   *
+   * @return array
+   */
+  protected function getOptions()
+  {
+    return [
+      [
+        'label-sender',
+        'l',
+        InputOption::VALUE_OPTIONAL,
+        'Whether sender should be labelled or not. '
+        . 'Not all mail server support labelling'
+      ],
+    ];
   }
 
   private function _getInstanceName()

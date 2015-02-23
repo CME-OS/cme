@@ -2,7 +2,7 @@
 namespace Cme\Web\Controllers;
 
 use Cme\Models\CMECampaign;
-use Cme\Models\CMECampaignEvent;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 
@@ -30,19 +30,31 @@ class AnalyticsController extends BaseController
     ];
 
     $stats  = [];
-    $events = CMECampaignEvent::getCampaignEvents($id);
 
     foreach($eventTypes as $type)
     {
       $stats[$type] = 0;
     }
-    foreach($events as $event)
+
+    $lastId = 0;
+    do
     {
-      if(isset($stats[$event->event_type]))
+      $events = DB::select(
+        "SELECT * FROM campaign_events
+         WHERE event_id > $lastId
+         AND campaign_id = $id
+         ORDER BY event_id ASC LIMIT 1000"
+      );
+      foreach($events as $event)
       {
-        $stats[$event->event_type]++;
+        if(isset($stats[$event->event_type]))
+        {
+          $stats[$event->event_type]++;
+        }
+        $lastId = $event->event_id;
       }
     }
+    while($events);
 
     return $stats;
   }

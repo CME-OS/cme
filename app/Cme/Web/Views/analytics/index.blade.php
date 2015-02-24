@@ -62,14 +62,51 @@
         </div>
       </div>
     </div>
-    <div class="well graph" style="background-color: #fff; border:0;">
-      <div class="row">
-         <div class="col-md-8 col-md-offset-2">
-           <canvas id="canvas" height="450" width="800" class="center-block"></canvas>
-         </div>
-      </div>
+
+    <div>
+      <h2>Link Activity</h2>
+      <table class="table table-bordered">
+        <tr>
+          <th>Link</th>
+          <th>Unique</th>
+          <th>Total</th>
+        </tr>
+        <?php foreach($clicks as $link => $data): ?>
+        <tr>
+          <td><?= $link  ?></td>
+          <td><?= $data['unique']; ?></td>
+          <td><?= $data['total']; ?></td>
+        </tr>
+        <?php endforeach; ?>
+      </table>
+
+      <h2>Last 10 Opens</h2>
+      <table class="table table-bordered">
+        <tr>
+          <th>Email</th>
+        </tr>
+        <?php foreach($opens as $s): ?>
+        <tr>
+          <td><?= $s->email; ?></td>
+        </tr>
+        <?php endforeach; ?>
+      </table>
+
+
+      <h2>Last 10 Unsubscribes</h2>
+      <table class="table table-bordered">
+        <tr>
+          <th>Email</th>
+        </tr>
+        <?php foreach($unsubscribes as $s): ?>
+        <tr>
+          <td><?= $s->email; ?></td>
+        </tr>
+        <?php endforeach; ?>
+      </table>
 
     </div>
+
     <?php else: ?>
       <div class="well">
         <p class="text-center" style="font-size:40px;">Select a campaign to display performance analytics</p>
@@ -78,38 +115,5 @@
   </div>
 </div>
 
-<script>
-  var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
-  var lineChartData = {
-    labels : ["January","February","March","April","May","June","July"],
-    datasets : [
-      {
-        label: "My First dataset",
-        fillColor : "rgba(220,220,220,0.2)",
-        strokeColor : "rgba(220,220,220,1)",
-        pointColor : "rgba(220,220,220,1)",
-        pointStrokeColor : "#fff",
-        pointHighlightFill : "#fff",
-        pointHighlightStroke : "rgba(220,220,220,1)",
-        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-      },
-      {
-        label: "My Second dataset",
-        fillColor : "rgba(151,187,205,0.2)",
-        strokeColor : "rgba(151,187,205,1)",
-        pointColor : "rgba(151,187,205,1)",
-        pointStrokeColor : "#fff",
-        pointHighlightFill : "#fff",
-        pointHighlightStroke : "rgba(151,187,205,1)",
-        data : [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()]
-      }
-    ]
-  }
-  window.onload = function(){
-    var ctx = document.getElementById("canvas").getContext("2d");
-    window.myLine = new Chart(ctx).Line(lineChartData, {
-      responsive: true
-    });
-  }
-</script>
+
 @stop

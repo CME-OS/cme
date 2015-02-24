@@ -33,6 +33,7 @@ class HomeController extends BaseController
           "SELECT * FROM campaign_events
            WHERE event_id > $lastId
            AND campaign_id = $campaign->id
+           AND subscriber_id > 0
            ORDER BY event_id ASC LIMIT 1000"
         );
         foreach($events as $event)

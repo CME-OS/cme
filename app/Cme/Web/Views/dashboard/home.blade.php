@@ -52,7 +52,7 @@
               <?php foreach($eventTypes as $type): ?>
                 <tr>
                   <td><?= ucwords($type) ?> </td>
-                  <td><strong><?= $data[$type]; ?> <?= ($type == 'opened') ? '(' . $data['opened_rate'] . ')' : '' ?></strong></td>
+                  <td><strong><?= $data[$type]['unique']; ?> <?= ($type == 'opened') ? '(' . $data['opened_rate'] . ')' : '' ?></strong></td>
                 </tr>
               <?php endforeach; ?>
             </table>

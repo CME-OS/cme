@@ -26,7 +26,7 @@
               Queued
             </div>
             <div class="panel-body">
-              <p class="text-center" style="font-size:40px;"><?= $stats['queued']; ?></p>
+              <p class="text-center" style="font-size:40px;"><?= $stats['queued']['total']; ?></p>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@
               Sent
             </div>
             <div class="panel-body">
-              <p class="text-center" style="font-size:40px;"><?= $stats['sent']; ?></p>
+              <p class="text-center" style="font-size:40px;"><?= $stats['sent']['unique']; ?></p>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
               Opened
             </div>
             <div class="panel-body">
-              <p class="text-center" style="font-size:40px;"><?= $stats['opened']; ?></p>
+              <p class="text-center" style="font-size:40px;"><?= $stats['opened']['unique']; ?></p>
             </div>
           </div>
         </div>
@@ -56,7 +56,7 @@
               Unsubscribed
             </div>
             <div class="panel-body">
-              <p class="text-center" style="font-size:40px;"><?= $stats['unsubscribed']; ?></p>
+              <p class="text-center" style="font-size:40px;"><?= $stats['unsubscribed']['unique']; ?></p>
             </div>
           </div>
         </div>

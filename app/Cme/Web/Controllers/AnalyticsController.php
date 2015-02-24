@@ -37,11 +37,12 @@ class AnalyticsController extends BaseController
       'unsubscribed'
     ];
 
-    $stats = [];
-
+    $stats   = [];
+    $counted = [];
     foreach($eventTypes as $type)
     {
-      $stats[$type] = 0;
+      $stats[$type]['unique'] = 0;
+      $stats[$type]['total']  = 0;
     }
 
     $lastId = 0;
@@ -58,7 +59,15 @@ class AnalyticsController extends BaseController
       {
         if(isset($stats[$event->event_type]))
         {
-          $stats[$event->event_type]++;
+          if(!isset($counted[$event->event_type][$event->subscriber_id]))
+          {
+            $counted[$event->event_type][$event->subscriber_id] = 1;
+            $stats[$event->event_type]['unique']++;
+          }
+          else
+          {
+            $stats[$event->event_type]['total']++;
+          }
         }
         $lastId = $event->event_id;
       }

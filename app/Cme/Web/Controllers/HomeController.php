@@ -20,6 +20,7 @@ class HomeController extends BaseController
     ];
 
     $stats          = [];
+    $counted        = [];
     $campaigns      = DB::select(
       'SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5'
     );
@@ -38,22 +39,38 @@ class HomeController extends BaseController
         );
         foreach($events as $event)
         {
-          if(!isset($stats[$event->campaign_id]))
+          $c = $event->campaign_id;
+          $e = $event->event_type;
+          $s = $event->subscriber_id;
+
+          if(!isset($stats[$c]))
           {
             foreach($eventTypes as $type)
             {
-              $stats[$event->campaign_id][$type] = 0;
+              $stats[$c][$type]['unique'] = 0;
+              $stats[$c][$type]['total']  = 0;
             }
           }
 
-          if(isset($stats[$event->campaign_id][$event->event_type]))
+          if(isset($stats[$c][$e]))
           {
-            $stats[$event->campaign_id][$event->event_type]++;
+            if(!isset($counted[$c][$e][$s]))
+            {
+              $counted[$c][$e][$s] = 1;
+              $stats[$event->campaign_id][$event->event_type]['unique']++;
+            }
+            else
+            {
+              $stats[$event->campaign_id][$event->event_type]['total']++;
+            }
           }
 
+          //always show total queued
+          $stats[$c]['queued']['unique'] = $stats[$c]['queued']['total'];
+
           $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
-            $stats[$event->campaign_id]['opened'],
-            $stats[$event->campaign_id]['sent']
+            $stats[$event->campaign_id]['opened']['unique'],
+            $stats[$event->campaign_id]['sent']['total']
           );
 
           $lastId = $event->event_id;

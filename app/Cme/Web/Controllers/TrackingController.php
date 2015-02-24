@@ -54,7 +54,7 @@ class TrackingController extends BaseController
         $unsubscribed = DB::table('unsubscribes')
           ->where('email', '=', $subscriber->email)
           ->first();
-        if(!$unsubscribed)
+        if(!$unsubscribed && $subscriber->id > 0)
         {
           DB::table('unsubscribes')->insert(
             [

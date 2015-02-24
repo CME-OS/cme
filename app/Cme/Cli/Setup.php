@@ -2,9 +2,6 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\InstallerHelper;
-use Illuminate\Config\EnvironmentVariables;
-use Illuminate\Support\Facades\App;
-use Illuminate\Config\Repository;
 
 class Setup extends CmeCommand
 {
@@ -126,14 +123,6 @@ class Setup extends CmeCommand
 
       $this->info("Welldone! I am now generating your env file");
       InstallerHelper::createEnvFile($env);
-
-      //force reload the config
-      with($envVariables = new EnvironmentVariables(
-        App::getEnvironmentVariablesLoader()))->load($env);
-
-      App::instance('config', $config = new Repository(
-        App::getConfigLoader(), $env
-      ));
 
       //install db
       $this->info("Installing Database");

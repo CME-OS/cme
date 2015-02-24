@@ -5,7 +5,10 @@
 
 namespace Cme\Helpers;
 
+use Illuminate\Config\EnvironmentVariables;
+use Illuminate\Config\Repository;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -105,8 +108,18 @@ class InstallerHelper
     $template = str_replace('[KEY]', Str::random(32), $template);
 
     file_put_contents($envFile, $template);
+    self::_reloadEnvConfig($env);
   }
 
+  private static function _reloadEnvConfig($env)
+  {
+    with($envVariables = new EnvironmentVariables(
+      App::getEnvironmentVariablesLoader()))->load($env);
+
+    App::instance('config', $config = new Repository(
+      App::getConfigLoader(), $env
+    ));
+  }
 
   private static function _getEvnFileTemplate()
   {

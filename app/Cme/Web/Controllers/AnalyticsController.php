@@ -64,10 +64,7 @@ class AnalyticsController extends BaseController
             $counted[$event->event_type][$event->subscriber_id] = 1;
             $stats[$event->event_type]['unique']++;
           }
-          else
-          {
-            $stats[$event->event_type]['total']++;
-          }
+          $stats[$event->event_type]['total']++;
         }
         $lastId = $event->event_id;
       }

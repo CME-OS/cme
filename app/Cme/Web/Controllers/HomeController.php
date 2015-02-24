@@ -22,7 +22,9 @@ class HomeController extends BaseController
     $stats          = [];
     $counted        = [];
     $campaigns      = DB::select(
-      'SELECT * FROM campaigns ORDER BY send_time DESC LIMIT 5'
+      'SELECT * FROM campaigns
+       WHERE deleted_at IS NULL
+       ORDER BY send_time DESC LIMIT 5'
     );
     $campaignLookUp = [];
     foreach($campaigns as $campaign)
@@ -57,20 +59,18 @@ class HomeController extends BaseController
             if(!isset($counted[$c][$e][$s]))
             {
               $counted[$c][$e][$s] = 1;
-              $stats[$event->campaign_id][$event->event_type]['unique']++;
+              $stats[$c][$e]['unique']++;
             }
-            else
-            {
-              $stats[$event->campaign_id][$event->event_type]['total']++;
-            }
+
+            $stats[$c][$e]['total']++;
           }
 
           //always show total queued
           $stats[$c]['queued']['unique'] = $stats[$c]['queued']['total'];
 
-          $stats[$event->campaign_id]['opened_rate'] = $this->_percentage(
-            $stats[$event->campaign_id]['opened']['unique'],
-            $stats[$event->campaign_id]['sent']['total']
+          $stats[$c]['opened_rate'] = $this->_percentage(
+            $stats[$c]['opened']['unique'],
+            $stats[$c]['sent']['unique']
           );
 
           $lastId = $event->event_id;

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 
-class SesTool extends CmeDbCommand
+class SesTool extends CmeCommand
 {
 
   /**

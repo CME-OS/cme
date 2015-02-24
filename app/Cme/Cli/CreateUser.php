@@ -1,11 +1,10 @@
 <?php
 namespace Cme\Cli;
 
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Cme\Helpers\InstallerHelper;
 use Symfony\Component\Console\Input\InputArgument;
 
-class CreateUser extends CmeDbCommand
+class CreateUser extends CmeCommand
 {
 
   /**
@@ -42,12 +41,7 @@ class CreateUser extends CmeDbCommand
     $username = $this->argument('username');
     $password = $this->argument('password');
 
-    $data['email']      = $username;
-    $data['password']   = Hash::make($password);
-    $data['created_at'] = date('Y-m-d H:i:s');
-    $data['updated_at'] = date('Y-m-d H:i:s');
-    $data['active']     = 1;
-    DB::table('users')->insert($data);
+    InstallerHelper::createUser($username, $password);
 
     $this->info("User $username created successfully!");
   }

@@ -1,10 +1,10 @@
 <?php
 namespace Cme\Cli;
 
-use Illuminate\Database\Migrations\Migration;
+use Cme\Helpers\InstallerHelper;
 use Symfony\Component\Console\Input\InputArgument;
 
-class InstallDb extends CmeDbCommand
+class InstallDb extends CmeCommand
 {
 
   /**
@@ -38,13 +38,14 @@ class InstallDb extends CmeDbCommand
    */
   public function fire()
   {
-    $table = $this->argument('table');
+    $table   = $this->argument('table');
+    $classes = [];
     if($table)
     {
-      $className = ucwords(camel_case('create_'.$table.'_table'));
+      $className = ucwords(camel_case('create_' . $table . '_table'));
       $classFile = implode(
         DIRECTORY_SEPARATOR,
-        [app_path(), 'Cme', 'Install', $className.'.php']
+        [app_path(), 'Cme', 'Install', $className . '.php']
       );
       if(file_exists($classFile))
       {
@@ -53,22 +54,15 @@ class InstallDb extends CmeDbCommand
       }
       else
       {
-        $this->error("Could not class file for table: ".$table);
+        $this->error("Could not class file for table: " . $table);
       }
     }
     else
     {
-      $classes = $this->getMigrationClasses();
+      $classes = InstallerHelper::getInstallClasses();
     }
 
-    foreach($classes as $migrationClass)
-    {
-      $m = new $migrationClass;
-      if($m instanceof Migration)
-      {
-        $m->up();
-      }
-    }
+    InstallerHelper::installDb($classes);
   }
 
   protected function getArguments()
@@ -77,5 +71,4 @@ class InstallDb extends CmeDbCommand
       array('table', InputArgument::OPTIONAL, 'Table Name'),
     );
   }
-
 }

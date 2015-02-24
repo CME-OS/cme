@@ -1,10 +1,10 @@
 <?php
 namespace Cme\Cli;
 
-use Illuminate\Database\Migrations\Migration;
+use Cme\Helpers\InstallerHelper;
 use Symfony\Component\Console\Input\InputArgument;
 
-class UninstallDb extends CmeDbCommand
+class UninstallDb extends CmeCommand
 {
 
   /**
@@ -41,10 +41,10 @@ class UninstallDb extends CmeDbCommand
     $table = $this->argument('table');
     if($table)
     {
-      $className = ucwords(camel_case('create_'.$table.'_table'));
+      $className = ucwords(camel_case('create_' . $table . '_table'));
       $classFile = implode(
         DIRECTORY_SEPARATOR,
-        [app_path(), 'Cme', 'Install', $className.'.php']
+        [app_path(), 'Cme', 'Install', $className . '.php']
       );
       if(file_exists($classFile))
       {
@@ -53,22 +53,15 @@ class UninstallDb extends CmeDbCommand
       }
       else
       {
-        $this->error("Could not class file for table: ".$table);
+        $this->error("Could not class file for table: " . $table);
       }
     }
     else
     {
-      $classes = $this->getMigrationClasses();
+      $classes = InstallerHelper::getInstallClasses();
     }
 
-    foreach($classes as $migrationClass)
-    {
-      $m = new $migrationClass;
-      if($m instanceof Migration)
-      {
-        $m->down();
-      }
-    }
+    InstallerHelper::unInstallDb($classes);
   }
 
   protected function getArguments()

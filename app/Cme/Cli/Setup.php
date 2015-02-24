@@ -1,9 +1,12 @@
 <?php
 namespace Cme\Cli;
 
-use Illuminate\Support\Str;
+use Cme\Helpers\InstallerHelper;
+use Illuminate\Config\EnvironmentVariables;
+use Illuminate\Support\Facades\App;
+use Illuminate\Config\Repository;
 
-class Setup extends CmeDbCommand
+class Setup extends CmeCommand
 {
 
   /**
@@ -112,29 +115,25 @@ class Setup extends CmeDbCommand
       $awsSecret = $this->ask("Enter AWS secret. Leave blank to skip: ", '');
       $awsRegion = $this->ask("Enter AWS region. Leave blank to skip: ", '');
 
-      $key = Str::random(32);
+      InstallerHelper::$domain = $domain;
+      InstallerHelper::$dbName = $dbName;
+      InstallerHelper::$dbHost = $dbHost;
+      InstallerHelper::$dbUser = $dbUser;
+      InstallerHelper::$dbPassword = $dbPassword;
+      InstallerHelper::$awsKey = $awsKey;
+      InstallerHelper::$awsSecret = $awsSecret;
+      InstallerHelper::$awsRegion = $awsRegion;
 
-      $envFile = ".env";
-      if($env !== 'production')
-      {
-        $envFile = ".env." . $env;
-      }
+      $this->info("Welldone! I am now generating your env file");
+      InstallerHelper::createEnvFile($env);
 
-      $envFile = strtolower($envFile . '.php');
+      //force reload the config
+      with($envVariables = new EnvironmentVariables(
+        App::getEnvironmentVariablesLoader()))->load($env);
 
-      $this->info("Welldone! I am now generating your env file - " . $envFile);
-      $template = $this->_getEvnFileTemplate();
-      $template = str_replace('[DOMAIN]', $domain, $template);
-      $template = str_replace('[HOST]', $dbHost, $template);
-      $template = str_replace('[DATABASE]', $dbName, $template);
-      $template = str_replace('[USERNAME]', $dbUser, $template);
-      $template = str_replace('[PASSWORD]', $dbPassword, $template);
-      $template = str_replace('[AWS_KEY]', $awsKey, $template);
-      $template = str_replace('[AWS_SECRET]', $awsSecret, $template);
-      $template = str_replace('[AWS_REGION]', $awsRegion, $template);
-      $template = str_replace('[KEY]', $key, $template);
-
-      file_put_contents($envFile, $template);
+      App::instance('config', $config = new Repository(
+        App::getConfigLoader(), $env
+      ));
 
       //install db
       $this->info("Installing Database");
@@ -142,42 +141,12 @@ class Setup extends CmeDbCommand
 
       //create user account
       $this->info("Creating a user account");
-      $this->call(
-        'cme:create-user',
-        ['username' => 'admin', 'password' => 'admin']
-      );
+      InstallerHelper::createUser('admin', 'admin');
       $this->info("Username: admin");
       $this->info("Password: admin");
       $this->info(
         "Please make sure you create a different user and delete this one"
       );
     }
-  }
-
-
-  private function _getEvnFileTemplate()
-  {
-    $template = "<?php
-
-return array(
-  'domain'           => '[DOMAIN]',
-  'mysql'            => array(
-    'driver'    => 'mysql',
-    'host'      => '[HOST]',
-    'database'  => '[DATABASE]',
-    'username'  => '[USERNAME]',
-    'password'  => '[PASSWORD]',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => ''
-  ),
-  'key'              => '[KEY]',
-  'cipher'           => MCRYPT_RIJNDAEL_128,
-  'aws_key'          => '[AWS_KEY]',
-  'aws_secret'       => '[AWS_SECRET]',
-  'aws_region'       => '[AWS_REGION]',
-);
-";
-    return $template;
   }
 }

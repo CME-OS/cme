@@ -4,6 +4,7 @@ namespace Cme\Web\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
+use MyProject\Proxies\__CG__\stdClass;
 
 class HomeController extends BaseController
 {
@@ -78,7 +79,12 @@ class HomeController extends BaseController
       }
       while($events);
 
-      $campaignLookUp[$campaign->id] = $campaign->subject;
+      if(!isset($campaignLookUp[$campaign->id]))
+      {
+        $campaignLookUp[$campaign->id] = new \stdClass();
+      }
+      $campaignLookUp[$campaign->id]->subject = $campaign->subject;
+      $campaignLookUp[$campaign->id]->sendTime = $campaign->send_time;
     }
 
     $data['eventTypes']     = $eventTypes;

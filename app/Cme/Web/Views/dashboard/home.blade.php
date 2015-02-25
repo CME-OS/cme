@@ -73,10 +73,11 @@
           <div class="panel-heading">
             <strong>
               <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
-              <?= Str::limit($campaignLookUp[$campaignId], 50) ?>
+              <?= Str::limit($campaignLookUp[$campaignId]->subject, 50) ?>
             </a>
             </strong>
             <div class="pull-right">
+              <span style="margin-right:10px;"><?= date('M d Y', $campaignLookUp[$campaignId]->sendTime) ?></span>
               <a href="/campaigns/preview/<?=$campaignId ?>" class="glyphicon glyphicon-eye-open" style="text-decoration: none;" title="Preview Campaign"></a>
             </div>
           </div>
@@ -144,10 +145,11 @@
         <div class="panel-heading">
           <strong>
             <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
-              <?= Str::limit($campaignLookUp[$campaignId], 50) ?>
+              <?= Str::limit($campaignLookUp[$campaignId]->subject, 50) ?>
             </a>
           </strong>
           <div class="pull-right">
+            <span style="margin-right:10px;"><?= date('M d Y', $campaignLookUp[$campaignId]->sendTime) ?></span>
             <a href="/campaigns/preview/<?=$campaignId ?>" class="glyphicon glyphicon-eye-open" style="text-decoration: none;" title="Preview Campaign"></a>
           </div>
         </div>

@@ -92,11 +92,14 @@ class HomeController extends BaseController
       'unsubscribed'
     ];
 
-    //get total stats
+    //get this month total stats
+    $monthStart = strtotime(date('Y-m-01 00:00:00'));
+    $monthEnd   = strtotime(date('Y-m-t 23:59:59'));
     $totalStats = DB::select(
       "SELECT count(*) as total, event_type
       FROM campaign_events
-      WHERE event_type IN ('".implode("','", $totalEventTypes)."')
+      WHERE event_type IN ('" . implode("','", $totalEventTypes) . "')
+      AND time BETWEEN $monthStart AND $monthEnd
       GROUP BY event_type"
     );
 

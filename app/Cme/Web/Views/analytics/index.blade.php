@@ -22,7 +22,10 @@
           <td style="width:80px;"><strong>Brand:</strong></td><td><?= $campaign->brand->brand_name; ?></td>
           </tr>
         <tr>
-          <td><strong>List:</strong></td><td><?= $campaign->lists->name; ?></td>
+          <td><strong>List:</strong></td>
+          <td>
+            <a href="/lists/view/<?= $campaign->lists->id ?>"><?= $campaign->lists->name; ?></a>
+          </td>
         </tr>
         <tr>
           <td><strong>Subject:</strong></td><td><?= $campaign->subject ?></td>

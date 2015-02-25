@@ -105,7 +105,7 @@ class AnalyticsController extends BaseController
     $listTable = ListHelper::getTable($campaign->list_id);
 
     $subscribers = DB::select(
-      "SELECT subscriber_id FROM campaign_events
+      "SELECT subscriber_id, time FROM campaign_events
       WHERE campaign_id = $campaignId
       AND subscriber_id > 0
       AND event_type='$eventType'
@@ -114,18 +114,25 @@ class AnalyticsController extends BaseController
     );
 
     $subscriber_ids = [];
+    $times = [];
     foreach($subscribers as $subscriber)
     {
       $subscriber_ids[] = $subscriber->subscriber_id;
+      $times[$subscriber->subscriber_id] = $subscriber->time;
     }
 
     $result = [];
     if($subscriber_ids)
     {
       $result = DB::select(
-        "SELECT * FROM $listTable
+        "SELECT id, email FROM $listTable
          WHERE id IN (" . implode(',', $subscriber_ids) . ")"
       );
+
+      foreach($result as $i => $row)
+      {
+        $result[$i]->time = $times[$row->id];
+      }
     }
 
     return $result;

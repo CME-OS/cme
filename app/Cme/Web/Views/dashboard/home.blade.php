@@ -70,10 +70,15 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <?php if(isset($data[0])): $campaignId = $data[0]; ?>
-          <div class="panel-heading text-center">
-            <a href="/analytics/<?= $campaignId ?>" title="<?= $campaignLookUp[$campaignId] ?>">
-              <?= Str::limit($campaignLookUp[$campaignId], 20) ?>
+          <div class="panel-heading">
+            <strong>
+              <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
+              <?= Str::limit($campaignLookUp[$campaignId], 50) ?>
             </a>
+            </strong>
+            <div class="pull-right">
+              <a href="/campaigns/preview/<?=$campaignId ?>" class="glyphicon glyphicon-eye-open" style="text-decoration: none;" title="Preview Campaign"></a>
+            </div>
           </div>
           <div class="panel-body">
             <div class="row">
@@ -126,7 +131,7 @@
             <div class="panel-body" style="height: 259px;">
 
               <div class="text-center" style="font-size:30px; margin-top:60px; ">
-                <span class="glyphicon glyphicon-plus" style="color: #ccc;"></span>
+                <span class="glyphicon glyphicon-plus-sign" style="color: #ccc;"></span>
                 <div style="font-size:20px;"><a href="/campaigns/new">Create New Campaign</a></div>
               </div>
             </div>
@@ -136,10 +141,15 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <?php if(isset($data[1])): $campaignId = $data[1]; ?>
-        <div class="panel-heading text-center">
-          <a href="/analytics/<?= $campaignId ?>" title="<?= $campaignLookUp[$campaignId] ?>">
-            <?= Str::limit($campaignLookUp[$campaignId], 20) ?>
-          </a>
+        <div class="panel-heading">
+          <strong>
+            <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
+              <?= Str::limit($campaignLookUp[$campaignId], 50) ?>
+            </a>
+          </strong>
+          <div class="pull-right">
+            <a href="/campaigns/preview/<?=$campaignId ?>" class="glyphicon glyphicon-eye-open" style="text-decoration: none;" title="Preview Campaign"></a>
+          </div>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -192,13 +202,14 @@
         <div class="panel-body" style="height: 259px;">
 
           <div class="text-center" style="font-size:30px; margin-top:60px; ">
-            <span class="glyphicon glyphicon-plus" style="color: #ccc;"></span>
+            <span class="glyphicon glyphicon-plus-sign" style="color: #ccc;"></span>
             <div style="font-size:20px;"><a href="/campaigns/new">Create New Campaign</a></div>
           </div>
         </div>
         <?php endif; ?>
       </div>
     </div>
+
 
 
 

@@ -4,7 +4,6 @@ namespace Cme\Web\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
-use MyProject\Proxies\__CG__\stdClass;
 
 class HomeController extends BaseController
 {
@@ -83,7 +82,7 @@ class HomeController extends BaseController
       {
         $campaignLookUp[$campaign->id] = new \stdClass();
       }
-      $campaignLookUp[$campaign->id]->subject = $campaign->subject;
+      $campaignLookUp[$campaign->id]->subject  = $campaign->subject;
       $campaignLookUp[$campaign->id]->sendTime = $campaign->send_time;
     }
 
@@ -98,10 +97,20 @@ class HomeController extends BaseController
       'unsubscribed'
     ];
 
+    //create Blank State
+    $totalStats = [];
+    foreach($totalEventTypes as $type)
+    {
+      $event             = new \stdClass();
+      $event->total      = 0;
+      $event->event_type = $type;
+      $totalStats[$type] = $event;
+    }
+
     //get this month total stats
     $monthStart = strtotime(date('Y-m-01 00:00:00'));
     $monthEnd   = strtotime(date('Y-m-t 23:59:59'));
-    $totalStats = DB::select(
+    $result     = DB::select(
       "SELECT count(*) as total, event_type
       FROM campaign_events
       WHERE event_type IN ('" . implode("','", $totalEventTypes) . "')
@@ -111,13 +120,13 @@ class HomeController extends BaseController
 
     //make sure we have a row for every event type
     //taking care of the 'Blank State'
-    foreach($totalStats as $event)
+    if($result)
     {
-      foreach($totalEventTypes as $type)
+      foreach($result as $event)
       {
-        if(!isset($event->$type))
+        if(isset($totalStats[$event->event_type]))
         {
-          $event->$type = 0;
+          $totalStats[$event->event_type]->total = $event->total;
         }
       }
     }

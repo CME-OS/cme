@@ -1,0 +1,19 @@
+h1{
+  font-size:20px;
+}
+
+
+.queued-well
+{
+  background-color: #F7464A;
+}
+
+.sent-well
+{
+  background-color: #46BFBD;
+}
+
+.opened-well
+{
+  background-color: #FDB45C;
+}

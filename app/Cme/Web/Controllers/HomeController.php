@@ -24,7 +24,7 @@ class HomeController extends BaseController
     $campaigns      = DB::select(
       'SELECT * FROM campaigns
        WHERE deleted_at IS NULL
-       ORDER BY send_time DESC LIMIT 5'
+       ORDER BY send_time DESC LIMIT 6'
     );
     $campaignLookUp = [];
     foreach($campaigns as $campaign)
@@ -87,7 +87,10 @@ class HomeController extends BaseController
 
     //get total stats
     $totalStats = DB::select(
-      "SELECT count(*) as total, event_type FROM campaign_events GROUP BY event_type"
+      "SELECT count(*) as total, event_type
+      FROM campaign_events
+      WHERE event_type IN ('queued', 'sent', 'opened', 'unsubscribed')
+      GROUP BY event_type"
     );
 
     $data['totalStats'] = $totalStats;

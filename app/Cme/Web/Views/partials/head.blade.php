@@ -5,5 +5,6 @@
 <title>Campaigns Made Easy</title>
 <link rel="stylesheet" href="/assets/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="/assets/css/built/theme.min.css"/>
+<link rel="stylesheet" href="/assets/css/cme.css"/>
 <script src="/assets/js/jquery.min.js"></script>
 

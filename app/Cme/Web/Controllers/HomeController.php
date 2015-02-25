@@ -85,13 +85,33 @@ class HomeController extends BaseController
     $data['stats']          = $stats;
     $data['campaignLookUp'] = $campaignLookUp;
 
+    $totalEventTypes = [
+      'queued',
+      'sent',
+      'opened',
+      'unsubscribed'
+    ];
+
     //get total stats
     $totalStats = DB::select(
       "SELECT count(*) as total, event_type
       FROM campaign_events
-      WHERE event_type IN ('queued', 'sent', 'opened', 'unsubscribed')
+      WHERE event_type IN ('".implode("','", $totalEventTypes)."')
       GROUP BY event_type"
     );
+
+    //make sure we have a row for every event type
+    //taking care of the 'Blank State'
+    foreach($totalStats as $event)
+    {
+      foreach($totalEventTypes as $type)
+      {
+        if(!isset($event->$type))
+        {
+          $event->$type = 0;
+        }
+      }
+    }
 
     $data['totalStats'] = $totalStats;
 

@@ -5,7 +5,7 @@ h1{
 
 .queued-well
 {
-  background-color: #F7464A;
+  background-color: #949FB1;
 }
 
 .sent-well
@@ -16,4 +16,9 @@ h1{
 .opened-well
 {
   background-color: #FDB45C;
+}
+
+.unsubscribed-well
+{
+  background-color: #F7464A;
 }

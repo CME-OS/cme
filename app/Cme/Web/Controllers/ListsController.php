@@ -60,7 +60,7 @@ class ListsController extends BaseController
       if(DB::table($tableName)->count())
       {
         $subscribers = DB::table($tableName)->simplePaginate(1000);
-        $columns     = array_keys((array)$subscribers->offSetGet(1));
+        $columns     = array_keys((array)$subscribers->offSetGet(0));
       }
     }
     //else suggest to user to import users by CSV/API

@@ -4,7 +4,7 @@
 CKEDITOR.plugins.add("cme-placeholder", {
     init: function(editor) {
         editor.ui.addRichCombo("cme-placeholder", {
-            label: "Placeholder",
+            label: "Insert Placeholder",
             title: "Placeholder",
             multiSelect: false,
             init: function() {

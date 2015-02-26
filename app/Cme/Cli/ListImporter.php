@@ -41,6 +41,7 @@ class ListImporter extends CmeCommand
    */
   public function fire()
   {
+    $this->_init();
     $this->_createPIDFile();
     $instanceName = $this->_getInstanceName();
     while(true)
@@ -96,6 +97,10 @@ class ListImporter extends CmeCommand
           $this->info("sleeping for a bit");
           sleep(2);
         }
+      }
+      if(!$lockedARow)
+      {
+        $this->_cronBailOut();
       }
     }
   }

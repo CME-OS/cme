@@ -44,6 +44,7 @@ class QueueMessages extends CmeCommand
    */
   public function fire()
   {
+    $this->_init();
     $this->_createPIDFile();
     $instanceName   = $this->_getInstanceName();
     $lockedCampaign = null;
@@ -225,6 +226,7 @@ class QueueMessages extends CmeCommand
         }
       }
       while($result);
+      $this->_cronBailOut();
     }
   }
 
@@ -247,15 +249,17 @@ class QueueMessages extends CmeCommand
    */
   protected function getOptions()
   {
-    return [
+    $options   = parent::getOptions();
+    $options[] =
       [
         'label-sender',
         'l',
         InputOption::VALUE_OPTIONAL,
         'Whether sender should be labelled or not. '
         . 'Not all mail server support labelling'
-      ],
-    ];
+      ];
+
+    return $options;
   }
 
   private function _getInstanceName()

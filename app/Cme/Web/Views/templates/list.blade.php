@@ -8,26 +8,26 @@
     <div class="col-sm-12">
 
       @if($templates)
-        <p><a href="/templates/new">Create a Template</a></p>
+        <p><a href="/templates/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a Template</a></p>
 
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
               <th>Name</th>
-              <th>Created</th>
               <th></th>
             </tr>
           </thead>
 
           <?php foreach($templates as $template): ?>
             <tr>
-              <td><a href="{{ URL::route('template.preview', $template->id) }}"><?= $template->name; ?></a></td>
-              <td><?= date('d/m/Y H:i:s', $template->created); ?></td>
+              <td><a href="{{ URL::route('template.preview', $template->id) }}">
+                  <strong><?= $template->name; ?></strong>
+                </a>
+              </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('template.edit', $template->id) }}" class="btn btn-default">Edit</a>
-                <a href="{{ URL::route('template.preview', $template->id) }}" class="btn btn-default">Preview</a>
-                <a href="{{ URL::route('template.delete', $template->id) }}" class="btn btn-default">Delete</a>
+                <a href="{{ URL::route('template.edit', $template->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('template.delete', $template->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

@@ -9,9 +9,9 @@
 
       @if($smtpProviders)
 
-        <p><a href="/smtp-providers/new">Add an SMTP Provider</a></p>
+        <p><a href="/smtp-providers/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add an SMTP Provider</a></p>
         <br/>
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
           <thead>
           <tr>
             <th>Name</th>
@@ -31,11 +31,11 @@
               <td><?= ($provider->default)? 'Yes' : 'No'; ?></td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('smtp-providers.edit', $provider->id) }}" class="btn btn-default">Edit</a>
                 <?php if(!$provider->default): ?>
-                <a href="{{ URL::route('smtp-providers.default', $provider->id) }}" class="btn btn-default">Make Default</a>
+                  <a href="{{ URL::route('smtp-providers.default', $provider->id) }}" class="btn btn-info" title="Make Default"><span class="glyphicon glyphicon-check"></span></a>
                 <?php endif; ?>
-                <a href="{{ URL::route('smtp-providers.delete', $provider->id) }}" class="btn btn-default">Delete</a>
+                  <a href="{{ URL::route('smtp-providers.edit', $provider->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                  <a href="{{ URL::route('smtp-providers.delete', $provider->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

@@ -4,7 +4,7 @@
   <div class="row">
     <div class="col-md-12">
       <?php if($users): ?>
-        <a href="/users/new">Add a User</a>
+        <p><a href="/users/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add a User</a></p>
         <table class="table table-striped">
           <thead>
           <tr>
@@ -16,14 +16,15 @@
           </thead>
           <?php foreach($users as $user): ?>
             <tr>
-              <td><?= $user->email; ?></td>
+              <td><span class="glyphicon glyphicon-user"></span>
+                <a href="{{ URL::route('users.view', $user->id) }}" ><strong><?= $user->email; ?></strong></a>
+              </td>
               <td><?= $user->active; ?></td>
               <td><?= $user->created_at; ?></td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('users.view', $user->id) }}" class="btn btn-default">View</a>
-                <a href="{{ URL::route('users.edit', $user->id) }}" class="btn btn-default">Edit</a>
-                <a href="{{ URL::route('users.delete', $user->id) }}" class="btn btn-default">Delete</a>
+                <a href="{{ URL::route('users.edit', $user->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('users.delete', $user->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

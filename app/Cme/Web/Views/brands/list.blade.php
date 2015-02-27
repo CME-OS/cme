@@ -30,8 +30,8 @@
               </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

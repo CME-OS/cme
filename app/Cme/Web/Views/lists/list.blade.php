@@ -14,14 +14,16 @@
           </thead>
           <?php foreach($lists as $list): ?>
             <tr>
-              <td><a href="{{ URL::route('lists.view', $list->id) }}">
+              <td>
+                <span class="glyphicon glyphicon-list-alt" style="color:mediumseagreen;"></span>
+                <a href="{{ URL::route('lists.view', $list->id) }}">
                   <strong><?= $list->name; ?></strong>
                 </a> (<?= number_format($list->size, 0); ?>)
               </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

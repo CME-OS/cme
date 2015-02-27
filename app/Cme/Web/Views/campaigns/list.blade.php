@@ -35,9 +35,9 @@
               <td>
                 <div class="pull-right">
                   {{--<a href="{{ URL::route('campaign.preview', $campaign->id) }}" class="btn btn-default">Preview</a>--}}
-                  <a href="{{ URL::route('campaign.copy', $campaign->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-duplicate"></span></a>
-                  <a href="{{ URL::route('campaign.edit', $campaign->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{ URL::route('campaign.delete', $campaign->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                  <a href="{{ URL::route('campaign.copy', $campaign->id) }}" class="btn btn-default" title="Copy"><span class="glyphicon glyphicon-duplicate"></span></a>
+                  <a href="{{ URL::route('campaign.edit', $campaign->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('campaign.delete', $campaign->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

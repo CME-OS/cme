@@ -7,15 +7,15 @@
     <?php if($subscribers): ?>
       <div class="row">
         <div class="col-md-6">
-          <form action="">
+          <form action="" style="margin-top:20px;">
             <input type="text" class="form-control" placeholder="Search this List"/>
           </form>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <?php echo $subscribers->links(); ?>
+          <div class="pull-right"><?php echo $subscribers->links(); ?></div>
         </div>
       </div>
-      <table class="table table-striped">
+      <table class="table table-striped table-hover">
         <thead>
         <tr>
           <?php foreach($columns as $c): ?>
@@ -30,7 +30,6 @@
             <td><?= $subscriber->$c; ?></td>
             <?php endforeach; ?>
             <td>
-              <a href="">View</a> |
               <a href="">Delete</a> |
               <a href="">Unsubscribe</a>
             </td>

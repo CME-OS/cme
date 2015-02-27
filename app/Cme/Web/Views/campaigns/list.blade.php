@@ -10,7 +10,7 @@
       @if($campaigns)
         <p><a href="/campaigns/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a Campaign</a></p>
 
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
               <th>Subject</th>

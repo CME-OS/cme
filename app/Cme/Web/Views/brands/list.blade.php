@@ -9,9 +9,12 @@
 
       @if($brands)
 
-        <p><a href="/brands/new">Add a brand</a></p>
+        <p>
+          <a href="/brands/new" class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span> Add a brand</a>
+        </p>
         <br/>
-        <table class="table table-striped">
+        <table class="table table-striped table-hover">
           <thead>
           <tr>
             <th>Name</th>
@@ -20,12 +23,15 @@
           </thead>
           <?php foreach($brands as $brand): ?>
             <tr>
-              <td><?= $brand->brand_name; ?></td>
+              <td>
+                <a href="{{ URL::route('brands.campaigns', $brand->id) }}">
+                  <strong><?= $brand->brand_name; ?></strong>
+                </a>
+              </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('brands.campaigns', $brand->id) }}" class="btn btn-default">View Campaigns</a>
-                <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default">Edit</a>
-                <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-default">Delete</a>
+                <a href="{{ URL::route('brands.edit', $brand->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('brands.delete', $brand->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

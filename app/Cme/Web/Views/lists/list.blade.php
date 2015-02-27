@@ -4,24 +4,24 @@
   <div class="row">
     <div class="col-md-12">
       <?php if($lists): ?>
-        <a href="/lists/new">Add a list</a>
-        <table class="table table-striped">
+        <p><a href="/lists/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add a list</a></p>
+        <table class="table table-striped table-hover">
           <thead>
           <tr>
             <th>Name</th>
-            <th>Size</th>
             <th></th>
           </tr>
           </thead>
           <?php foreach($lists as $list): ?>
             <tr>
-              <td><?= $list->name; ?></td>
-              <td><?= number_format($list->size, 0); ?></td>
+              <td><a href="{{ URL::route('lists.view', $list->id) }}">
+                  <strong><?= $list->name; ?></strong>
+                </a> (<?= number_format($list->size, 0); ?>)
+              </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('lists.view', $list->id) }}" class="btn btn-default">View</a>
-                <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default">Edit</a>
-                <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-default">Delete</a>
+                <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>
               </td>
             </tr>

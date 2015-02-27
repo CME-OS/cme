@@ -3,14 +3,19 @@
 <h1 class="page-header">Brands
   <small>Manage your brands</small>
 </h1>
+<div class="container">
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12 well">
     <h2>Update Brand</h2>
 
     @include('partials.errors')
 
     <form role="form" action="/brands/update" method="post">
       <input type="hidden" name="id" value="<?= $brand->id ?>"/>
+      <div class="form-group">
+        <label for="brand-logo">Brand Logo</label>
+        <input type="file" name="brand_logo" id="brand-logo">
+      </div>
       <div class="form-group">
         <label for="brand-name">Name</label>
         <input type="text" name="brand_name" class="form-control" id="brand-name" value="<?= $brand->brand_name ?>">
@@ -31,12 +36,9 @@
         <label for="unsubscribe-url">Unsubscribe URL</label>
         <input type="text" name="brand_unsubscribe_url" class="form-control" id="unsubscribe-url" value="<?= $brand->brand_unsubscribe_url ?>">
       </div>
-      <div class="form-group">
-        <label for="brand-logo">Brand Logo</label>
-        <input type="file" name="brand_logo" id="brand-logo">
-      </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit" class="btn btn-submit">Submit</button>
     </form>
   </div>
+</div>
 </div>
 @stop

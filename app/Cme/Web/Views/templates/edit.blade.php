@@ -1,15 +1,11 @@
 @extends('layouts.default')
 @section('content')
+    <h1 class="page-header">Templates
+        <small>{{ $template->name }}</small>
+    </h1>
+    <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-            <h1>Edit Template
-                <small>{{ $template->name }}</small>
-            </h1>
-            <hr>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 well">
 
             {{ Form::model($template, ['route' => 'template.update.post', 'id' => 'template-form']) }}
 
@@ -33,6 +29,7 @@
             </div>
             {{ Form::close() }}
         </div>
+    </div>
     </div>
     <script src="/assets/ckeditor/ckeditor.js"></script>
     <script>CKEDITOR.replace('template-content');</script>

@@ -3,8 +3,9 @@
 <h1 class="page-header">Users
   <small>Manage your users</small>
 </h1>
+<div class="container">
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12 well">
     <h2>Update User</h2>
     <form role="form" action="/lists/update" method="post">
       <input type="hidden" name="id" value="<?= $user->id ?>"/>
@@ -19,5 +20,6 @@
       <button type="submit" class="btn btn-default">Submit</button>
     </form>
   </div>
+</div>
 </div>
 @stop

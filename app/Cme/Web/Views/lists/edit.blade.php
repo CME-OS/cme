@@ -3,8 +3,9 @@
 <h1 class="page-header">Lists
   <small>Manage your lists</small>
 </h1>
+<div class="container">
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12 well">
     <h2>Update List - <?= $list->name ?></h2>
     <form role="form" action="/lists/update" method="post">
       <input type="hidden" name="id" value="<?= $list->id ?>"/>
@@ -30,8 +31,9 @@
         <label for="list-description">Description</label>
         <textarea name="description" id="list-description" class="form-control" style="width: 100%;" cols="50" rows="4"><?= $list->description ?></textarea>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit" class="btn btn-success">Submit</button>
     </form>
   </div>
+</div>
 </div>
 @stop

@@ -16,7 +16,6 @@
               <th>Subject</th>
               <th>List</th>
               <th>Brand</th>
-              <th>Status</th>
               <th>Created</th>
               <th></th>
             </tr>
@@ -27,10 +26,10 @@
               <td>
                 <span class="glyphicon glyphicon-envelope" style="color:royalblue;"></span>
                 <strong><a href="{{ URL::route('campaign.preview', $campaign->id) }}"><?= $campaign->subject; ?></a></strong>
+                <span class="label <?= $labelClasses[$campaign->status]; ?>"><?= $campaign->status; ?></span>
               </td>
               <td><?= $campaign->lists->name; ?></td>
               <td><?= $campaign->brand->brand_name; ?></td>
-              <td><?= $campaign->status; ?></td>
               <td><?= date('d M Y H:i:A', $campaign->created); ?></td>
               <td>
                 <div class="pull-right">

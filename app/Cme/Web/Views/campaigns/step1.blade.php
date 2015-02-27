@@ -1,12 +1,13 @@
-@extends('layouts.default')
 @section('content')
+@extends('layouts.default')
 <h1 class="page-header">Step 1:
   <small>Define Campaign</small>
 </h1>
+<div class="container">
 <form role="form" action="/campaigns/new" method="post">
   <input type="hidden" name="step" value="2"/>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12 well">
       <div class="form-group">
         <label for="campaign-type">What type of campaign is this?</label>
         <select name="type" id="campaign-type" class="form-control">
@@ -120,10 +121,10 @@
         </tr>
         </table>
       </div>
-
+      <button type="submit" class="btn btn-success">Next</button>
     </div>
   </div>
-  <button type="submit" class="btn btn-success">Next</button>
 </form>
+</div>
 
 @stop

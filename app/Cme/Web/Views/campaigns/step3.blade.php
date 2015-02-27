@@ -4,11 +4,12 @@
 <h1 class="page-header">Step 3:
   <small>Schedule & Prioritize a Campaign</small>
 </h1>
+<div class="container">
 <form role="form" action="/campaigns/add" method="post">
   <input type="hidden" name="step" value="3"/>
   <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12 well">
       <div class="form-group">
         <label for="campaign-priority">Send Priority:</label>
         <select name="send_priority" id="campaign-priority" class="form-control">
@@ -36,9 +37,10 @@
           <?php endforeach; ?>
         </select>
       </div>
+      <a href="/campaigns/new/2" class="btn btn-default">Back</a>
+      <button type="submit" class="btn btn-success">Save</button>
     </div>
   </div>
-  <a href="/campaigns/new/2" class="btn btn-default">Back</a>
-  <button type="submit" class="btn btn-success">Save</button>
 </form>
+</div>
 @stop

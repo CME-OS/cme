@@ -23,7 +23,16 @@ class CampaignsController extends BaseController
 {
   public function index()
   {
-    $data['campaigns'] = CMECampaign::getAllActive();
+    $data['campaigns']    = CMECampaign::getAllActive();
+    $data['labelClasses'] = [
+      'Pending' => 'label-default',
+      'Queuing' => 'label-info',
+      'Queued'  => 'label-info',
+      'Sending' => 'label-primary',
+      'Sent'    => 'label-success',
+      'Paused'  => 'label-warning',
+      'Aborted' => 'label-danger'
+    ];
 
     return View::make('campaigns.list', $data);
   }

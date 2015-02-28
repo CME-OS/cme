@@ -21,10 +21,13 @@ Route::group(['before' => 'auth'], function(){
     Route::get('/lists/view/{id}', ['as' => 'lists.view', 'uses' => 'Cme\Web\Controllers\ListsController@view']);
     Route::get('/lists/edit/{id}', ['as' => 'lists.edit', 'uses' => 'Cme\Web\Controllers\ListsController@edit']);
     Route::get('/lists/delete/{id}', ['as' => 'lists.delete', 'uses' => 'Cme\Web\Controllers\ListsController@delete']);
+    Route::get('/lists/new-subscriber/{id}', ['as' => 'lists.new-subscriber', 'uses' => 'Cme\Web\Controllers\ListsController@newSubscriber']);
+    Route::get('/lists/{listId}/delete-subscriber/{id}', ['as' => 'lists.delete-subscriber', 'uses' => 'Cme\Web\Controllers\ListsController@deleteSubscriber']);
 
     Route::post('/lists/add', ['as' => 'lists.new.post', 'uses' => 'Cme\Web\Controllers\ListsController@add']);
     Route::post('/lists/update', ['as' => 'lists.update.post', 'uses' => 'Cme\Web\Controllers\ListsController@update']);
     Route::post('/lists/import/{type}', ['as' => 'lists.import.post', 'uses' => 'Cme\Web\Controllers\ListsController@import']);
+    Route::post('/lists/add-subscriber', ['as' => 'lists.add-subscriber', 'uses' => 'Cme\Web\Controllers\ListsController@addSubscriber']);
 
     //campaigns
     Route::get('/campaigns', ['as' => 'campaigns', 'uses' => 'Cme\Web\Controllers\CampaignsController@index']);

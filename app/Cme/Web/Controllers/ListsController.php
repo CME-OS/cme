@@ -1,6 +1,8 @@
 <?php
 namespace Cme\Web\Controllers;
+
 use Cme\Helpers\ListHelper;
+use Cme\Helpers\ListsSchemaHelper;
 use Cme\Models\CMEList;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +48,46 @@ class ListsController extends BaseController
     $listId = DB::table('lists')->insertGetId($data);
 
     return Redirect::to('/lists/view/' . $listId);
+  }
+
+  public function newSubscriber($id)
+  {
+    $list = CMEList::find($id);
+    if($list)
+    {
+      $table           = ListHelper::getTable($id);
+      $data['id']      = $id;
+      $data['columns'] = ListsSchemaHelper::getColumnNames($table);
+      return View::make('lists.new-subscriber', $data);
+    }
+    return Redirect::to('/lists');
+  }
+
+  public function addSubscriber()
+  {
+    $listId = (int)Input::get('id');
+    if($listId)
+    {
+      $data  = Input::except('id');
+      $data['date_created'] = date('Y-m-d H:i:s');
+      $table = ListHelper::getTable($listId);
+      DB::table($table)->insert($data);
+      return Redirect::to('/lists/view/' . $listId);
+    }
+    return Redirect::to('/lists');
+  }
+
+  public function deleteSubscriber()
+  {
+    $listId       = (int)Route::input('listId');
+    $subscriberId = (int)Route::input('id');
+    if($listId && $subscriberId)
+    {
+      $table = ListHelper::getTable($listId);
+      DB::table($table)->where(['id' => $subscriberId])->delete();
+      return Redirect::to('/lists/view/' . $listId);
+    }
+    return Redirect::to('/lists');
   }
 
   public function view($id)

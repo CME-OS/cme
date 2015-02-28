@@ -30,8 +30,7 @@
             <td><?= $subscriber->$c; ?></td>
             <?php endforeach; ?>
             <td>
-              <a href="">Delete</a> |
-              <a href="">Unsubscribe</a>
+              <a href="/lists/<?= $list->id ?>/delete-subscriber/<?= $subscriber->id ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
             </td>
           </tr>
         <?php endforeach; ?>

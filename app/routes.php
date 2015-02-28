@@ -101,6 +101,10 @@ Route::get('/track/open/{source}', 'Cme\Web\Controllers\TrackingController@track
 Route::get('/track/unsubscribe/{source}/{redirect}', 'Cme\Web\Controllers\TrackingController@trackUnsubscribe');
 Route::get('/track/click/{source}/{redirect}', 'Cme\Web\Controllers\TrackingController@trackClick');
 
+//setup
+Route::get('/setup', 'Cme\Web\Controllers\SetupController@index');
+Route::get('/setup/skip', 'Cme\Web\Controllers\SetupController@skip');
+Route::post('/setup/install', 'Cme\Web\Controllers\SetupController@install');
 
 
 Route::post(

@@ -25,6 +25,24 @@ class InstallerHelper
   public static $awsSecret;
   public static $awsRegion;
 
+  public static function isCMEInstalled()
+  {
+    $installFile = implode(
+      DIRECTORY_SEPARATOR,
+      [base_path(), 'installed.json']
+    );
+    return file_exists($installFile);
+  }
+
+  public static function writeInstallFlag()
+  {
+    $installFile = implode(
+      DIRECTORY_SEPARATOR,
+      [base_path(), 'installed.json']
+    );
+    file_put_contents($installFile, "{}");
+  }
+
   /**
    * Get Install Classes
    *
@@ -113,12 +131,17 @@ class InstallerHelper
 
   private static function _reloadEnvConfig($env)
   {
-    with($envVariables = new EnvironmentVariables(
-      App::getEnvironmentVariablesLoader()))->load($env);
+    with(
+      $envVariables = new EnvironmentVariables(
+        App::getEnvironmentVariablesLoader())
+    )->load($env);
 
-    App::instance('config', $config = new Repository(
-      App::getConfigLoader(), $env
-    ));
+    App::instance(
+      'config',
+      $config = new Repository(
+        App::getConfigLoader(), $env
+      )
+    );
   }
 
   private static function _getEvnFileTemplate()

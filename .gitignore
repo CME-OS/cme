@@ -13,3 +13,4 @@ Thumbs.db
 /app/storage/monit
 /node_modules
 /.sass-cache
+installed.json

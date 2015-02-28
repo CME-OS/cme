@@ -86,7 +86,7 @@ class Setup extends CmeCommand
           "Enter CME database user. If blank, defaults to root: ",
           'root'
         );
-        $dbPassword = $this->ask(
+        $dbPassword = $this->secret(
           "Enter CME database password. If blank, defaults to no password: ",
           ''
         );

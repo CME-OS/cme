@@ -1,6 +1,7 @@
 <?php
 namespace Cme\Web\Controllers;
 
+use Cme\Helpers\InstallerHelper;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
@@ -13,7 +14,11 @@ class LoginController extends BaseController
    */
   public function login()
   {
-    return View::make('login.login');
+    if(InstallerHelper::isCMEInstalled())
+    {
+      return View::make('login.login');
+    }
+    return Redirect::to('/setup');
   }
 
   /**

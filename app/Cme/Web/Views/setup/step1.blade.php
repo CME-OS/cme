@@ -18,7 +18,7 @@
       </div>
       <div class="form-group">
         <label for="install-dbUser">Database Username:</label>
-        <input type="text" name="dbUser" class="form-control" id="install-dbUser" value=" ">
+        <input type="text" name="dbUser" class="form-control" id="install-dbUser" value="">
       </div>
       <div class="form-group">
         <label for="install-dbPass">Database Password:</label>

@@ -25,21 +25,23 @@ class InstallerHelper
   public static $awsSecret;
   public static $awsRegion;
 
-  public static function isCMEInstalled()
+  private static function _getInstallFile()
   {
-    $installFile = implode(
+    return implode(
       DIRECTORY_SEPARATOR,
       [base_path(), 'installed.json']
     );
+  }
+
+  public static function isCMEInstalled()
+  {
+    $installFile = self::_getInstallFile();
     return file_exists($installFile);
   }
 
   public static function writeInstallFlag()
   {
-    $installFile = implode(
-      DIRECTORY_SEPARATOR,
-      [base_path(), 'installed.json']
-    );
+    $installFile = self::_getInstallFile();
     file_put_contents($installFile, "{}");
   }
 
@@ -67,6 +69,9 @@ class InstallerHelper
     return $classes;
   }
 
+  /**
+   * @param array $classes
+   */
   public static function installDb($classes)
   {
     foreach($classes as $migrationClass)
@@ -79,6 +84,9 @@ class InstallerHelper
     }
   }
 
+  /**
+   * @param array $classes
+   */
   public static function unInstallDb($classes)
   {
     foreach($classes as $migrationClass)
@@ -91,6 +99,10 @@ class InstallerHelper
     }
   }
 
+  /**
+   * @param string $username
+   * @param string $password
+   */
   public static function createUser($username, $password)
   {
     $data['email']      = $username;
@@ -101,6 +113,10 @@ class InstallerHelper
     DB::table('users')->insert($data);
   }
 
+  /**
+   * $env could be any of the following: development|stage|production
+   * @param string $env
+   */
   public static function createEnvFile($env)
   {
     $envFile = ".env";

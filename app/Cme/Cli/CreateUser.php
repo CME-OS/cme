@@ -38,19 +38,11 @@ class CreateUser extends CmeCommand
    */
   public function fire()
   {
-    $username = $this->argument('username');
-    $password = $this->argument('password');
+    $username = $this->ask("Username:", "admin");
+    $password = $this->secret("Password:");
 
     InstallerHelper::createUser($username, $password);
 
     $this->info("User $username created successfully!");
-  }
-
-  protected function getArguments()
-  {
-    return array(
-      array('username', InputArgument::REQUIRED, 'User Name'),
-      array('password', InputArgument::REQUIRED, 'Password'),
-    );
   }
 }

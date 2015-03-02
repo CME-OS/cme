@@ -16,6 +16,7 @@ Artisan::add(new Cme\Cli\ListImporter);
 Artisan::add(new Cme\Cli\ListRefresher);
 Artisan::add(new Cme\Cli\InstallDb);
 Artisan::add(new Cme\Cli\UninstallDb);
+Artisan::add(new Cme\Cli\UpgradeDb);
 Artisan::add(new Cme\Cli\DbSnapshot);
 Artisan::add(new Cme\Cli\GenerateMigrationFiles);
 Artisan::add(new Cme\Cli\CreateUser);

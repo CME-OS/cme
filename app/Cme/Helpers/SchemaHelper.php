@@ -15,7 +15,7 @@ class SchemaHelper
   {
     if(self::$_columns === null)
     {
-      self::$_columns = DB::select("SHOW COLUMNS FROM $table");
+      self::$_columns = DB::select("SHOW COLUMNS FROM `$table`");
     }
 
     return self::$_columns;

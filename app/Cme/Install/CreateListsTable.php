@@ -1,9 +1,10 @@
 <?php
+namespace Cme\Install;
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateListsTable extends Migration
+class CreateListsTable extends InstallTable
 {
 	public $table = 'lists';
 

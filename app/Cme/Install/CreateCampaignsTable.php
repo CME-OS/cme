@@ -1,9 +1,10 @@
 <?php
+namespace Cme\Install;
 
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateCampaignsTable extends Migration
+class CreateCampaignsTable extends InstallTable
 {
 	public $table = 'campaigns';
 
@@ -17,7 +18,7 @@ class CreateCampaignsTable extends Migration
 		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('subject', 500);
+			$table->string('name', 500);
 			$table->string('from', 225);
 			$table->text('html_content', 65535)->nullable();
 			$table->text('text_content', 65535)->nullable();

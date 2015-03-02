@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCampaignsTable extends Migration {
+class CreateCampaignsTable extends Migration
+{
+	public $table = 'campaigns';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateCampaignsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('campaigns', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('subject', 500);
@@ -24,13 +26,13 @@ class CreateCampaignsTable extends Migration {
 			$table->integer('send_time')->nullable();
 			$table->integer('send_priority')->default(0);
 			$table->enum('status', array('Pending','Queuing','Queued','Sending','Sent','Paused','Aborted'))->default('Pending');
-			$table->integer('created');
-			$table->text('filters', 65535)->nullable();
+			$table->enum('type', array('default','rolling'))->default('default');
 			$table->integer('frequency')->nullable();
+			$table->text('filters', 65535)->nullable();
 			$table->integer('tested')->default(0);
 			$table->integer('previewed')->default(0);
 			$table->integer('smtp_provider_id')->nullable();
-			$table->enum('type', array('default','rolling'))->default('default');
+			$table->integer('created');
 			$table->integer('deleted_at')->nullable();
 		});
 	}
@@ -43,7 +45,12 @@ class CreateCampaignsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('campaigns');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

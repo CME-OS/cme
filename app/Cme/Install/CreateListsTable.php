@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateListsTable extends Migration {
+class CreateListsTable extends Migration
+{
+	public $table = 'lists';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateListsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('lists', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('name', 225)->default('0');
@@ -33,7 +35,12 @@ class CreateListsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('lists');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

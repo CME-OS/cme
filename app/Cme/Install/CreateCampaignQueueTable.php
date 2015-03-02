@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateCampaignQueueTable extends Migration {
+class CreateCampaignQueueTable extends Migration
+{
+	public $table = 'campaign_queue';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateCampaignQueueTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('campaign_queue', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id')->nullable();
 			$table->integer('campaign_id')->nullable();
@@ -30,7 +32,12 @@ class CreateCampaignQueueTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('campaign_queue');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

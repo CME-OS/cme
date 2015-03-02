@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateSmtpProvidersTable extends Migration {
+class CreateSmtpProvidersTable extends Migration
+{
+	public $table = 'smtp_providers';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateSmtpProvidersTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('smtp_providers', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('name', 250)->default('0');
@@ -33,7 +35,12 @@ class CreateSmtpProvidersTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('smtp_providers');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

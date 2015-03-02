@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateTemplatesTable extends Migration {
+class CreateTemplatesTable extends Migration
+{
+	public $table = 'templates';
 
 	/**
 	 * Run the migrations.
@@ -12,12 +14,12 @@ class CreateTemplatesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('templates', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('name', 500);
 			$table->text('content', 65535)->nullable();
-			$table->string('screenshot', 500);
+			$table->string('screenshot', 500)->nullable();
 			$table->integer('created');
 			$table->integer('deleted_at')->nullable();
 		});
@@ -31,7 +33,12 @@ class CreateTemplatesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('templates');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateBrandsTable extends Migration {
+class CreateBrandsTable extends Migration
+{
+	public $table = 'brands';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateBrandsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('brands', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('brand_name', 225)->default('0');
@@ -23,7 +25,7 @@ class CreateBrandsTable extends Migration {
 			$table->string('brand_unsubscribe_url', 225)->default('0');
 			$table->string('brand_logo', 225)->default('0');
 			$table->integer('brand_created')->default(0);
-			$table->integer('brand_deleted_at')->nullable()->default(0);
+			$table->integer('brand_deleted_at')->nullable();
 		});
 	}
 
@@ -35,7 +37,12 @@ class CreateBrandsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('brands');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateUnsubscribesTable extends Migration {
+class CreateUnsubscribesTable extends Migration
+{
+	public $table = 'unsubscribes';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateUnsubscribesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('unsubscribes', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->string('email', 200)->primary();
 			$table->integer('brand_id')->nullable()->index('brand_id');
@@ -30,7 +32,12 @@ class CreateUnsubscribesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('unsubscribes');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

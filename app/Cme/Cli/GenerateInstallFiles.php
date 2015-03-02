@@ -170,7 +170,7 @@ class GenerateInstallFiles extends GeneratorCommand
    */
   protected function getFileGenerationPath()
   {
-    $path     = $this->option('path');
+    $path = $this->option('path');
     if(!$path)
     {
       $path = 'app/Cme/Install';
@@ -187,7 +187,7 @@ class GenerateInstallFiles extends GeneratorCommand
    */
   protected function getTemplatePath()
   {
-    return $this->getPathByOptionOrConfig('templatePath', 'migration_template_path');
+    return 'app/Cme/Install/installTable.txt';
   }
 
   /**
@@ -199,19 +199,33 @@ class GenerateInstallFiles extends GeneratorCommand
   {
     if($this->method == 'create')
     {
-      $up   = (new AddToTable($this->file, $this->compiler))->run($this->fields, $this->table, 'create');
+      $up   = (new AddToTable($this->file, $this->compiler))->run(
+        $this->fields,
+        $this->table,
+        'create'
+      );
       $down = (new DroppedTable)->drop($this->table);
     }
     else
     {
-      $up   = (new AddForeignKeysToTable($this->file, $this->compiler))->run($this->fields, $this->table);
-      $down = (new RemoveForeignKeysFromTable($this->file, $this->compiler))->run($this->fields, $this->table);
+      $up   = (new AddForeignKeysToTable($this->file, $this->compiler))->run(
+        $this->fields,
+        $this->table
+      );
+      $down = (
+      new RemoveForeignKeysFromTable(
+        $this->file, $this->compiler
+      )
+      )->run($this->fields, $this->table);
     }
 
+    $up   = str_replace("'{$this->table}'", "\$this->table", $up);
+    $down = str_replace("'{$this->table}'", "\$this->table", $down);
     return [
       'CLASS' => ucwords(camel_case($this->migrationName)),
       'UP'    => $up,
-      'DOWN'  => $down
+      'DOWN'  => $down,
+      'TABLE' => $this->table
     ];
   }
 
@@ -236,10 +250,30 @@ class GenerateInstallFiles extends GeneratorCommand
         InputOption::VALUE_OPTIONAL,
         'A list of Tables you wish to ignore, separated by a comma: users,posts,comments'
       ],
-      ['path', 'p', InputOption::VALUE_OPTIONAL, 'Where should the file be created?'],
-      ['templatePath', 'tp', InputOption::VALUE_OPTIONAL, 'The location of the template for this generator'],
-      ['defaultIndexNames', null, InputOption::VALUE_NONE, 'Don\'t use db index names for migrations'],
-      ['defaultFKNames', null, InputOption::VALUE_NONE, 'Don\'t use db foreign key names for migrations'],
+      [
+        'path',
+        'p',
+        InputOption::VALUE_OPTIONAL,
+        'Where should the file be created?'
+      ],
+      [
+        'templatePath',
+        'tp',
+        InputOption::VALUE_OPTIONAL,
+        'The location of the template for this generator'
+      ],
+      [
+        'defaultIndexNames',
+        null,
+        InputOption::VALUE_NONE,
+        'Don\'t use db index names for migrations'
+      ],
+      [
+        'defaultFKNames',
+        null,
+        InputOption::VALUE_NONE,
+        'Don\'t use db foreign key names for migrations'
+      ],
     ];
   }
 

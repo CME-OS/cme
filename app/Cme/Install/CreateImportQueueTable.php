@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateImportQueueTable extends Migration {
+class CreateImportQueueTable extends Migration
+{
+	public $table = 'import_queue';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateImportQueueTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('import_queue', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->integer('list_id')->default(0);
@@ -30,7 +32,12 @@ class CreateImportQueueTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('import_queue');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateRangesTable extends Migration {
+class CreateRangesTable extends Migration
+{
+	public $table = 'ranges';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateRangesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('ranges', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('list_id');
 			$table->integer('campaign_id');
@@ -32,7 +34,12 @@ class CreateRangesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('ranges');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

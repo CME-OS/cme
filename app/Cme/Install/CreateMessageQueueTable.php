@@ -3,7 +3,9 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateMessageQueueTable extends Migration {
+class CreateMessageQueueTable extends Migration
+{
+	public $table = 'message_queue';
 
 	/**
 	 * Run the migrations.
@@ -12,7 +14,7 @@ class CreateMessageQueueTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('message_queue', function(Blueprint $table)
+		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
 			$table->string('subject', 500);
@@ -40,7 +42,12 @@ class CreateMessageQueueTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('message_queue');
+		Schema::drop($this->table);
+	}
+
+	public function setTable($table)
+	{
+	  $this->table = $table;
 	}
 
 }

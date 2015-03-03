@@ -61,9 +61,12 @@ class InstallerHelper
     $classes = [];
     foreach($files as $file)
     {
-      require_once $file;
-      $className = str_replace('.php', '', basename($file));
-      $classes[] = $className;
+      if(basename($file) != 'InstallTable.php')
+      {
+        require_once $file;
+        $className = str_replace('.php', '', basename($file));
+        $classes[] = $className;
+      }
     }
 
     return $classes;

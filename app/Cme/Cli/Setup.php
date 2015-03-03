@@ -136,6 +136,7 @@ class Setup extends CmeCommand
       $this->info(
         "Please make sure you create a different user and delete this one"
       );
+      InstallerHelper::writeInstallFlag();
     }
   }
 }

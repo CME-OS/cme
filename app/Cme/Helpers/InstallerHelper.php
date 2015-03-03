@@ -5,9 +5,9 @@
 
 namespace Cme\Helpers;
 
+use Cme\Install\InstallTable;
 use Illuminate\Config\EnvironmentVariables;
 use Illuminate\Config\Repository;
-use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -76,8 +76,9 @@ class InstallerHelper
   {
     foreach($classes as $migrationClass)
     {
-      $m = new $migrationClass;
-      if($m instanceof Migration)
+      $migrationClass = "Cme\\Install\\" . $migrationClass;
+      $m              = new $migrationClass;
+      if($m instanceof InstallTable)
       {
         $m->up();
       }
@@ -91,8 +92,9 @@ class InstallerHelper
   {
     foreach($classes as $migrationClass)
     {
-      $m = new $migrationClass;
-      if($m instanceof Migration)
+      $migrationClass = "Cme\\Install\\" . $migrationClass;
+      $m              = new $migrationClass;
+      if($m instanceof InstallTable)
       {
         $m->down();
       }
@@ -115,6 +117,7 @@ class InstallerHelper
 
   /**
    * $env could be any of the following: development|stage|production
+   *
    * @param string $env
    */
   public static function createEnvFile($env)
@@ -149,7 +152,8 @@ class InstallerHelper
   {
     with(
       $envVariables = new EnvironmentVariables(
-        App::getEnvironmentVariablesLoader())
+        App::getEnvironmentVariablesLoader()
+      )
     )->load($env);
 
     App::instance(

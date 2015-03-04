@@ -41,11 +41,49 @@ class UpgradeDb extends CmeCommand
    */
   public function fire()
   {
-    $update = new DbUpdate();
-
+    $update     = new DbUpdate();
     $installDir = app_path() . '/Cme/Install/';
-    //loop through _added
-    //and run install class
+    //process added tables
+    foreach($update->added() as $table => $renames)
+    {
+      $className   = 'Create' . ucfirst($table) . 'Table';
+      $installFile = $installDir . $className . '.php';
+      if(file_exists($installFile))
+      {
+        require_once $installFile;
+        $className = "Cme\\Install\\" . $className;
+        $m         = new $className;
+        if($m instanceof InstallTable)
+        {
+          $m->up();
+        }
+      }
+    }
+
+    //processed removed tables
+    foreach($update->removed() as $table => $renames)
+    {
+      $className   = 'Create' . ucfirst($table) . 'Table';
+      $installFile = $installDir . $className . '.php';
+      if(file_exists($installFile))
+      {
+        require_once $installFile;
+        $className = "Cme\\Install\\" . $className;
+        $m         = new $className;
+        if($m instanceof InstallTable)
+        {
+          $m->down();
+        }
+      }
+    }
+
+    //process renamed tables
+    foreach($update->renamed() as $oldName => $newName)
+    {
+      Schema::rename($oldName, $newName);
+    }
+
+    //process modified tables
     foreach($update->modified() as $table => $renames)
     {
       $className   = 'Create' . ucfirst($table) . 'Table';

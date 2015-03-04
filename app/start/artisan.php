@@ -21,5 +21,6 @@ Artisan::add(new Cme\Cli\DbSnapshot);
 Artisan::add(new Cme\Cli\GenerateMigrationFiles);
 Artisan::add(new Cme\Cli\CreateUser);
 Artisan::add(new Cme\Cli\SesTool);
+Artisan::add(new Cme\Cli\InstallCommander);
 Artisan::add(new Cme\Cli\Setup);
 Artisan::add(new Cme\Cli\GenerateInstallFiles(App::make('config')));

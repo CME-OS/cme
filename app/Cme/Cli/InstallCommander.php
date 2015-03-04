@@ -4,6 +4,7 @@ namespace Cme\Cli;
 use Aws\Ec2\Ec2Client;
 use Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Console\Input\InputOption;
 
 class InstallCommander extends CmeCommand
 {
@@ -32,6 +33,7 @@ class InstallCommander extends CmeCommand
   private $_ec2PublicDns;
   private $_ec2PublicIp;
   private $_ec2Status;
+  private $_groupId;
   private $_keyName = 'cme-commander';
 
   /**
@@ -84,9 +86,10 @@ class InstallCommander extends CmeCommand
   {
     $this->_setupEc2();
     $status = $this->_ec2Status;
+    echo "Checking if EC2 server is ready for deployment" . PHP_EOL;
     while($status != 16)
     {
-      echo "Checking if EC2 server is ready for deployment..." . PHP_EOL;
+      echo "...\r\n";
       $status = $this->_checkEc2Status();
       sleep(1);
     }
@@ -106,14 +109,16 @@ class InstallCommander extends CmeCommand
     {
       $cmeCommanderSrc = "cme-commander.7z";
       $runCmds         = [
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get update",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get install p7zip",
-        "scp -i {$this->_keyName}.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicIp}:$cmeCommanderSrc",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} p7zip -d $cmeCommanderSrc",
-        "scp -i {$this->_keyName}.pem commander.config.php ubuntu@{$this->_ec2PublicIp}:/home/ubuntu/cme-commander/commander.config.php",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/install.sh",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/purge.sh",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo cme-commander/install.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get update",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get install p7zip curl",
+        "scp -i {$this->_keyName}.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicDns}:$cmeCommanderSrc",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} p7zip -d $cmeCommanderSrc",
+        "scp -i {$this->_keyName}.pem commander.config.php ubuntu@{$this->_ec2PublicDns}:/home/ubuntu/cme-commander/commander.config.php",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/install.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/purge.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo cme-commander/install.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} \"sudo curl -sS https://getcomposer.org/installer | php\"",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} \"php /home/ubuntu/composer.phar install -d=/home/ubuntu/cme-commander\"",
       ];
 
       foreach($runCmds as $cmd)
@@ -126,6 +131,7 @@ class InstallCommander extends CmeCommand
         {
           echo implode("\n", $output) . PHP_EOL;
         }
+        sleep(1);
       }
       echo "CME Commander is deployed and ready!" . PHP_EOL;
     }
@@ -145,7 +151,13 @@ class InstallCommander extends CmeCommand
       ]
     );
     $statuses = $result->get('InstanceStatuses');
-    return $statuses[0]['InstanceState']['Code'];
+    $return   = 0;
+    if(isset($statuses[0]))
+    {
+      $return = $statuses[0]['InstanceState']['Code'];
+    }
+
+    return $return;
   }
 
   private function _setupEc2()
@@ -169,52 +181,88 @@ class InstallCommander extends CmeCommand
       }
 
       //Create Security Group to allow on SSH connection
-      /*$result  = $this->_ec2Client->createSecurityGroup(
-        array(
-          'DryRun'      => $dryRun,
-          'GroupName'   => 'CME Security Group',
-          'Description' => 'SSH Only',
-        )
-      );
-      $groupId = $result->get('GroupId');
-
-      $response = $this->_ec2Client->authorizeSecurityGroupIngress(
-        array(
-          'GroupId'       => $groupId,
-          'IpPermissions' => array(
-            array(
-              'IpProtocol' => 'tcp',
-              'FromPort'   => '22',
-              'ToPort'     => '22',
-            )
+      try
+      {
+        $result         = $this->_ec2Client->createSecurityGroup(
+          array(
+            'DryRun'      => $dryRun,
+            'GroupName'   => 'CME Security Group',
+            'Description' => 'SSH Only',
           )
-        )
-      );*/
+        );
+        $this->_groupId = $result->get('GroupId');
 
-      //Create Instance
-      $result = $this->_ec2Client->runInstances(
-        array(
-          'DryRun'                            => $dryRun,
-          'ImageId'                           => 'ami-f6b11181',
-          'MinCount'                          => 1,
-          'MaxCount'                          => 1,
-          'KeyName'                           => $this->_keyName,
-          'InstanceType'                      => 't1.micro',
-          'Monitoring'                        => array(
-            'Enabled' => false,
-          ),
-          'DisableApiTermination'             => false,
-          'InstanceInitiatedShutdownBehavior' => 'stop',
-          'ClientToken'                       => 'CME-INSTALLER-3',
-          'EbsOptimized'                      => false,
-        )
-      );
+        try
+        {
+          $this->_ec2Client->authorizeSecurityGroupIngress(
+            array(
+              'GroupId'       => $this->_groupId,
+              'IpPermissions' => array(
+                array(
+                  'IpProtocol' => 'tcp',
+                  'FromPort'   => 22,
+                  'ToPort'     => 22,
+                  'IpRanges'   => array(
+                    array(
+                      'CidrIp' => '0.0.0.0/0',
+                    )
+                  ),
+                ),
 
-      $instances           = $result->get('Instances');
+              )
+            )
+          );
+        }
+        catch(\Exception $e)
+        {
+          $this->info("CME: " . $e->getMessage());
+        }
+      }
+      catch(\Exception $e)
+      {
+        $result         = $this->_ec2Client->describeSecurityGroups(
+          array(
+            'DryRun'     => $dryRun,
+            'GroupNames' => array('CME Security Group'),
+          )
+        );
+        $securityGroups = $result->get('SecurityGroups');
+        $this->_groupId = $securityGroups[0]['GroupId'];
+        $this->info("CME: " . $e->getMessage());
+      }
+
+      do
+      {
+        //Create Instance
+        $result    = $this->_ec2Client->runInstances(
+          array(
+            'DryRun'                            => $dryRun,
+            'ImageId'                           => 'ami-f6b11181',
+            'MinCount'                          => 1,
+            'MaxCount'                          => 1,
+            'KeyName'                           => $this->_keyName,
+            'SecurityGroupIds'                  => array($this->_groupId),
+            'InstanceType'                      => 't1.micro',
+            'Monitoring'                        => array(
+              'Enabled' => false,
+            ),
+            'DisableApiTermination'             => false,
+            'InstanceInitiatedShutdownBehavior' => 'stop',
+            'ClientToken'                       => 'CME-INSTALLER-' . $this->option('instance-id'),
+            'EbsOptimized'                      => false,
+          )
+        );
+        $instances = $result->get('Instances');
+        echo "Waiting for instance to start up" . PHP_EOL;
+        echo "...\r\n";
+      }
+      while($instances[0]["PublicDnsName"] == "");
+
       $this->_instanceId   = $instances[0]['InstanceId'];
       $this->_ec2PublicDns = $instances[0]["PublicDnsName"];
-      $this->_ec2PublicIp  = $instances[0]['PublicIpAddress'];
-      $this->_ec2Status    = $instances[0]['State']['Code'];
+      $this->info("Public DNS: " . $this->_ec2PublicDns);
+      $this->_ec2PublicIp = $instances[0]['PublicIpAddress'];
+      $this->_ec2Status = $instances[0]['State']['Code'];
 
       //Tag the instance
       $this->_ec2Client->createTags(
@@ -233,5 +281,17 @@ class InstallCommander extends CmeCommand
     {
       $this->error('Installer could not talk to EC2');
     }
+  }
+
+  protected function getOptions()
+  {
+    return [
+      [
+        'instance-id',
+        'i',
+        InputOption::VALUE_REQUIRED,
+        'Instance Id used to build a Client Token'
+      ]
+    ];
   }
 }

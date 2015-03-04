@@ -4,6 +4,7 @@ namespace Cme\Cli;
 use Cme\Helpers\DbUpdate;
 use Cme\Helpers\SchemaHelper;
 use Cme\Install\InstallTable;
+use Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 

@@ -3,14 +3,12 @@
  * @author  oke.ugwu
  */
 
-namespace Cme\Cli;
+namespace Cme\Lib\Cli;
 
-
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class CmeCommand extends Command
+abstract class LongRunningScript extends CmeCommand
 {
   protected $_cronMode;
   protected $_monitDir;
@@ -18,8 +16,12 @@ abstract class CmeCommand extends Command
 
   protected function _init()
   {
-    $className = str_replace('\\', DIRECTORY_SEPARATOR, get_class($this));
-    $this->_monitDir = implode(
+    $className          = str_replace(
+      '\\',
+      DIRECTORY_SEPARATOR,
+      get_class($this)
+    );
+    $this->_monitDir    = implode(
       DIRECTORY_SEPARATOR,
       [storage_path(), 'monit', $className]
     );
@@ -27,7 +29,7 @@ abstract class CmeCommand extends Command
       DIRECTORY_SEPARATOR,
       [$this->_monitDir, $this->argument('inst') . '.pid']
     );
-    $this->_cronMode = ($this->option('cron-mode') == 'true');
+    $this->_cronMode    = ($this->option('cron-mode') == 'true');
     if($this->_cronMode && File::exists($this->_pidFileName))
     {
       die('Exiting a process is already running');

@@ -2,10 +2,11 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\ApiImporter;
+use Cme\Lib\Cli\LongRunningScript;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ListRefresher extends CmeCommand
+class ListRefresher extends LongRunningScript
 {
 
   /**

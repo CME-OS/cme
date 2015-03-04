@@ -2,7 +2,7 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\InstallerHelper;
-use Symfony\Component\Console\Input\InputArgument;
+use Cme\Lib\Cli\CmeCommand;
 
 class CreateUser extends CmeCommand
 {

@@ -2,6 +2,7 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\InstallerHelper;
+use Cme\Lib\Cli\CmeCommand;
 
 class Setup extends CmeCommand
 {

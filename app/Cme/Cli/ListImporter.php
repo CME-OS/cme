@@ -3,11 +3,12 @@ namespace Cme\Cli;
 
 use Cme\Helpers\ApiImporter;
 use Cme\Helpers\CsvImporter;
+use Cme\Lib\Cli\LongRunningScript;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
 
-class ListImporter extends CmeCommand
+class ListImporter extends LongRunningScript
 {
 
   /**

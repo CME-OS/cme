@@ -3,6 +3,7 @@ namespace Cme\Cli;
 
 use Cme\Helpers\CampaignHelper;
 use Cme\Helpers\FilterHelper;
+use Cme\Lib\Cli\LongRunningScript;
 use Cme\Models\CMEBrand;
 use Cme\Models\CMECampaign;
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
-class QueueMessages extends CmeCommand
+class QueueMessages extends LongRunningScript
 {
 
   /**

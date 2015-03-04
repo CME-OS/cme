@@ -1,6 +1,7 @@
 <?php
 namespace Cme\Cli;
 
+use Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
 
 class GenerateMigrationFiles extends CmeCommand

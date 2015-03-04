@@ -4,6 +4,7 @@ namespace Cme\Cli;
 use Aws\Ses\SesClient;
 use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
+use Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;

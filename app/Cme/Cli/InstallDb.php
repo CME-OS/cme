@@ -2,6 +2,7 @@
 namespace Cme\Cli;
 
 use Cme\Helpers\InstallerHelper;
+use Cme\Lib\Cli\CmeCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
 class InstallDb extends CmeCommand

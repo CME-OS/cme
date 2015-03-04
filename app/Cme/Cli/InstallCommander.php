@@ -99,17 +99,21 @@ class InstallCommander extends CmeCommand
 
   private function _deployCommander()
   {
-    if(file_exists($this->_keyName . '.pem'))
+    if(file_exists($this->_keyName . '.pem') && file_exists(
+        'commander.config.php'
+      )
+    )
     {
       $cmeCommanderSrc = "cme-commander.7z";
       $runCmds         = [
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get update",
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get install p7zip",
-        "scp -i cme-commander.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicIp}:$cmeCommanderSrc",
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} p7zip -d $cmeCommanderSrc",
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/install.sh",
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/purge.sh",
-        "ssh -i cme-commander.pem ubuntu@{$this->_ec2PublicIp} sudo cme-commander/install.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get update",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo apt-get install p7zip",
+        "scp -i {$this->_keyName}.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicIp}:$cmeCommanderSrc",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} p7zip -d $cmeCommanderSrc",
+        "scp -i {$this->_keyName}.pem commander.config.php ubuntu@{$this->_ec2PublicIp}:/home/ubuntu/cme-commander/commander.config.php",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/install.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} chmod +x cme-commander/purge.sh",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicIp} sudo cme-commander/install.sh",
       ];
 
       foreach($runCmds as $cmd)
@@ -128,6 +132,7 @@ class InstallCommander extends CmeCommand
     else
     {
       echo "CME Commander cannot be deployed without a private key" . PHP_EOL;
+      echo "Make sure you have both {$this->_keyName}.pem and commander.config.php files" . PHP_EOL;
     }
   }
 
@@ -164,7 +169,7 @@ class InstallCommander extends CmeCommand
       }
 
       //Create Security Group to allow on SSH connection
-      $result  = $this->_ec2Client->createSecurityGroup(
+      /*$result  = $this->_ec2Client->createSecurityGroup(
         array(
           'DryRun'      => $dryRun,
           'GroupName'   => 'CME Security Group',
@@ -184,7 +189,7 @@ class InstallCommander extends CmeCommand
             )
           )
         )
-      );
+      );*/
 
       //Create Instance
       $result = $this->_ec2Client->runInstances(

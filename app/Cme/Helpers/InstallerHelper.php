@@ -151,6 +151,28 @@ class InstallerHelper
     self::_reloadEnvConfig($env);
   }
 
+  /**
+   * Creates the commander config file, which will be SCPed across to EC2
+   * when we deploy commander
+   */
+  public static function createCommanderConfigFile()
+  {
+    $configFile = "commander.config.php";
+
+    $configFile = implode(
+      DIRECTORY_SEPARATOR,
+      [base_path(), strtolower($configFile . '.php')]
+    );
+
+    $template = self::_getCommanderConfigTemplate();
+    $template = str_replace('[HOST]', self::$dbHost, $template);
+    $template = str_replace('[DATABASE]', self::$dbName, $template);
+    $template = str_replace('[USERNAME]', self::$dbUser, $template);
+    $template = str_replace('[PASSWORD]', self::$dbPassword, $template);
+
+    file_put_contents($configFile, $template);
+  }
+
   private static function _reloadEnvConfig($env)
   {
     with(
@@ -189,6 +211,21 @@ return array(
   'aws_secret'       => '[AWS_SECRET]',
   'aws_region'       => '[AWS_REGION]',
 );
+";
+    return $template;
+  }
+
+  private static function _getCommanderConfigTemplate()
+  {
+    $template = "<?php
+return  [
+  'database' => [
+    'host'     => '[HOST]',
+    'database' => '[DATABASE]'
+    'username' => '[USERNAME]',
+    'password' => '[PASSWORD]',
+  ]
+];
 ";
     return $template;
   }

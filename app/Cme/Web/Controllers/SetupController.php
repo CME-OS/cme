@@ -30,6 +30,7 @@ class SetupController extends BaseController
     InstallerHelper::$awsRegion  = Input::get('awsRegion');
 
     InstallerHelper::createEnvFile('production');
+    InstallerHelper::createCommanderConfigFile();
     InstallerHelper::installDb(InstallerHelper::getInstallClasses());
     InstallerHelper::createUser('admin', 'admin');
     InstallerHelper::writeInstallFlag();

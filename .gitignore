@@ -14,3 +14,4 @@ Thumbs.db
 /node_modules
 /.sass-cache
 installed.json
+commander.config.php

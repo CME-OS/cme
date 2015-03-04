@@ -124,6 +124,7 @@ class Setup extends CmeCommand
 
       $this->info("Welldone! I am now generating your env file");
       InstallerHelper::createEnvFile($env);
+      InstallerHelper::createCommanderConfigFile();
 
       //install db
       $this->info("Installing Database");

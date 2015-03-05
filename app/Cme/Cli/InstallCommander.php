@@ -89,7 +89,7 @@ class InstallCommander extends CmeCommand
     echo "Checking if EC2 server is ready for deployment" . PHP_EOL;
     while($status != 16)
     {
-      echo "...\r\n";
+      echo "...\r";
       $status = $this->_checkEc2Status();
       sleep(1);
     }
@@ -110,35 +110,46 @@ class InstallCommander extends CmeCommand
       $cmeCommanderSrc = "cme-commander.7z";
       $runCmds         = [
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get update",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get install p7zip curl",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get install -y p7zip",
         "scp -i {$this->_keyName}.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicDns}:$cmeCommanderSrc",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} p7zip -d $cmeCommanderSrc",
         "scp -i {$this->_keyName}.pem commander.config.php ubuntu@{$this->_ec2PublicDns}:/home/ubuntu/cme-commander/commander.config.php",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/install.sh",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/purge.sh",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo cme-commander/install.sh",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} \"sudo curl -sS https://getcomposer.org/installer | php\"",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} \"php /home/ubuntu/composer.phar install -d=/home/ubuntu/cme-commander\"",
       ];
 
       foreach($runCmds as $cmd)
       {
         $output = [];
         $return = null;
-        echo "Running: " . $cmd . PHP_EOL;
-        exec($cmd, $output, $return);
-        if($return == 0)
+
+        $tries    = 0;
+        $maxTries = 5;
+        do
         {
-          echo implode("\n", $output) . PHP_EOL;
+          $this->info("Running ($tries): " . $cmd);
+          exec($cmd, $output, $return);
+          if($return == 0)
+          {
+            echo implode("\n", $output) . PHP_EOL;
+          }
+          $tries++;
+          sleep(1);
         }
-        sleep(1);
+        while($return != 0 && $tries < $maxTries);
       }
-      echo "CME Commander is deployed and ready!" . PHP_EOL;
+      $this->info("CME Commander is deployed and ready!");
+      $this->info(
+        "To login RUN: ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns}"
+      );
     }
     else
     {
-      echo "CME Commander cannot be deployed without a private key" . PHP_EOL;
-      echo "Make sure you have both {$this->_keyName}.pem and commander.config.php files" . PHP_EOL;
+      $this->error("CME Commander cannot be deployed without a private key");
+      $this->error(
+        "Make sure you have both {$this->_keyName}.pem and commander.config.php files"
+      );
     }
   }
 
@@ -168,6 +179,7 @@ class InstallCommander extends CmeCommand
       //Create Keys
       if(!file_exists($this->_keyName . '.pem'))
       {
+        $this->info("Creating public/private key pairs");
         $result = $this->_ec2Client->createKeyPair(
           array(
             'DryRun'  => $dryRun,
@@ -178,11 +190,14 @@ class InstallCommander extends CmeCommand
         //maybe write this to a file
         $privateKey = $result->get('KeyMaterial') . PHP_EOL;
         file_put_contents($this->_keyName . '.pem', $privateKey);
+        //make private key file read only
+        chmod($this->_keyName . '.pem', 400);
       }
 
       //Create Security Group to allow on SSH connection
       try
       {
+        $this->info("Creating security group to allow only SSH connections");
         $result         = $this->_ec2Client->createSecurityGroup(
           array(
             'DryRun'      => $dryRun,
@@ -231,6 +246,8 @@ class InstallCommander extends CmeCommand
         $this->info("CME: " . $e->getMessage());
       }
 
+      $this->info("Launching an instance to host Commander");
+      $this->info("Waiting for instance to start up");
       do
       {
         //Create Instance
@@ -248,13 +265,15 @@ class InstallCommander extends CmeCommand
             ),
             'DisableApiTermination'             => false,
             'InstanceInitiatedShutdownBehavior' => 'stop',
-            'ClientToken'                       => 'CME-INSTALLER-' . $this->option('instance-id'),
+            'ClientToken'                       => 'CME-INSTALLER-' . $this->option(
+                'instance-id'
+              ),
             'EbsOptimized'                      => false,
           )
         );
         $instances = $result->get('Instances');
-        echo "Waiting for instance to start up" . PHP_EOL;
-        echo "...\r\n";
+        echo "...\r";
+        sleep(1);
       }
       while($instances[0]["PublicDnsName"] == "");
 
@@ -262,7 +281,7 @@ class InstallCommander extends CmeCommand
       $this->_ec2PublicDns = $instances[0]["PublicDnsName"];
       $this->info("Public DNS: " . $this->_ec2PublicDns);
       $this->_ec2PublicIp = $instances[0]['PublicIpAddress'];
-      $this->_ec2Status = $instances[0]['State']['Code'];
+      $this->_ec2Status   = $instances[0]['State']['Code'];
 
       //Tag the instance
       $this->_ec2Client->createTags(

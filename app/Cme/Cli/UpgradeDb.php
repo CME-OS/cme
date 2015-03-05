@@ -45,8 +45,9 @@ class UpgradeDb extends CmeCommand
     $update     = new DbUpdate();
     $installDir = app_path() . '/Cme/Install/';
     //process added tables
-    foreach($update->added() as $table => $renames)
+    foreach($update->added() as $table)
     {
+      $this->info("Adding $table table");
       $className   = 'Create' . ucfirst($table) . 'Table';
       $installFile = $installDir . $className . '.php';
       if(file_exists($installFile))
@@ -62,8 +63,9 @@ class UpgradeDb extends CmeCommand
     }
 
     //processed removed tables
-    foreach($update->removed() as $table => $renames)
+    foreach($update->removed() as $table)
     {
+      $this->info("Removing $table table");
       $className   = 'Create' . ucfirst($table) . 'Table';
       $installFile = $installDir . $className . '.php';
       if(file_exists($installFile))
@@ -81,6 +83,7 @@ class UpgradeDb extends CmeCommand
     //process renamed tables
     foreach($update->renamed() as $oldName => $newName)
     {
+      $this->info("Renaming $oldName to $newName");
       Schema::rename($oldName, $newName);
     }
 

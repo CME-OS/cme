@@ -27,7 +27,7 @@ class DbUpdate
   public function removed()
   {
     return [
-      'templates_old'
+
     ];
   }
 
@@ -48,7 +48,9 @@ class DbUpdate
    */
   public function renamed()
   {
-    return [];
+    return [
+      'ranges' => 'ranges_queue'
+    ];
   }
 
   public function run()

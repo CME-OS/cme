@@ -107,12 +107,13 @@ class InstallCommander extends CmeCommand
       )
     )
     {
-      $cmeCommanderSrc = "cme-commander.7z";
+      $cmeCommanderSrc = "cme-commander";
       $runCmds         = [
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get update",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo apt-get install -y p7zip",
-        "scp -i {$this->_keyName}.pem $cmeCommanderSrc ubuntu@{$this->_ec2PublicDns}:$cmeCommanderSrc",
-        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} p7zip -d $cmeCommanderSrc",
+        "scp -i {$this->_keyName}.pem $cmeCommanderSrc.7z ubuntu@{$this->_ec2PublicDns}:$cmeCommanderSrc.7z",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} sudo rm -Rf $cmeCommanderSrc",
+        "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} p7zip -d $cmeCommanderSrc.7z",
         "scp -i {$this->_keyName}.pem commander.config.php ubuntu@{$this->_ec2PublicDns}:/home/ubuntu/cme-commander/commander.config.php",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/install.sh",
         "ssh -i {$this->_keyName}.pem ubuntu@{$this->_ec2PublicDns} chmod +x cme-commander/purge.sh",

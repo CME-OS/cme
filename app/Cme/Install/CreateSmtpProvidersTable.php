@@ -20,8 +20,8 @@ class CreateSmtpProvidersTable extends InstallTable
 			$table->integer('id', true);
 			$table->string('name', 250)->default('0');
 			$table->string('host', 250)->default('0');
-			$table->string('username', 250)->default('0');
-			$table->string('password', 250)->default('0');
+			$table->text('username', 65535);
+			$table->text('password', 65535);
 			$table->integer('port')->default(0);
 			$table->integer('default')->default(0);
 			$table->integer('deleted_at')->nullable();

@@ -2,6 +2,7 @@
 namespace Cme\Web\Controllers;
 
 use Cme\Models\CMESmtpProvider;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
@@ -25,7 +26,9 @@ class SmtpProvidersController extends BaseController
 
   public function add()
   {
-    $data = Input::all();
+    $data             = Input::all();
+    $data['username'] = Crypt::encrypt($data['username']);
+    $data['password'] = Crypt::encrypt($data['password']);
     CMESmtpProvider::insert($data);
 
     return Redirect::route('smtp-providers');
@@ -33,17 +36,24 @@ class SmtpProvidersController extends BaseController
 
   public function edit($id)
   {
-    $data['smtpProvider'] = CMESmtpProvider::find($id);
+    $provider             = CMESmtpProvider::find($id);
+    $provider->username   = Crypt::decrypt($provider->username);
+    $data['smtpProvider'] = $provider;
 
     return View::make('smtp.edit', $data);
   }
 
   public function update()
   {
-    $data = Input::all();
+    $data             = Input::all();
+    $data['username'] = Crypt::encrypt($data['username']);
     if($data['password'] == "")
     {
       unset($data['password']);
+    }
+    else
+    {
+      $data['password'] = Crypt::encrypt($data['password']);
     }
     DB::table('smtp_providers')->where('id', '=', $data['id'])
       ->update($data);
@@ -71,6 +81,9 @@ class SmtpProvidersController extends BaseController
     DB::table('smtp_providers')->where('id', '=', $id)
       ->update($data);
 
-    return Redirect::to('/smtp-providers')->with('msg', 'SMTP Provider has been deleted');
+    return Redirect::to('/smtp-providers')->with(
+      'msg',
+      'SMTP Provider has been deleted'
+    );
   }
 }

@@ -16,7 +16,6 @@
           <tr>
             <th>Name</th>
             <th>Host</th>
-            <th>Username</th>
             <th>Port</th>
             <th>Default</th>
             <th></th>
@@ -26,7 +25,6 @@
             <tr>
               <td><?= $provider->name; ?></td>
               <td><?= $provider->host; ?></td>
-              <td><?= $provider->username; ?></td>
               <td><?= $provider->port; ?></td>
               <td><?= ($provider->default)? 'Yes' : 'No'; ?></td>
               <td>

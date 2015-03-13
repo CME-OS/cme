@@ -24,6 +24,7 @@ class InstallerHelper
   public static $awsKey;
   public static $awsSecret;
   public static $awsRegion;
+  private static $_key;
 
   private static function _getInstallFile()
   {
@@ -77,10 +78,10 @@ class InstallerHelper
    */
   public static function installDb($classes)
   {
-    foreach($classes as $migrationClass)
+    foreach($classes as $installClass)
     {
-      $migrationClass = "Cme\\Install\\" . $migrationClass;
-      $m              = new $migrationClass;
+      $installClass = "Cme\\Install\\" . $installClass;
+      $m              = new $installClass;
       if($m instanceof InstallTable)
       {
         $m->up();
@@ -93,10 +94,10 @@ class InstallerHelper
    */
   public static function unInstallDb($classes)
   {
-    foreach($classes as $migrationClass)
+    foreach($classes as $installClass)
     {
-      $migrationClass = "Cme\\Install\\" . $migrationClass;
-      $m              = new $migrationClass;
+      $installClass = "Cme\\Install\\" . $installClass;
+      $m              = new $installClass;
       if($m instanceof InstallTable)
       {
         $m->down();
@@ -136,6 +137,7 @@ class InstallerHelper
       [base_path(), strtolower($envFile . '.php')]
     );
 
+    self::$_key = Str::random(32);
     $template = self::_getEvnFileTemplate();
     $template = str_replace('[DOMAIN]', self::$domain, $template);
     $template = str_replace('[HOST]', self::$dbHost, $template);
@@ -145,7 +147,7 @@ class InstallerHelper
     $template = str_replace('[AWS_KEY]', self::$awsKey, $template);
     $template = str_replace('[AWS_SECRET]', self::$awsSecret, $template);
     $template = str_replace('[AWS_REGION]', self::$awsRegion, $template);
-    $template = str_replace('[KEY]', Str::random(32), $template);
+    $template = str_replace('[KEY]', self::$_key, $template);
 
     file_put_contents($envFile, $template);
     self::_reloadEnvConfig($env);
@@ -169,6 +171,7 @@ class InstallerHelper
     $template = str_replace('[DATABASE]', self::$dbName, $template);
     $template = str_replace('[USERNAME]', self::$dbUser, $template);
     $template = str_replace('[PASSWORD]', self::$dbPassword, $template);
+    $template = str_replace('[KEY]', self::$_key, $template);
 
     file_put_contents($configFile, $template);
   }
@@ -224,7 +227,8 @@ return  [
     'database' => '[DATABASE]'
     'username' => '[USERNAME]',
     'password' => '[PASSWORD]',
-  ]
+  ],
+  'key' => [KEY]
 ];
 ";
     return $template;

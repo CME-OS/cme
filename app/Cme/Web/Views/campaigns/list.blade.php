@@ -13,7 +13,7 @@
         <table class="table table-striped table-hover">
           <thead>
             <tr>
-              <th>Subject</th>
+              <th>Name</th>
               <th>List</th>
               <th>Brand</th>
               <th>Created</th>
@@ -24,9 +24,12 @@
           <?php foreach($campaigns as $campaign): ?>
             <tr>
               <td>
-                <span class="glyphicon glyphicon-envelope" style="color:royalblue;"></span>
-                <strong><a href="{{ URL::route('campaign.preview', $campaign->id) }}"><?= $campaign->subject; ?></a></strong>
-                <span class="label <?= $labelClasses[$campaign->status]; ?>"><?= $campaign->status; ?></span>
+                <div>
+                  <span class="glyphicon glyphicon-envelope" style="color:royalblue;"></span>
+                  <strong><a href="{{ URL::route('campaign.preview', $campaign->id) }}"><?= $campaign->name; ?></a></strong>
+                  <span class="label <?= $labelClasses[$campaign->status]; ?>"><?= $campaign->status; ?></span>
+                </div>
+                <small><?= $campaign->subject ?></small>
               </td>
               <td><?= $campaign->lists->name; ?></td>
               <td><?= $campaign->brand->brand_name; ?></td>

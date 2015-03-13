@@ -18,6 +18,7 @@ class CreateCampaignsTable extends InstallTable
 		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
+			$table->string('name', 500);
 			$table->string('subject', 500);
 			$table->string('from', 225);
 			$table->text('html_content', 65535)->nullable();

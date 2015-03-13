@@ -38,6 +38,7 @@ class CMECampaign extends Model
   {
     return [
       'id',
+      'name',
       'subject',
       'from',
       'html_content',

@@ -52,6 +52,7 @@ class CampaignsController extends BaseController
           CMECampaign::find($campaignId) : new CMECampaign();
         if(Request::isMethod('post'))
         {
+          $campaign->name     = Input::get('name');
           $campaign->subject  = Input::get('subject');
           $campaign->from     = Input::get('from');
           $campaign->list_id  = Input::get('list_id');
@@ -207,7 +208,7 @@ class CampaignsController extends BaseController
     $originalCampaign = CMECampaign::find($id);
 
     $newCampaign            = $originalCampaign->replicate();
-    $newCampaign->subject   = $newCampaign->subject . ' (COPY)';
+    $newCampaign->subject   = $newCampaign->name . ' (COPY)';
     $newCampaign->send_time = null;
     $newCampaign->tested    = 0;
     $newCampaign->previewed = 0;

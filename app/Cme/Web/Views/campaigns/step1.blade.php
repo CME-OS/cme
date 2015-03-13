@@ -16,6 +16,10 @@
         </select>
       </div>
       <div class="form-group">
+        <label for="campaign-name">What is the name of this campaign?</label>
+        <input type="text" name="name" class="form-control" id="campaign-name" value="<?= $campaign->name ?>">
+      </div>
+      <div class="form-group">
         <label for="campaign-subject">What is the subject of this campaign?</label>
         <input type="text" name="subject" class="form-control" id="campaign-subject" value="<?= $campaign->subject ?>">
       </div>

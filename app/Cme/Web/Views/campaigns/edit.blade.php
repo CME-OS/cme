@@ -22,6 +22,11 @@
                 <div class="col-md-8">
 
                     <div class='form-group'>
+                        {{ Form::label('name', 'Name') }}
+                        {{ Form::text('name', null, ['class' => 'form-control']) }}
+                    </div>
+
+                    <div class='form-group'>
                         {{ Form::label('subject', 'Subject') }}
                         {{ Form::text('subject', null, ['class' => 'form-control']) }}
                     </div>

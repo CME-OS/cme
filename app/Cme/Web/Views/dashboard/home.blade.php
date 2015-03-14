@@ -73,7 +73,7 @@
           <div class="panel-heading">
             <strong>
               <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
-              <?= Str::limit($campaignLookUp[$campaignId]->subject, 50) ?>
+              <?= Str::limit($campaignLookUp[$campaignId]->name, 50) ?>
             </a>
             </strong>
             <div class="pull-right">
@@ -145,7 +145,7 @@
         <div class="panel-heading">
           <strong>
             <a href="/analytics/<?= $campaignId ?>" title="View Analytics">
-              <?= Str::limit($campaignLookUp[$campaignId]->subject, 50) ?>
+              <?= Str::limit($campaignLookUp[$campaignId]->name, 50) ?>
             </a>
           </strong>
           <div class="pull-right">

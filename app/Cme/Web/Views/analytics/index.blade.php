@@ -8,8 +8,8 @@
       <form action="" class="form">
         <select name="campaignId" class="form-control" onchange="location.href='/analytics/'+$(this).val();">
           <option value="0">Select a Campaign</option>
-          <?php foreach($campaigns as $id => $subject): ?>
-            <option value="<?= $id ?>" <?= ($id == $selectedId)? 'selected="selected"' : ''; ?>><?= $subject ?></option>
+          <?php foreach($campaigns as $id => $name): ?>
+            <option value="<?= $id ?>" <?= ($id == $selectedId)? 'selected="selected"' : ''; ?>><?= $name ?></option>
           <?php endforeach; ?>
         </select>
       </form>

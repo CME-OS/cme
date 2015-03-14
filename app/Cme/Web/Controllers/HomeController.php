@@ -82,7 +82,7 @@ class HomeController extends BaseController
       {
         $campaignLookUp[$campaign->id] = new \stdClass();
       }
-      $campaignLookUp[$campaign->id]->subject  = $campaign->subject;
+      $campaignLookUp[$campaign->id]->name     = $campaign->name;
       $campaignLookUp[$campaign->id]->sendTime = $campaign->send_time;
     }
 

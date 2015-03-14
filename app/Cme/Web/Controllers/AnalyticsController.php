@@ -21,7 +21,7 @@ class AnalyticsController extends BaseController
       $data['clicks']       = $this->_getLinkActivity($id);
       $data['campaign']     = CMECampaign::find($id);
     }
-    $data['campaigns'] = CMECampaign::getKeyedListFor('subject');
+    $data['campaigns'] = CMECampaign::getKeyedListFor('name');
     return View::make('analytics.index', $data);
   }
 

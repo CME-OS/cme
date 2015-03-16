@@ -208,7 +208,7 @@ class CampaignsController extends BaseController
     $originalCampaign = CMECampaign::find($id);
 
     $newCampaign            = $originalCampaign->replicate();
-    $newCampaign->subject   = $newCampaign->name . ' (COPY)';
+    $newCampaign->name      = $newCampaign->name . ' (COPY)';
     $newCampaign->send_time = null;
     $newCampaign->tested    = 0;
     $newCampaign->previewed = 0;

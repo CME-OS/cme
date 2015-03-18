@@ -163,7 +163,7 @@ class InstallerHelper
 
     $configFile = implode(
       DIRECTORY_SEPARATOR,
-      [base_path(), strtolower($configFile . '.php')]
+      [base_path(), strtolower($configFile)]
     );
 
     $template = self::_getCommanderConfigTemplate();

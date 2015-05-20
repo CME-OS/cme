@@ -219,6 +219,9 @@ class GenerateInstallFiles extends GeneratorCommand
       )->run($this->fields, $this->table);
     }
 
+    $up = str_replace("\r\n", "\n", $up);
+    $down = str_replace("\r\n", "\n", $down);
+
     $up   = str_replace("'{$this->table}'", "\$this->table", $up);
     $down = str_replace("'{$this->table}'", "\$this->table", $down);
     return [

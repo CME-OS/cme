@@ -4,9 +4,9 @@ namespace Cme\Install;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateListsTable extends InstallTable
+class CreateApiClientsTable extends InstallTable
 {
-	public $table = 'lists';
+	public $table = 'api_clients';
 
 	/**
 	 * Run the migrations.
@@ -17,14 +17,12 @@ class CreateListsTable extends InstallTable
 	{
 		Schema::create($this->table, function(Blueprint $table)
 		{
-			$table->integer('id', true);
-			$table->string('name', 225)->default('0');
-			$table->string('description', 225)->nullable();
-			$table->string('endpoint', 225)->nullable();
-			$table->integer('refresh_interval')->nullable();
-			$table->integer('last_refresh_time')->nullable();
-			$table->string('locked_by', 225)->nullable();
-			$table->integer('deleted_at')->nullable();
+			$table->integer('client_id', true);
+			$table->string('client_name', 50)->nullable();
+			$table->string('client_key', 50)->nullable();
+			$table->string('client_secret', 50)->nullable();
+			$table->integer('time')->nullable();
+			$table->index(['client_key','client_secret'], 'client_key_client_secret');
 		});
 	}
 

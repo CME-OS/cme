@@ -18,11 +18,11 @@ class CreateSmtpProvidersTable extends InstallTable
 		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name', 250)->default('0');
-			$table->string('host', 250)->default('0');
+			$table->string('name', 250);
+			$table->string('host', 250);
 			$table->text('username', 65535);
 			$table->text('password', 65535);
-			$table->integer('port')->default(0);
+			$table->integer('port');
 			$table->integer('default')->default(0);
 			$table->integer('deleted_at')->nullable();
 		});

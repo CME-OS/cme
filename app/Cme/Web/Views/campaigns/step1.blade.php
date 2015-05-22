@@ -28,8 +28,8 @@
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
-            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brand_id)? 'selected="selected"' : '' ?>>
-              <?= $brand->brand_name; ?>
+            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brandId)? 'selected="selected"' : '' ?>>
+              <?= $brand->brandName; ?>
             </option>
           <?php endforeach; ?>
         </select>
@@ -43,13 +43,13 @@
         <select name="list_id" id="campaign-list-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($lists as $list): ?>
-            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->list_id)? 'selected="selected"' : '' ?>>
+            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->listId)? 'selected="selected"' : '' ?>>
               <?= $list->name; ?>
             </option>
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="form-group" id="campaign-target-div" <?= (!$campaign->list_id)? 'style="display: none;"' : '' ?>>
+      <div class="form-group" id="campaign-target-div" <?= (!$campaign->listId)? 'style="display: none;"' : '' ?>>
         <label for="campaign-target">Who do you want to?</label>
         <select name="target" id="campaign-target" class="form-control">
           <option value="all">Send to all subscribers in list</option>

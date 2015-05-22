@@ -70,20 +70,20 @@
                     <tr>
                         <!-- if within 24hours be clever with time (e.g in 15 mins) -->
                         <td>Send Time:</td>
-                        <td><?= date('d/M/Y H:i:s', $campaign->send_time) ?></td>
+                        <td><?= date('d/M/Y H:i:s', $campaign->sendTime) ?></td>
                     </tr>
                     <tr>
                         <td>Recipients:</td>
-                        <td><?= \Cme\Helpers\ListHelper::count($campaign->list_id, $campaign->id) ?>
-                            /<?= \Cme\Helpers\ListHelper::count($campaign->list_id) ?></td>
+                        <td><?= \CmeKernel\Core\CmeKernel::Campaign()->getRecipientCount($campaign->id, $campaign->listId); ?>
+                            /<?= $campaign->list->getSize() ?></td>
                     </tr>
                     <tr>
                         <td>Brand:</td>
-                        <td><?= $campaign->brand->brand_name; ?></td>
+                        <td><?= $campaign->brand->brandName; ?></td>
                     </tr>
                     <tr>
                         <td>List:</td>
-                        <td><?= $campaign->lists->name; ?></td>
+                        <td><?= $campaign->list->name; ?></td>
                     </tr>
                     <tr>
                         <td>Campaign Type:</td>
@@ -97,7 +97,7 @@
                     <?php endif; ?>
                     <tr>
                         <td>Priority:</td>
-                        <td><?php echo \Cme\Helpers\CampaignHelper::getPriority($campaign->send_priority) ?></td>
+                        <td><?php echo \Cme\Helpers\CampaignHelper::getPriority($campaign->sendPriority) ?></td>
                     </tr>
                     <tr>
                         <td>SMTP Provider:</td>

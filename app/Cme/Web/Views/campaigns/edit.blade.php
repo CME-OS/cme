@@ -54,7 +54,7 @@
                                 class="form-control">
                             <option value="">SELECT</option>
                             <?php foreach($brands as $brand): ?>
-                            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brand_id) ? 'selected="selected"' : ''; ?>><?= $brand->brand_name; ?></option>
+                            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brandId) ? 'selected="selected"' : ''; ?>><?= $brand->brandName; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -75,12 +75,12 @@
                                 class="form-control">
                             <option value="">SELECT</option>
                             <?php foreach($lists as $list): ?>
-                            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->list_id) ? 'selected="selected"' : ''; ?>><?= $list->name; ?></option>
+                            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->listId) ? 'selected="selected"' : ''; ?>><?= $list->name; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
 
-                    <div class="form-group" id="campaign-target-div" <?= (!$campaign->list_id)? 'style="display: none;"' : '' ?>>
+                    <div class="form-group" id="campaign-target-div" <?= (!$campaign->listId)? 'style="display: none;"' : '' ?>>
                         <label for="campaign-target">Who do you want to?</label>
                         <select name="target" id="campaign-target" class="form-control">
                             <option value="all">Send to all subscribers in list</option>
@@ -139,10 +139,10 @@
                         <label for="campaign-priority">Send Priority:</label>
                         <select name="send_priority" id="campaign-priority"
                                 class="form-control">
-                            <option value="2" <?= ($campaign->send_priority == 2)? 'selected="selected"' : '' ?>>Normal</option>
-                            <option value="1" <?= ($campaign->send_priority == 1)? 'selected="selected"' : '' ?>>Low</option>
-                            <option value="3" <?= ($campaign->send_priority == 3)? 'selected="selected"' : '' ?>>Medium</option>
-                            <option value="4" <?= ($campaign->send_priority == 4)? 'selected="selected"' : '' ?>>High</option>
+                            <option value="2" <?= ($campaign->sendPriority == 2)? 'selected="selected"' : '' ?>>Normal</option>
+                            <option value="1" <?= ($campaign->sendPriority == 1)? 'selected="selected"' : '' ?>>Low</option>
+                            <option value="3" <?= ($campaign->sendPriority == 3)? 'selected="selected"' : '' ?>>Medium</option>
+                            <option value="4" <?= ($campaign->sendPriority == 4)? 'selected="selected"' : '' ?>>High</option>
                         </select>
                     </div>
 
@@ -153,7 +153,7 @@
                         <div id="datetimepicker" class="input-group date">
                             <input type="text" name="send_time"
                                    class="form-control" id="campaign-send-time"
-                                   value="<?= $campaign->send_time ?>">
+                                   value="<?= $campaign->sendTime ?>">
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-time"></span>
                   </span>
@@ -165,7 +165,7 @@
                         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
                             <option value="0">Use Default</option>
                             <?php foreach($smtpProviders as $provider): ?>
-                            <option value="<?= $provider->id; ?>" <?= (($campaign->smtp_provider_id == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
+                            <option value="<?= $provider->id; ?>" <?= (($campaign->smtpProviderId == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -218,7 +218,7 @@
     <div class="clearfix"></div>
     <script>
         if(!window.cme){window.cme = {};}
-        window.cme.listId = '<?= $campaign->list_id ?>';
+        window.cme.listId = '<?= $campaign->listId ?>';
     </script>
     <script src="/assets/ckeditor/ckeditor.js"></script>
     <script>CKEDITOR.replace('campaign-message');</script>

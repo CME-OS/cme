@@ -1,21 +1,20 @@
 <?php
 namespace Cme\Web\Controllers;
 
-use Cme\Helpers\CampaignHelper;
-use Cme\Helpers\ListHelper;
-use Cme\Helpers\ListsSchemaHelper;
-use Cme\Models\CMEBrand;
-use Cme\Models\CMECampaign;
-use Cme\Models\CMECampaignEvent;
-use Cme\Models\CMEList;
-use Cme\Models\CMESmtpProvider;
-use Cme\Models\CMETemplate;
+use CmeData\CampaignData;
+use CmeData\MessageQueueData;
+use CmeKernel\Core\CmeDatabase;
+use CmeKernel\Core\CmeKernel;
+use CmeKernel\Core\CmeMessage;
+use CmeKernel\Enums\CampaignPriority;
+use CmeKernel\Helpers\CampaignHelper;
+use CmeKernel\Helpers\ListHelper;
+use CmeKernel\Helpers\ListsSchemaHelper;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
@@ -23,7 +22,7 @@ class CampaignsController extends BaseController
 {
   public function index()
   {
-    $data['campaigns']    = CMECampaign::getAllActive();
+    $data['campaigns']    = CmeKernel::Campaign()->all();
     $data['labelClasses'] = [
       'Pending' => 'label-default',
       'Queuing' => 'label-info',
@@ -49,32 +48,31 @@ class CampaignsController extends BaseController
         break;
       case 2:
         $campaign = ($campaignId) ?
-          CMECampaign::find($campaignId) : new CMECampaign();
+          CmeKernel::Campaign()->get($campaignId) : new CampaignData();
         if(Request::isMethod('post'))
         {
-          $campaign->name     = Input::get('name');
-          $campaign->subject  = Input::get('subject');
-          $campaign->from     = Input::get('from');
-          $campaign->list_id  = Input::get('list_id');
-          $campaign->brand_id = Input::get('brand_id');
-          $campaign->type     = Input::get('type');
+          $campaign->name    = Input::get('name');
+          $campaign->subject = Input::get('subject');
+          $campaign->from    = Input::get('from');
+          $campaign->listId  = Input::get('list_id');
+          $campaign->brandId = Input::get('brand_id');
+          $campaign->type    = Input::get('type');
           if(Input::get('filters'))
           {
             $campaign->filters = json_encode(Input::get('filters'));
           }
-          $campaign->created = time();
-          $campaign->save();
+          $campaign->id = CmeKernel::Campaign()->create($campaign);
           Session::put('newCampaignId', $campaign->id);
         }
 
         $stepView = $this->_step2($campaign->id);
         break;
       case 3:
-        $campaign = CMECampaign::find($campaignId);
+        $campaign = CmeKernel::Campaign()->get($campaignId);
         if($campaign)
         {
-          $campaign->html_content = Input::get('html_content');
-          $campaign->save();
+          $campaign->htmlContent = Input::get('html_content');
+          CmeKernel::Campaign()->update($campaign);
           $stepView = $this->_step3($campaign->id);
         }
         else
@@ -92,45 +90,46 @@ class CampaignsController extends BaseController
   {
     if($campaignId === null)
     {
-      $data['campaign'] = new CMECampaign();
+      $data['campaign'] = new CampaignData();
     }
     else
     {
-      $campaign           = CMECampaign::find($campaignId);
+      $campaign           = CmeKernel::Campaign()->get($campaignId);
       $data['campaign']   = $campaign;
-      $data['filterData'] = $this->_getSegmentOptions($campaign->list_id);
+      $data['filterData'] = $this->_getSegmentOptions($campaign->listId);
     }
-    $data['brands'] = CMEBrand::getAllActive();
-    $data['lists']  = CMEList::getAllActive();
+    $data['brands'] = CmeKernel::Brand()->all();
+    $data['lists']  = CmeKernel::EmailList()->all();
 
     return View::make('campaigns.step1', $data);
   }
 
   private function _step2($campaignId)
   {
-    $campaign = CMECampaign::find($campaignId);;
+    $campaign             = CmeKernel::Campaign()->get($campaignId);
     $data['campaign']     = $campaign;
-    $data['templates']    = CMETemplate::getKeyedListFor('name');
-    $data['placeholders'] = $this->_getPlaceHolders($campaign->list_id);
+    $data['templates']    = CmeKernel::Template()->getKeyedListFor('name');
+    $data['placeholders'] = $this->_getPlaceHolders($campaign->listId);
 
     return View::make('campaigns.step2', $data);
   }
 
   private function _step3($campaignId)
   {
-    $data['campaign']      = CMECampaign::find($campaignId);
-    $data['smtpProviders'] = CMESmtpProvider::getAllActive();
+    $data['campaign']      = CmeKernel::Campaign()->get($campaignId);
+    $data['smtpProviders'] = CmeKernel::SmtpProvider()->all();
 
     return View::make('campaigns.step3', $data);
   }
 
   public function add()
   {
-    $campaign                   = CMECampaign::find(Input::get('id'));
-    $campaign->send_priority    = Input::get('send_priority');
-    $campaign->send_time        = strtotime(Input::get('send_time'));
-    $campaign->smtp_provider_id = Input::get('smtp_provider_id');
-    $campaign->save();
+    $campaign                 = CmeKernel::Campaign()->get(Input::get('id'));
+    $campaign->sendPriority   = Input::get('send_priority');
+    $campaign->sendTime       = strtotime(Input::get('send_time'));
+    $campaign->smtpProviderId = Input::get('smtp_provider_id');
+
+    CmeKernel::Campaign()->update($campaign);
 
     Session::forget('newCampaignId');
     return Redirect::to('/campaigns/preview/' . $campaign->id);
@@ -138,16 +137,16 @@ class CampaignsController extends BaseController
 
   public function edit($id)
   {
-    $campaign = CMECampaign::find($id);
+    $campaign = CmeKernel::Campaign()->get($id);
     if($campaign)
     {
-      $campaign->send_time   = date('Y-m-d H:i:s', $campaign->send_time);
+      $campaign->sendTime    = date('Y-m-d H:i:s', $campaign->sendTime);
       $data['campaign']      = $campaign;
-      $data['brands']        = CMEBrand::getAllActive();
-      $data['lists']         = CMEList::getAllActive();
-      $data['smtpProviders'] = CMESmtpProvider::getAllActive();
-      $data['placeholders']  = $this->_getPlaceHolders($campaign->list_id);
-      $data['filterData']    = $this->_getSegmentOptions($campaign->list_id);
+      $data['brands']        = CmeKernel::Brand()->all();
+      $data['lists']         = CmeKernel::EmailList()->all();
+      $data['smtpProviders'] = CmeKernel::SmtpProvider()->all();
+      $data['placeholders']  = $this->_getPlaceHolders($campaign->listId);
+      $data['filterData']    = $this->_getSegmentOptions($campaign->listId);
 
       return View::make('campaigns.edit', $data);
     }
@@ -157,18 +156,26 @@ class CampaignsController extends BaseController
 
   public function preview($id)
   {
-    $campaign           = CMECampaign::find($id);
+    $campaign               = CmeKernel::Campaign()->get($id);
+    $campaign->brand        = CmeKernel::Brand()->get($campaign->brandId);
+    $campaign->list         = CmeKernel::EmailList()->get($campaign->listId);
+    $campaign->smtpProvider = CmeKernel::SmtpProvider()->get(
+      $campaign->smtpProviderId
+    );
+
     $data['campaign']   = $campaign;
-    $data['sentEmails'] = CMECampaignEvent::getSentMessages($id);
+    $data['sentEmails'] = CmeKernel::CampaignEvent()->getSentMessages(
+      $campaign->id
+    );
     return View::make('campaigns.preview', $data);
   }
 
   public function content($id)
   {
-    $campaign = CMECampaign::find($id);
+    $campaign = CmeKernel::Campaign()->get($id);
     if($campaign)
     {
-      echo $campaign->html_content;
+      echo $campaign->htmlContent;
     }
     else
     {
@@ -179,106 +186,42 @@ class CampaignsController extends BaseController
 
   public function update()
   {
-    $data     = Input::all();
-    $campaign = CMECampaign::find($data['id']);
-    //if content changed, force user to test & preview campaign as a
-    //safety measure
-    if($campaign->html_content != $data['html_content'])
-    {
-      $data['tested']    = 0;
-      $data['previewed'] = 0;
-    }
-    if(isset($data['filters']))
-    {
-      $data['filters'] = json_encode($data['filters']);
-    }
-    else
-    {
-      $data['filters'] = null;
-    }
+    $data = CmeDatabase::hydrate(new CampaignData(), Input::all());
+    CmeKernel::Campaign()->update($data);
 
-    $data['send_time'] = strtotime($data['send_time']);
-    CMECampaign::saveData($data);
-
-    return Redirect::to('/campaigns/preview/' . $data['id']);
+    return Redirect::to('/campaigns/preview/' . $data->id);
   }
 
   public function copy($id)
   {
-    $originalCampaign = CMECampaign::find($id);
-
-    $newCampaign            = $originalCampaign->replicate();
-    $newCampaign->name      = $newCampaign->name . ' (COPY)';
-    $newCampaign->send_time = null;
-    $newCampaign->tested    = 0;
-    $newCampaign->previewed = 0;
-    $newCampaign->status    = 'Pending';
-
-    $newCampaign->push();
-
+    CmeKernel::Campaign()->copy($id);
     return Redirect::to('/campaigns');
   }
 
   public function delete()
   {
-    $id = Route::input('id');
-    if(CMECampaign::find($id))
-    {
-      $data['id']         = $id;
-      $data['deleted_at'] = time();
-      CMECampaign::saveData($data);
-    }
+    CmeKernel::Campaign()->delete(Route::input('id'));
     return Redirect::to('/campaigns');
   }
 
   public function send()
   {
     $id = Input::get('id');
-    //build ranges to be consumed through the QueueMessages Command
-    if($this->_buildQueueRanges($id))
-    {
-      //update status of campaign
-      DB::table('campaigns')->where(['id' => $id])->update(
-        ['status' => 'Queuing']
-      );
-    }
-
+    CmeKernel::Campaign()->queue($id);
     return Redirect::to("/campaigns/preview/" . $id);
   }
 
   public function pause()
   {
     $id = Input::get('id');
-
-    DB::table('message_queue')
-      ->where(['campaign_id' => $id, 'status' => 'pending'])
-      ->update(
-        ['status' => 'Paused']
-      );
-
-    //update status of campaign
-    DB::table('campaigns')->where(['id' => $id])->update(
-      ['status' => 'Paused']
-    );
-
+    CmeKernel::Campaign()->pause($id);
     return Redirect::to("/campaigns/preview/" . $id);
   }
 
   public function resume()
   {
     $id = Input::get('id');
-
-    DB::table('message_queue')
-      ->where(['campaign_id' => $id, 'status' => 'Paused'])
-      ->update(
-        ['status' => 'Pending']
-      );
-
-    //update status of campaign
-    DB::table('campaigns')->where(['id' => $id])->update(
-      ['status' => 'Queued']
-    );
-
+    CmeKernel::Campaign()->resume($id);
     return Redirect::to("/campaigns/preview/" . $id);
   }
 
@@ -286,76 +229,18 @@ class CampaignsController extends BaseController
   public function abort()
   {
     $id = Input::get('id');
-
-    //delete pending messages from the queue
-    DB::table('message_queue')
-      ->where(['campaign_id' => $id, 'status' => 'pending'])
-      ->delete();
-
-    //update status of campaign
-    DB::table('campaigns')->where(['id' => $id])->update(
-      ['status' => 'Aborted']
-    );
-
+    CmeKernel::Campaign()->abort($id);
     return Redirect::to("/campaigns/preview/" . $id);
-  }
-
-  private function _buildQueueRanges($campaignId)
-  {
-    $built    = false;
-    $campaign = CMECampaign::find($campaignId);
-    if($campaign)
-    {
-      if($campaign->tested > 0)
-      {
-        //get min and max id of campaign list
-        $Ids   = ListHelper::getMinMaxIds($campaign->list_id);
-        $minId = $Ids->minId;
-        $maxId = $Ids->maxId;
-
-        //build ranges
-        for($i = $minId; $i <= $maxId; $i++)
-        {
-          $start = $i;
-          $end   = $i = $i + 1000;
-          $range = [
-            'list_id'     => $campaign->list_id,
-            'campaign_id' => $campaignId,
-            'start'       => $start,
-            'end'         => $end,
-            'created'     => time()
-          ];
-          try
-          {
-            DB::table('ranges')->insert($range);
-          }
-          catch(\Exception $e)
-          {
-            Log::error($e->getMessage());
-          }
-        }
-        $built = true;
-      }
-      else
-      {
-        throw new \Exception(
-          "You cannot queue a campaign you have not tested. "
-          . "Please test campaign before queuing"
-        );
-      }
-    }
-
-    return $built;
   }
 
   public function test()
   {
     $email      = Input::get('test_email');
     $campaignId = Input::get('id');
-    $campaign   = CMECampaign::find($campaignId);
-    $brand      = CMEBrand::find($campaign->brand_id);
+    $campaign   = CmeKernel::Campaign()->get($campaignId);
+    $brand      = CmeKernel::Brand()->get($campaign->brandId);
 
-    $subscriber = ListHelper::getRandomSubscriber($campaign->list_id);
+    $subscriber = ListHelper::getRandomSubscriber($campaign->listId);
     if($subscriber)
     {
       $message = CampaignHelper::compileMessage($campaign, $brand, $subscriber);
@@ -371,23 +256,23 @@ class CampaignsController extends BaseController
       $fromEmail = CampaignHelper::labelSender($fromEmail, $messageId);*/
 
       //write to message queue
-      $message = [
-        'subject'       => $campaign->subject,
-        'from_name'     => $fromName,
-        'from_email'    => $fromEmail,
-        'to'            => $email,
-        'html_content'  => $message->html,
-        'text_content'  => $message->text,
-        'subscriber_id' => 0,
-        'list_id'       => $campaign->list_id,
-        'brand_id'      => $campaign->brand_id,
-        'campaign_id'   => $campaign->id,
-        'send_time'     => strtotime('-365 days'),
-        'send_priority' => 4
-      ];
-      DB::table('message_queue')->insert($message);
+      $messageData               = new MessageQueueData();
+      $messageData->subject      = $campaign->subject;
+      $messageData->fromName     = $fromName;
+      $messageData->fromEmail    = $fromEmail;
+      $messageData->to           = $email;
+      $messageData->htmlContent  = $message->html;
+      $messageData->textContent  = $message->text;
+      $messageData->subscriberId = 0;
+      $messageData->listId       = $campaign->listId;
+      $messageData->brandId      = $campaign->brandId;
+      $messageData->campaignId   = $campaign->id;
+      $messageData->sendTime     = strtotime('-365 days');
+      $messageData->sendPriority = CampaignPriority::HIGH;
+      (new CmeMessage())->create($messageData);
+
       $campaign->tested = 1;
-      $campaign->save();
+      CmeKernel::Campaign()->update($campaign);
 
       return Redirect::to("/campaigns/preview/" . $campaignId);
     }
@@ -412,13 +297,12 @@ class CampaignsController extends BaseController
 
   private function _getPlaceHolders($listId)
   {
-    $brand        = (array)CMEBrand::getAnyBrand();
-    $placeholders = array_keys($brand);
+    $placeholders = CmeKernel::Brand()->getColumns();
     if($listId)
     {
-      $list = (array)CMEList::getAnySubscriber($listId);
+      $listColumns = CmeKernel::EmailList()->getColumns($listId);
 
-      $placeholders = array_merge($placeholders, array_keys($list));
+      $placeholders = array_merge($placeholders, $listColumns);
     }
 
     return array_diff($placeholders, ListHelper::inBuiltFields());
@@ -426,18 +310,8 @@ class CampaignsController extends BaseController
 
   public function getDefaultSender()
   {
-    $brandId = Input::get('brandId');
-    $brand   = head(
-      DB::select(
-        sprintf(
-          "SELECT brand_sender_email, brand_sender_name
-           FROM brands WHERE id=%d",
-          $brandId
-        )
-      )
-    );
-
-    $sender = $brand->brand_sender_name . ' <' . $brand->brand_sender_email . '>';
+    $brand  = CmeKernel::Brand()->get(Input::get('brandId'));
+    $sender = $brand->brandSenderName . ' <' . $brand->brandSenderEmail . '>';
 
     return Response::json($sender);
   }
@@ -464,7 +338,7 @@ class CampaignsController extends BaseController
   public function getTemplate()
   {
     $templateId           = Input::get('templateId');
-    $template             = CMETemplate::find($templateId);
+    $template             = CmeKernel::Template()->get($templateId);
     $response['template'] = "";
     if($template)
     {

@@ -14,6 +14,16 @@
 App::before(function($request)
 {
 	//
+	$config   = App::make('config');
+	$profile  = $config->get('database.default') ;
+	$dbConfig = $config->get('database.connections');
+
+	$initData = new \CmeData\InitData() ;
+	$initData ->dbName = $dbConfig[$profile]['database'] ;
+	$initData ->dbUsername = $dbConfig[$profile]['username'] ;
+	$initData ->dbPassword = $dbConfig[$profile]['password'] ;
+	$initData ->dbHost = $dbConfig[$profile]['host'] ;
+	\CmeKernel\Core\CmeKernel::init($initData);
 });
 
 

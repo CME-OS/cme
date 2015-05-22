@@ -27,7 +27,7 @@
       </div>
       <div class="form-group">
         <label for="sender-name">Message</label>
-        <textarea name="html_content" class="form-control" id="campaign-message" cols="30" rows="10"><?= $campaign->html_content ?></textarea>
+        <textarea name="html_content" class="form-control" id="campaign-message" cols="30" rows="10"><?= $campaign->htmlContent ?></textarea>
       </div>
       <a href="/campaigns/new/1" class="btn btn-default">Back</a>
       <button type="submit" class="btn btn-success">Next</button>

@@ -13,16 +13,16 @@
       <div class="form-group">
         <label for="campaign-priority">Send Priority:</label>
         <select name="send_priority" id="campaign-priority" class="form-control">
-          <option value="2" <?= ($campaign->send_priority == 2)? 'selected="selected"' : '' ?>>Normal</option>
-          <option value="1" <?= ($campaign->send_priority == 1)? 'selected="selected"' : '' ?>>Low</option>
-          <option value="3" <?= ($campaign->send_priority == 3)? 'selected="selected"' : '' ?>>Medium</option>
-          <option value="4" <?= ($campaign->send_priority == 4)? 'selected="selected"' : '' ?>>High</option>
+          <option value="2" <?= ($campaign->sendPriority == 2)? 'selected="selected"' : '' ?>>Normal</option>
+          <option value="1" <?= ($campaign->sendPriority == 1)? 'selected="selected"' : '' ?>>Low</option>
+          <option value="3" <?= ($campaign->sendPriority == 3)? 'selected="selected"' : '' ?>>Medium</option>
+          <option value="4" <?= ($campaign->sendPriority == 4)? 'selected="selected"' : '' ?>>High</option>
         </select>
       </div>
       <div class="form-group">
         <label for="campaign-send-time">When do you want to send this campaign?</label>
         <div id="datetimepicker" class="input-group date">
-          <input type="text" name="send_time" class="form-control" id="campaign-send-time" value="<?= ($campaign->send_time)? date('Y-m-d H:i:s', $campaign->send_time) : '' ?>">
+          <input type="text" name="send_time" class="form-control" id="campaign-send-time" value="<?= ($campaign->sendTime)? date('Y-m-d H:i:s', $campaign->sendTime) : '' ?>">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-time"></span>
           </span>

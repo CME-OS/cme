@@ -31,8 +31,8 @@
                 </div>
                 <small><?= $campaign->subject ?></small>
               </td>
-              <td><?= $campaign->lists->name; ?></td>
-              <td><?= $campaign->brand->brand_name; ?></td>
+              <td><?= $campaign->list->name; ?></td>
+              <td><?= $campaign->brand->brandName; ?></td>
               <td><?= date('d M Y H:i:A', $campaign->created); ?></td>
               <td>
                 <div class="pull-right">

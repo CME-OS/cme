@@ -1,6 +1,8 @@
 <?php
 namespace Cme\Web\Controllers;
 
+use CmeKernel\Core\CmeKernel;
+use CmeKernel\Enums\EventType;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
@@ -9,18 +11,10 @@ class HomeController extends BaseController
 {
   public function index()
   {
-    $eventTypes = [
-      'queued',
-      'sent',
-      'opened',
-      /*'clicked',*/
-      'failed',
-      'bounced',
-      'unsubscribed'
-    ];
+    $eventTypes = EventType::getPossibleValues();
+    unset($eventTypes[EventType::CLICKED]);
 
     $stats          = [];
-    $counted        = [];
     $campaigns      = DB::select(
       'SELECT * FROM campaigns
        WHERE deleted_at IS NULL
@@ -29,55 +23,13 @@ class HomeController extends BaseController
     $campaignLookUp = [];
     foreach($campaigns as $campaign)
     {
-      $lastId = 0;
-      do
-      {
-        $events = DB::select(
-          "SELECT * FROM campaign_events
-           WHERE event_id > $lastId
-           AND campaign_id = $campaign->id
-           AND subscriber_id > 0
-           ORDER BY event_id ASC LIMIT 1000"
-        );
-        foreach($events as $event)
-        {
-          $c = $event->campaign_id;
-          $e = $event->event_type;
-          $s = $event->subscriber_id;
-
-          if(!isset($stats[$c]))
-          {
-            foreach($eventTypes as $type)
-            {
-              $stats[$c][$type]['unique'] = 0;
-              $stats[$c][$type]['total']  = 0;
-            }
-          }
-
-          if(isset($stats[$c][$e]))
-          {
-            if(!isset($counted[$c][$e][$s]))
-            {
-              $counted[$c][$e][$s] = 1;
-              $stats[$c][$e]['unique']++;
-            }
-
-            $stats[$c][$e]['total']++;
-          }
-
-          //always show total queued
-          $stats[$c]['queued']['unique'] = $stats[$c]['queued']['total'];
-
-          $stats[$c]['opened_rate'] = $this->_percentage(
-            $stats[$c]['opened']['unique'],
-            $stats[$c]['sent']['unique']
-          );
-
-          $lastId = $event->event_id;
-        }
-      }
-      while($events);
-
+      $stats[$campaign->id] = CmeKernel::Analytics()->getEventCounts(
+        $campaign->id
+      );
+      $stats[$campaign->id]['opened_rate'] = $this->_percentage(
+        $stats[$campaign->id]['opened']['unique'],
+        $stats[$campaign->id]['sent']['unique']
+      );
       if(!isset($campaignLookUp[$campaign->id]))
       {
         $campaignLookUp[$campaign->id] = new \stdClass();
@@ -90,12 +42,9 @@ class HomeController extends BaseController
     $data['stats']          = $stats;
     $data['campaignLookUp'] = $campaignLookUp;
 
-    $totalEventTypes = [
-      'queued',
-      'sent',
-      'opened',
-      'unsubscribed'
-    ];
+    $totalEventTypes = $eventTypes;
+    unset($totalEventTypes[EventType::FAILED]);
+    unset($totalEventTypes[EventType::BOUNCED]);
 
     //create Blank State
     $totalStats = [];

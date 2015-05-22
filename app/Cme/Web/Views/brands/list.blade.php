@@ -25,7 +25,7 @@
             <tr>
               <td>
                 <a href="{{ URL::route('brands.campaigns', $brand->id) }}">
-                  <strong><?= $brand->brand_name; ?></strong>
+                  <strong><?= $brand->brandName; ?></strong>
                 </a>
               </td>
               <td>

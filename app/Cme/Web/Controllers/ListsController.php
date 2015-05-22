@@ -1,35 +1,22 @@
 <?php
 namespace Cme\Web\Controllers;
 
-use Cme\Helpers\ListHelper;
-use Cme\Helpers\ListsSchemaHelper;
-use Cme\Models\CMEList;
+use CmeData\ListData;
+use CmeData\ListImportQueueData;
+use CmeData\SubscriberData;
+use CmeKernel\Core\CmeKernel;
+use CmeKernel\Helpers\ListHelper;
+use CmeKernel\Helpers\ListsSchemaHelper;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
 class ListsController extends BaseController
 {
   public function index()
   {
-    $result = DB::select("SELECT * FROM lists WHERE deleted_at IS NULL");
-    foreach($result as $k => $list)
-    {
-      $size      = 0;
-      $tableName = ListHelper::getTable($list->id);
-      //check if list table exists/
-      if(Schema::hasTable($tableName))
-      {
-        $size = DB::table($tableName)->count();
-      }
-      $result[$k]->size = $size;
-    }
-
-    $data['lists'] = $result;
-
+    $data['lists'] = CmeKernel::EmailList()->all();
     return View::make('lists.list', $data);
   }
 
@@ -40,19 +27,14 @@ class ListsController extends BaseController
 
   public function add()
   {
-    $data = Input::all();
-    if((int)$data['refresh_interval'] == 0)
-    {
-      unset($data['refresh_interval']);
-    }
-    $listId = DB::table('lists')->insertGetId($data);
-
+    $data   = Input::all();
+    $listId = CmeKernel::EmailList()->create(ListData::hydrate($data));
     return Redirect::to('/lists/view/' . $listId);
   }
 
   public function newSubscriber($id)
   {
-    $list = CMEList::find($id);
+    $list = CmeKernel::EmailList()->get($id);
     if($list)
     {
       $table           = ListHelper::getTable($id);
@@ -66,12 +48,12 @@ class ListsController extends BaseController
   public function addSubscriber()
   {
     $listId = (int)Input::get('id');
-    if($listId)
+    $added  = CmeKernel::EmailList()->addSubscriber(
+      SubscriberData::hydrate(Input::all()),
+      $listId
+    );
+    if($added)
     {
-      $data  = Input::except('id');
-      $data['date_created'] = date('Y-m-d H:i:s');
-      $table = ListHelper::getTable($listId);
-      DB::table($table)->insert($data);
       return Redirect::to('/lists/view/' . $listId);
     }
     return Redirect::to('/lists');
@@ -81,10 +63,12 @@ class ListsController extends BaseController
   {
     $listId       = (int)Route::input('listId');
     $subscriberId = (int)Route::input('id');
-    if($listId && $subscriberId)
+    $deleted      = CmeKernel::EmailList()->deleteSubscriber(
+      $subscriberId,
+      $listId
+    );
+    if($deleted)
     {
-      $table = ListHelper::getTable($listId);
-      DB::table($table)->where(['id' => $subscriberId])->delete();
       return Redirect::to('/lists/view/' . $listId);
     }
     return Redirect::to('/lists');
@@ -92,26 +76,11 @@ class ListsController extends BaseController
 
   public function view($id)
   {
-    $tableName = ListHelper::getTable($id);
-    //check if list table exists/
-    $subscribers = [];
-    $columns     = [];
-    if(Schema::hasTable($tableName))
+    $subscribers = CmeKernel::EmailList()->getSubscribers($id);
+    if($subscribers)
     {
-      //if it does, fetch all subscribers and display
-      if(DB::table($tableName)->count())
-      {
-        $subscribers = DB::table($tableName)->simplePaginate(1000);
-        $columns     = array_keys((array)$subscribers->offSetGet(0));
-      }
-    }
-    //else suggest to user to import users by CSV/API
-
-    $list = DB::table('lists')->where('id', $id)->first();
-    if($list)
-    {
-      $data['list']        = $list;
-      $data['columns']     = $columns;
+      $data['list']        = CmeKernel::EmailList()->get($id);
+      $data['columns']     = CmeKernel::EmailList()->getColumns($id);
       $data['subscribers'] = $subscribers;
       return View::make('lists.subscribers', $data);
     }
@@ -123,17 +92,14 @@ class ListsController extends BaseController
 
   public function edit($id)
   {
-    $data['list'] = CMEList::find($id);
-
+    $data['list'] = CmeKernel::EmailList()->get($id);
     return View::make('lists.edit', $data);
   }
 
   public function update()
   {
     $data = Input::all();
-    DB::table('lists')->where('id', '=', $data['id'])
-      ->update($data);
-
+    CmeKernel::EmailList()->update(ListData::hydrate($data));
     return Redirect::to('/lists/edit/' . $data['id'])->with(
       'msg',
       'List has been updated'
@@ -142,10 +108,7 @@ class ListsController extends BaseController
 
   public function delete($id)
   {
-    $data['deleted_at'] = time();
-    DB::table('lists')->where('id', '=', $id)
-      ->update($data);
-
+    CmeKernel::EmailList()->delete($id);
     return Redirect::to('/lists')->with('msg', 'List has been deleted');
   }
 
@@ -180,12 +143,11 @@ class ListsController extends BaseController
       if($source)
       {
         //queue up
-        $importRequest = [
-          'list_id' => $listId,
-          'type'    => $type,
-          'source'  => $source
-        ];
-        DB::table('import_queue')->insert($importRequest);
+        $importRequest = new ListImportQueueData();
+        $importRequest->listId = $listId;
+        $importRequest->type    = $type;
+        $importRequest->source  = $source;
+        CmeKernel::EmailList()->import($importRequest);
       }
 
       //show user a progress bar, or tell them import request has been

@@ -20,11 +20,11 @@
       <div class="form-group">
         <label for="list-refresh-interval">Refresh Interval (For API List Only)</label>
         <select name="refresh_interval" id="list-refresh-interval" class="form-control">
-          <option value="" <?= ($list->refresh_interval == "")? 'selected="selected"': '' ?>>Not Applicable</option>
-          <option value="60" <?= ($list->refresh_interval == 60)? 'selected="selected"': '' ?>>Every minute</option>
-          <option value="300" <?= ($list->refresh_interval == 300)? 'selected="selected"': '' ?>>Every 5 minutes</option>
-          <option value="600" <?= ($list->refresh_interval == 600)? 'selected="selected"': '' ?>>Every 10 minutes</option>
-          <option value="3600" <?= ($list->refresh_interval == 3600)? 'selected="selected"': '' ?>>Every hour</option>
+          <option value="" <?= ($list->refreshInterval == "")? 'selected="selected"': '' ?>>Not Applicable</option>
+          <option value="60" <?= ($list->refreshInterval == 60)? 'selected="selected"': '' ?>>Every minute</option>
+          <option value="300" <?= ($list->refreshInterval == 300)? 'selected="selected"': '' ?>>Every 5 minutes</option>
+          <option value="600" <?= ($list->refreshInterval == 600)? 'selected="selected"': '' ?>>Every 10 minutes</option>
+          <option value="3600" <?= ($list->refreshInterval == 3600)? 'selected="selected"': '' ?>>Every hour</option>
         </select>
       </div>
       <div class="form-group">

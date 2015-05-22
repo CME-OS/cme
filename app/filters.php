@@ -19,6 +19,7 @@ App::before(function($request)
 	$dbConfig = $config->get('database.connections');
 
 	$initData = new \CmeData\InitData() ;
+	$initData->cmeHost = $config->get('app.domain');
 	$initData ->dbName = $dbConfig[$profile]['database'] ;
 	$initData ->dbUsername = $dbConfig[$profile]['username'] ;
 	$initData ->dbPassword = $dbConfig[$profile]['password'] ;

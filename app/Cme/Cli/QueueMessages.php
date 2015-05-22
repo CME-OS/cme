@@ -1,11 +1,10 @@
 <?php
 namespace Cme\Cli;
 
-use Cme\Helpers\CampaignHelper;
-use Cme\Helpers\FilterHelper;
 use Cme\Lib\Cli\LongRunningScript;
-use Cme\Models\CMEBrand;
-use Cme\Models\CMECampaign;
+use CmeKernel\Core\CmeKernel;
+use CmeKernel\Helpers\CampaignHelper;
+use CmeKernel\Helpers\FilterHelper;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
@@ -66,10 +65,10 @@ class QueueMessages extends LongRunningScript
           $lockedCampaign = $queueRequest->campaign_id;
 
           //grab the campaign
-          $campaign = CMECampaign::find($lockedCampaign);
+          $campaign = CmeKernel::Campaign()->get($lockedCampaign);
 
           //get the brand
-          $brand = CMEBrand::find($campaign->brand_id);
+          $brand = CmeKernel::Brand()->get($campaign->brandId);
 
           //process list in chunks
           $listTable = 'list_' . $queueRequest->list_id;
@@ -108,7 +107,7 @@ class QueueMessages extends LongRunningScript
                 ->where(
                   [
                     'email'    => $subscriber->email,
-                    'brand_id' => $campaign->brand_id
+                    'brand_id' => $campaign->brandId
                   ]
                 )
                 ->first();
@@ -122,7 +121,7 @@ class QueueMessages extends LongRunningScript
                 $message = CampaignHelper::compileMessage(
                   $campaign,
                   $brand,
-                  $subscriber
+                  (array)$subscriber
                 );
 
                 list($fromName, $fromEmail) = explode(' <', $campaign->from);
@@ -152,10 +151,10 @@ class QueueMessages extends LongRunningScript
                   'text_content'  => $message->text,
                   'subscriber_id' => $subscriber->id,
                   'list_id'       => $queueRequest->list_id,
-                  'brand_id'      => $campaign->brand_id,
+                  'brand_id'      => $campaign->brandId,
                   'campaign_id'   => $campaign->id,
-                  'send_time'     => $campaign->send_time,
-                  'send_priority' => $campaign->send_priority
+                  'send_time'     => $campaign->sendTime,
+                  'send_priority' => $campaign->sendPriority
                 ];
                 Log::debug("Queuing message for " . $subscriber->email);
                 DB::table('message_queue')->insert($message);

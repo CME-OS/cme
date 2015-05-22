@@ -18,7 +18,7 @@
                 <span class="glyphicon glyphicon-list-alt" style="color:mediumseagreen;"></span>
                 <a href="{{ URL::route('lists.view', $list->id) }}">
                   <strong><?= $list->name; ?></strong>
-                </a> (<?= number_format($list->size, 0); ?>)
+                </a> (<?= number_format($list->getSize(), 0); ?>)
               </td>
               <td>
                 <div class="pull-right">

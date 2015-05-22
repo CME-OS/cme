@@ -3,6 +3,8 @@ namespace Cme\Web\Controllers;
 
 use Cme\Brands\Validation\AddBrandValidation;
 use Cme\Models\CMEBrand;
+use CmeData\BrandData;
+use CmeKernel\Core\CmeKernel;
 use Illuminate\Support\Facades\DB;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
@@ -25,10 +27,8 @@ class BrandsController extends BaseController
 
   public function index()
   {
-    $result = CMEBrand::getAllActive();
-
+    $result         = CmeKernel::Brand()->all();
     $data['brands'] = $result;
-
     return View::make('brands.list', $data);
   }
 
@@ -40,28 +40,21 @@ class BrandsController extends BaseController
   public function add()
   {
     $data = Input::all();
-
     $this->addBrandValidation->validate($data);
-
-    $data['brand_created'] = time();
-    DB::table('brands')->insert($data);
-
+    CmeKernel::Brand()->create(BrandData::hydrate($data));
     return Redirect::route('brands');
   }
 
   public function edit($id)
   {
-    $data['brand'] = CMEBrand::find($id);
-
+    $data['brand'] = CmeKernel::Brand()->get($id);
     return View::make('brands.edit', $data);
   }
 
   public function update()
   {
     $data = Input::all();
-    DB::table('brands')->where('id', '=', $data['id'])
-      ->update($data);
-
+    CmeKernel::Brand()->update(BrandData::hydrate($data));
     return Redirect::to('/brands/edit/' . $data['id'])->with(
       'msg',
       'Brand has been updated'
@@ -70,18 +63,22 @@ class BrandsController extends BaseController
 
   public function delete($id)
   {
-    $data['brand_deleted_at'] = time();
-    DB::table('brands')->where('id', '=', $id)
-      ->update($data);
-
+    CmeKernel::Brand()->delete($id);
     return Redirect::to('/brands')->with('msg', 'Brand has been deleted');
   }
 
   public function campaigns($brandId)
   {
-    $brand             = CMEBrand::find($brandId);
-    $data['campaigns'] = $brand->campaigns;
-
+    $data['campaigns'] = CmeKernel::Brand()->campaigns($brandId);
+    $data['labelClasses'] = [
+      'Pending' => 'label-default',
+      'Queuing' => 'label-info',
+      'Queued'  => 'label-info',
+      'Sending' => 'label-primary',
+      'Sent'    => 'label-success',
+      'Paused'  => 'label-warning',
+      'Aborted' => 'label-danger'
+    ];
     return View::make('campaigns.list', $data);
   }
 }

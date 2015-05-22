@@ -97,7 +97,7 @@
                     <?php endif; ?>
                     <tr>
                         <td>Priority:</td>
-                        <td><?php echo \Cme\Helpers\CampaignHelper::getPriority($campaign->sendPriority) ?></td>
+                        <td><?php echo \CmeKernel\Helpers\CampaignHelper::getPriority($campaign->sendPriority) ?></td>
                     </tr>
                     <tr>
                         <td>SMTP Provider:</td>

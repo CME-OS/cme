@@ -19,19 +19,19 @@
     <div class="well" style="background-color: #fff; border:0;">
       <table>
         <tr>
-          <td style="width:80px;"><strong>Brand:</strong></td><td><?= $campaign->brand->brand_name; ?></td>
+          <td style="width:80px;"><strong>Brand:</strong></td><td><?= $campaign->brand->brandName; ?></td>
           </tr>
         <tr>
           <td><strong>List:</strong></td>
           <td>
-            <a href="/lists/view/<?= $campaign->lists->id ?>"><?= $campaign->lists->name; ?></a>
+            <a href="/lists/view/<?= $campaign->list->id ?>"><?= $campaign->list->name; ?></a>
           </td>
         </tr>
         <tr>
           <td><strong>Subject:</strong></td><td><?= $campaign->subject ?></td>
         </tr>
         <tr>
-          <td><strong>Sent: </strong></td><td><?= date('D, M d Y H:iA', $campaign->send_time) ?></td>
+          <td><strong>Sent: </strong></td><td><?= date('D, M d Y H:iA', $campaign->sendTime) ?></td>
         </tr>
       </table>
     </div>
@@ -92,8 +92,8 @@
             </tr>
             <?php foreach($opens as $s): ?>
             <tr>
-              <td><?= $s->email; ?></td>
-              <td><?= date('D, d M Y H:iA', $s->time); ?></td>
+              <td><?= $s['email']; ?></td>
+              <td><?= date('D, d M Y H:iA', $s['time']); ?></td>
             </tr>
             <?php endforeach; ?>
           </table>
@@ -107,8 +107,8 @@
             </tr>
             <?php foreach($unsubscribes as $s): ?>
             <tr>
-              <td><?= $s->email; ?></td>
-              <td><?= date('D, d M Y H:iA', $s->time); ?></td>
+              <td><?= $s['email']; ?></td>
+              <td><?= date('D, d M Y H:iA', $s['time']); ?></td>
             </tr>
             <?php endforeach; ?>
           </table>

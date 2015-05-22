@@ -1,12 +1,8 @@
 <?php
 namespace Cme\Cli;
 
-use Cme\Helpers\ApiImporter;
-use Cme\Helpers\CsvImporter;
 use Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\Console\Input\InputArgument;
 
 class DbSnapshot extends CmeCommand
 {

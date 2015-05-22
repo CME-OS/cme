@@ -33,7 +33,7 @@
         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
           <option value="0">Use Default</option>
           <?php foreach($smtpProviders as $provider): ?>
-          <option value="<?= $provider->id; ?>" <?= (($campaign->smtp_provider_id == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
+          <option value="<?= $provider->id; ?>" <?= (($campaign->smtpProviderId == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
           <?php endforeach; ?>
         </select>
       </div>

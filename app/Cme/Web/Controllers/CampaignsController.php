@@ -186,7 +186,7 @@ class CampaignsController extends BaseController
 
   public function update()
   {
-    $data = CmeDatabase::hydrate(new CampaignData(), Input::all());
+    $data = CampaignData::hydrate(Input::all());
     CmeKernel::Campaign()->update($data);
 
     return Redirect::to('/campaigns/preview/' . $data->id);

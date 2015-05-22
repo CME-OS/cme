@@ -1,9 +1,9 @@
 <?php
 namespace Cme\Web\Controllers;
 
-use Cme\Helpers\ListHelper;
-use Cme\Models\CMECampaign;
-use Illuminate\Support\Facades\DB;
+use CmeData\CampaignEventData;
+use CmeKernel\Core\CmeKernel;
+use CmeKernel\Enums\EventType;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
@@ -15,16 +15,15 @@ class TrackingController extends BaseController
 
     if($campaignId && $listId && $subscriberId)
     {
-      DB::table('campaign_events')->insert(
-        [
-          'campaign_id'   => $campaignId,
-          'list_id'       => $listId,
-          'subscriber_id' => $subscriberId,
-          'event_type'    => 'opened',
-          'reference'     => $this->_getIpAddress(),
-          'time'          => time()
-        ]
-      );
+      $data = [
+        'campaign_id'   => $campaignId,
+        'list_id'       => $listId,
+        'subscriber_id' => $subscriberId,
+        'event_type'    => EventType::OPENED,
+        'reference'     => $this->_getIpAddress(),
+        'time'          => time()
+      ];
+      CmeKernel::CampaignEvent()->trackOpen(CampaignEventData::hydrate($data));
     }
   }
 
@@ -33,42 +32,17 @@ class TrackingController extends BaseController
     list($campaignId, $listId, $subscriberId) = explode('_', $source);
     if($campaignId && $listId && $subscriberId)
     {
-      DB::table('campaign_events')->insert(
-        [
-          'campaign_id'   => $campaignId,
-          'list_id'       => $listId,
-          'subscriber_id' => $subscriberId,
-          'event_type'    => 'unsubscribed',
-          'time'          => time()
-        ]
+      $data = [
+        'campaign_id'   => $campaignId,
+        'list_id'       => $listId,
+        'subscriber_id' => $subscriberId,
+        'event_type'    => EventType::UNSUBSCRIBED,
+        'time'          => time()
+      ];
+      CmeKernel::CampaignEvent()->trackUnsubscribe(
+        CampaignEventData::hydrate($data)
       );
-
-      if(ListHelper::tableExists($listId))
-      {
-        $subscriber = DB::table(ListHelper::getTable($listId))
-          ->where('id', '=', $subscriberId)
-          ->first();
-
-        $campaign = CMECampaign::find($campaignId);
-
-        $unsubscribed = DB::table('unsubscribes')
-          ->where('email', '=', $subscriber->email)
-          ->first();
-        if(!$unsubscribed && $subscriber->id > 0)
-        {
-          DB::table('unsubscribes')->insert(
-            [
-              'email'       => $subscriber->email,
-              'brand_id'    => $campaign->brand_id,
-              'campaign_id' => $campaignId,
-              'list_id'     => $listId,
-              'time'        => time()
-            ]
-          );
-        }
-      }
     }
-
     return Redirect::to(base64_decode($redirect));
   }
 
@@ -78,16 +52,15 @@ class TrackingController extends BaseController
     $redirectTo = base64_decode($redirect);
     if($campaignId && $listId && $subscriberId)
     {
-      DB::table('campaign_events')->insert(
-        [
-          'campaign_id'   => $campaignId,
-          'list_id'       => $listId,
-          'subscriber_id' => $subscriberId,
-          'event_type'    => 'clicked',
-          'reference'     => $redirectTo,
-          'time'          => time()
-        ]
-      );
+      $data = [
+        'campaign_id'   => $campaignId,
+        'list_id'       => $listId,
+        'subscriber_id' => $subscriberId,
+        'event_type'    => EventType::CLICKED,
+        'reference'     => $redirectTo,
+        'time'          => time()
+      ];
+      CmeKernel::CampaignEvent()->trackClick(CampaignEventData::hydrate($data));
     }
     return Redirect::to($redirectTo);
   }

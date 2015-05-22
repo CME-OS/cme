@@ -18,23 +18,23 @@
       </div>
       <div class="form-group">
         <label for="brand-name">Name</label>
-        <input type="text" name="brand_name" class="form-control" id="brand-name" value="<?= $brand->brand_name ?>">
+        <input type="text" name="brand_name" class="form-control" id="brand-name" value="<?= $brand->brandName ?>">
       </div>
       <div class="form-group">
         <label for="sender-name">Default Sender Name</label>
-        <input type="text" name="brand_sender_name" class="form-control" id="brand-sender-name" value="<?= $brand->brand_sender_name ?>">
+        <input type="text" name="brand_sender_name" class="form-control" id="brand-sender-name" value="<?= $brand->brandSenderName ?>">
       </div>
       <div class="form-group">
         <label for="brand-name">Default Sender Email</label>
-        <input type="email" name="brand_sender_email" class="form-control" id="sender-email" value="<?= $brand->brand_sender_email ?>">
+        <input type="email" name="brand_sender_email" class="form-control" id="sender-email" value="<?= $brand->brandSenderEmail ?>">
       </div>
       <div class="form-group">
         <label for="domain-name">Domain Name</label>
-        <input type="text" name="brand_domain_name" class="form-control" id="domain-name" value="<?= $brand->brand_domain_name ?>">
+        <input type="text" name="brand_domain_name" class="form-control" id="domain-name" value="<?= $brand->brandDomainName ?>">
       </div>
       <div class="form-group">
         <label for="unsubscribe-url">Unsubscribe URL</label>
-        <input type="text" name="brand_unsubscribe_url" class="form-control" id="unsubscribe-url" value="<?= $brand->brand_unsubscribe_url ?>">
+        <input type="text" name="brand_unsubscribe_url" class="form-control" id="unsubscribe-url" value="<?= $brand->brandUnsubscribeUrl ?>">
       </div>
       <button type="submit" class="btn btn-submit">Submit</button>
     </form>

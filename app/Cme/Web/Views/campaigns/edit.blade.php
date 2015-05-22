@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-sm-12">
 
-            {{ Form::model($campaign, ['route' => 'campaigns.update.post', 'id' => 'campaign-form']) }}
+            {{ Form::open(['route' => 'campaigns.update.post', 'id' => 'campaign-form']) }}
 
             <input type="hidden" name="id" value="<?= $campaign->id ?>"/>
 
@@ -23,17 +23,17 @@
 
                     <div class='form-group'>
                         {{ Form::label('name', 'Name') }}
-                        {{ Form::text('name', null, ['class' => 'form-control']) }}
+                        {{ Form::text('name', $campaign->name, ['class' => 'form-control']) }}
                     </div>
 
                     <div class='form-group'>
                         {{ Form::label('subject', 'Subject') }}
-                        {{ Form::text('subject', null, ['class' => 'form-control']) }}
+                        {{ Form::text('subject', $campaign->subject, ['class' => 'form-control']) }}
                     </div>
 
                     <div class='form-group'>
                         {{ Form::label('html_content', 'Message') }}
-                        {{ Form::textarea('html_content', null, ['class' => 'form-control', 'id' => 'campaign-message']) }}
+                        {{ Form::textarea('html_content', $campaign->htmlContent, ['class' => 'form-control', 'id' => 'campaign-message']) }}
                     </div>
                 </div>
 

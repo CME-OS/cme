@@ -12,7 +12,7 @@
           </form>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <div class="pull-right"><?php echo $subscribers->links(); ?></div>
+          <div class="pull-right"><?php //echo $subscribers->links(); ?></div>
         </div>
       </div>
       <table class="table table-striped table-hover">
@@ -27,7 +27,7 @@
         <?php foreach($subscribers as $subscriber): ?>
           <tr>
           <?php foreach($columns as $c): ?>
-            <td><?= $subscriber->$c; ?></td>
+            <td><?= $subscriber->{camel_case($c)}; ?></td>
             <?php endforeach; ?>
             <td>
               <a href="/lists/<?= $list->id ?>/delete-subscriber/<?= $subscriber->id ?>" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>

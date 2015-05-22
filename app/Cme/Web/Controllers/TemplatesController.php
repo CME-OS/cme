@@ -1,7 +1,8 @@
 <?php
 namespace Cme\Web\Controllers;
 
-use Cme\Models\CMETemplate;
+use CmeData\TemplateData;
+use CmeKernel\Core\CmeKernel;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
@@ -11,8 +12,7 @@ class TemplatesController extends BaseController
 {
   public function index()
   {
-    $data['templates'] = CMETemplate::getAllActive();
-
+    $data['templates'] = CmeKernel::Template()->all();
     return View::make('templates.list', $data);
   }
 
@@ -24,13 +24,13 @@ class TemplatesController extends BaseController
   public function add()
   {
     $data     = Input::all();
-    CMETemplate::saveData($data);
+    CmeKernel::Template()->create(TemplateData::hydrate($data));
     return Redirect::to('/templates');
   }
 
   public function edit($id)
   {
-    $template = CMETemplate::find($id);
+    $template = CmeKernel::Template()->get($id);
     if($template)
     {
       $data['template']      = $template;
@@ -42,14 +42,13 @@ class TemplatesController extends BaseController
 
   public function preview($id)
   {
-    $template         = CMETemplate::find($id);
-    $data['template'] = $template;
+    $data['template'] = CmeKernel::Template()->get($id);
     return View::make('templates.preview', $data);
   }
 
   public function content($id)
   {
-    $template = CMETemplate::find($id);
+    $template = CmeKernel::Template()->get($id);
     if($template)
     {
       echo $template->content;
@@ -64,8 +63,7 @@ class TemplatesController extends BaseController
   public function update()
   {
     $data     = Input::all();
-    CMETemplate::saveData($data);
-
+    CmeKernel::Template()->update(TemplateData::hydrate($data));
     return Redirect::to('/templates/preview/' . $data['id']);
   }
 
@@ -73,11 +71,9 @@ class TemplatesController extends BaseController
   public function delete()
   {
     $id = Route::input('id');
-    if(CMETemplate::find($id))
+    if(CmeKernel::Template()->exists($id))
     {
-      $data['id']         = $id;
-      $data['deleted_at'] = time();
-      CMETemplate::saveData($data);
+      CmeKernel::Template()->delete($id);
     }
     return Redirect::to('/templates');
   }

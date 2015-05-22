@@ -12,7 +12,16 @@ class HomeController extends BaseController
   public function index()
   {
     $eventTypes = EventType::getPossibleValues();
-    unset($eventTypes[EventType::CLICKED]);
+
+    // we don't want clicks, tests and unknowns showing up on the dashboard
+    // so we unset them here
+    foreach($eventTypes as $i => $type)
+    {
+      if(in_array($type, [EventType::CLICKED, EventType::TEST, EventType::UNKNOWN]))
+      {
+        unset($eventTypes[$i]);
+      }
+    }
 
     $stats          = [];
     $campaigns      = DB::select(
@@ -42,9 +51,16 @@ class HomeController extends BaseController
     $data['stats']          = $stats;
     $data['campaignLookUp'] = $campaignLookUp;
 
+    // for the total stats, we don't want to show failed and bounced stats
+    // so we unset them here
     $totalEventTypes = $eventTypes;
-    unset($totalEventTypes[EventType::FAILED]);
-    unset($totalEventTypes[EventType::BOUNCED]);
+    foreach($totalEventTypes as $i => $type)
+    {
+      if(in_array($type, [EventType::FAILED, EventType::BOUNCED]))
+      {
+        unset($totalEventTypes[$i]);
+      }
+    }
 
     //create Blank State
     $totalStats = [];

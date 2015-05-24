@@ -12,7 +12,7 @@
     "way/generators": "~2.0",
     "xethron/migrations-generator": "dev-master",
     "aws/aws-sdk-php": "2.7.18",
-    "cme/cme-kernel": "1.0.2"
+    "cme/cme-kernel": "1.0.3"
   },
   "autoload": {
     "classmap": [

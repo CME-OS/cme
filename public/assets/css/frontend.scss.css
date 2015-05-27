@@ -3,8 +3,9 @@
   max-width: 600px;
   background: #fff;
   border-radius: 4px;
-  margin: 0 auto;
-  padding: 20px; }
+  margin: 120px auto;
+  border: 1px solid #6690B9;
+  padding: 30px; }
   .login img {
     width: 100%; }
   .login h3 {
@@ -36,5 +37,7 @@ h1 {
   margin-bottom: 20px; }
 
 .footer {
-  background: whitesmoke;
+  background: #f5f5f5;
   padding: 20px; }
+
+/*# sourceMappingURL=frontend.scss.css.map */

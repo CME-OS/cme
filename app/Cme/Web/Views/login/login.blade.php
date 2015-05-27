@@ -6,12 +6,13 @@
 <body>
     <div class="login">
         <div class="row">
-            <div class="col-sm-4">
-                <img src="/assets/img/main-logo.png" alt=""/>
+            <div class="col-sm-12">
+                <img src="/assets/img/logo.png" alt=""/>
             </div>
-
-            <div class="col-sm-8">
-                <h3>Login to your account!</h3>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3 class="text-center">Login to your account!</h3>
                 @if($message = Session::get('message', false))
                     <div class="alert alert-danger">{{ $message }}</div>
                 @endif
@@ -41,6 +42,15 @@
     </div>
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
-    <script>$.backstretch("https://unsplash.imgix.net/reserve/nE6neNVdRPSIasnmePZe_IMG_1950.jpg");
-</script>
+    <script>
+        var images = [
+            'https://unsplash.com/photos/a_xa7RUKzdc/download',
+            'https://unsplash.com/photos/dfZbts6B4yw/download',
+            'https://unsplash.com/photos/m0l5J8Lqnzo/download',
+            'https://unsplash.com/photos/cGe1PV_yEso/download'
+        ];
+
+        var index = Math.floor(Math.random() * images.length);
+        $.backstretch(images[index]);
+    </script>
 </body>

@@ -76,9 +76,9 @@ class ListsController extends BaseController
 
   public function view($id)
   {
-    $subscribers = CmeKernel::EmailList()->getSubscribers($id);
-    if($subscribers)
+    if(CmeKernel::EmailList()->exists($id))
     {
+      $subscribers = CmeKernel::EmailList()->getSubscribers($id);
       $data['list']        = CmeKernel::EmailList()->get($id);
       $data['columns']     = CmeKernel::EmailList()->getColumns($id);
       $data['subscribers'] = $subscribers;

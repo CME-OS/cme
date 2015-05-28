@@ -1,8 +1,8 @@
 check process ListImporter-Inst1
-    with pidfile "/var/www/html/cme/app/storage/monit/ListImporter/inst1.pid"
+    with pidfile "/var/www/html/cme/app/storage/monit/Cme/Cli/ListImporter/inst1.pid"
     group CME
     start program = "/usr/bin/php /var/www/html/cme/artisan --env=production cme:list-import inst1"
-    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/ListImporter/inst1.pid`'"
+    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/Cme/Cli/ListImporter/inst1.pid`'"
     if mem > 5% for 3 cycles then alert
     if mem > 10% for 5 cycles then restart
 
@@ -11,7 +11,7 @@ check process ListRefresher-Inst1
     with pidfile "/var/www/html/cme/app/storage/monit/ListRefresher/inst1.pid"
     group CME
     start program = "/usr/bin/php /var/www/html/cme/artisan --env=production cme:list-refresh inst1"
-    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/ListRefresfer/inst1.pid`'"
+    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/Cme/Cli/ListRefresfer/inst1.pid`'"
     if mem > 5% for 3 cycles then alert
     if mem > 10% for 5 cycles then restart
 
@@ -19,6 +19,6 @@ check process QueueMessages-Inst1
     with pidfile "/var/www/html/cme/app/storage/monit/QueueMessages/inst1.pid"
     group CME
     start program = "/usr/bin/php /var/www/html/cme/artisan --env=production cme:queue-messages inst1"
-    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/QueueMessages/inst1.pid`'"
+    stop program = "/bin/bash -c '/bin/kill `/bin/cat /var/www/html/cme/app/storage/monit/Cme/Cli/QueueMessages/inst1.pid`'"
     if mem > 5% for 3 cycles then alert
     if mem > 10% for 5 cycles then restart

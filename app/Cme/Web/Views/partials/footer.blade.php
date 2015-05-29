@@ -122,6 +122,7 @@
       }
       else
       {
+        $('.campaign-custom-target').empty();
         $('.campaign-custom-target').hide();
       }
     });

@@ -24,11 +24,7 @@ class CsvImporter
   {
     while($subscribers = $this->_getDataFromCsv($source))
     {
-      if(!ListHelper::tableExists($listId))
-      {
-        ListHelper::createListTable($listId, $this->_columns);
-      }
-
+      ListHelper::createListTable($listId, $this->_columns);
       ListHelper::addSubscribers($listId, $subscribers);
     }
     File::delete($source);

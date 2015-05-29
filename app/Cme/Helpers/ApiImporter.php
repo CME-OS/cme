@@ -27,11 +27,7 @@ class ApiImporter
     $stopTime = time() + $this->_timeout;
     while($subscribers = $this->_getDataFromApi($source, $listId))
     {
-      if(!ListHelper::tableExists($listId))
-      {
-        ListHelper::createListTable($listId, $this->_columns);
-      }
-
+      ListHelper::createListTable($listId, $this->_columns);
       ListHelper::addSubscribers($listId, $subscribers);
 
       if(time() >= $stopTime)

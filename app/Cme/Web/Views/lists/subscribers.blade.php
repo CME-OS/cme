@@ -39,7 +39,7 @@
           </form>
         </div>
         <div class="col-md-2 col-md-offset-4">
-          <div class="pull-right"><?php //echo $subscribers->links(); ?></div>
+          <div class="pull-right"><?php echo $pager->links(); ?></div>
         </div>
       </div>
       <table class="table table-striped table-hover">

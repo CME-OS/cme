@@ -4,10 +4,12 @@ namespace Cme\Web\Controllers;
 use CmeData\ListData;
 use CmeData\ListImportQueueData;
 use CmeData\SubscriberData;
+use CmeKernel\Core\CmeDatabase;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Helpers\ListHelper;
 use CmeKernel\Helpers\ListsSchemaHelper;
 use \Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\View;
@@ -78,7 +80,25 @@ class ListsController extends BaseController
   {
     if(CmeKernel::EmailList()->exists($id))
     {
-      $subscribers = CmeKernel::EmailList()->getSubscribers($id);
+      $page        = Input::get('page', 1);
+      $perPage     = 1000;
+      $offset      = ($page - 1) * $perPage;
+      $subscribers = CmeKernel::EmailList()->getSubscribers(
+        $id,
+        $offset,
+        $perPage
+      );
+
+      Paginator::setViewName('pagination::simple');
+      $subscriberTotal     = CmeDatabase::conn()
+        ->table(ListHelper::getTable($id))
+        ->count();
+      $pager               = Paginator::make(
+        $subscribers,
+        $subscriberTotal,
+        $perPage
+      );
+      $data['pager']       = $pager;
       $data['list']        = CmeKernel::EmailList()->get($id);
       $data['columns']     = CmeKernel::EmailList()->getColumns($id);
       $data['subscribers'] = $subscribers;
@@ -143,10 +163,10 @@ class ListsController extends BaseController
       if($source)
       {
         //queue up
-        $importRequest = new ListImportQueueData();
+        $importRequest         = new ListImportQueueData();
         $importRequest->listId = $listId;
-        $importRequest->type    = $type;
-        $importRequest->source  = $source;
+        $importRequest->type   = $type;
+        $importRequest->source = $source;
         CmeKernel::EmailList()->import($importRequest);
       }
 

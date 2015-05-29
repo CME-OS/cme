@@ -1,7 +1,34 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header"><?= $list->name ?> List
-</h1>
+<h1 class="page-header"><?= $list->name ?> List</h1>
+<?php if($subscribers): ?>
+<div class="row alert alert-info" style="border-radius: 0;">
+  <div class="col-md-12">
+    <p style="font-weight: bold; font-size:18px;">Import more subscribers</p>
+    <div class="row">
+      <div class="col-md-3">
+        <form class="form-inline" role="form" action="/lists/import/api" method="post">
+          <div class="form-group">
+            <input type="hidden" name="listId" value="<?= $list->id ?>">
+            <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php" value="<?= $list->endpoint ?>">
+          </div>
+          <button type="submit" class="btn btn-default">Import From API</button>
+        </form>
+      </div>
+      <div class="col-md-3">
+        <form class="form-inline" role="form" action="/lists/import/csv" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="listId" value="<?= $list->id ?>">
+          <div class="form-group">
+            <input type="file" name="listFile" id="list-csv">
+          </div>
+          <button type="submit" class="btn btn-default">Import From CSV</button>
+        </form>
+      </div>
+      <div class="col-md-offset-6"></div>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
 <div class="row">
   <div class="col-md-12">
     <?php if($subscribers): ?>
@@ -42,7 +69,6 @@
       <h2>Import From API</h2>
       <form role="form" action="/lists/import/api" method="post">
         <div class="form-group">
-          <label for="brand-name">Name</label>
           <input type="hidden" name="listId" value="<?= $list->id ?>">
           <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php" value="<?= $list->endpoint ?>">
         </div>

@@ -59,7 +59,7 @@ class CampaignsController extends BaseController
           $campaign->type    = Input::get('type');
           if(Input::get('filters'))
           {
-            $campaign->filters = json_encode(Input::get('filters'));
+            $campaign->filters = Input::get('filters');
           }
           $campaign->id = CmeKernel::Campaign()->create($campaign);
           Session::put('newCampaignId', $campaign->id);

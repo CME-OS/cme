@@ -110,10 +110,9 @@
                 </table>
             </div>
 
-            <?php if($campaign->filters): ?>
+            <?php if(is_array($campaign->filters)): $filters = $campaign->filters; ?>
             <div style="width: 350px;">
-                <?php $filters = json_decode($campaign->filters); ?>
-                <?php $filtersCount = count($filters->filter_field); ?>
+                <?php $filtersCount = count($filters['filter_field']); ?>
                 <table class="table">
                     <tr>
                         <th>This campaign will be sent to subscribers that meet the following conditions</th>
@@ -121,9 +120,9 @@
                     <?php for($i = 0; $i < $filtersCount; $i++): ?>
                     <tr>
                         <?php
-                        $field = $filters->filter_field[$i];
-                        $operator = $filters->filter_operator[$i];
-                        $value = $filters->filter_value[$i];
+                        $field = $filters['filter_field'][$i];
+                        $operator = $filters['filter_operator'][$i];
+                        $value = $filters['filter_value'][$i];
                         ?>
                         <td><?= ($i + 1) . '. ' . $field . ' ' . $operator . ' <u>' . $value . '</u>' ?></td>
                     </tr>

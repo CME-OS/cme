@@ -78,9 +78,7 @@ class QueueMessages extends LongRunningScript
           $placeHolders = null;
           do
           {
-
-            $filters   = json_decode($campaign->filters);
-            $filterSql = FilterHelper::buildSql($filters);
+            $filterSql = FilterHelper::buildSql($campaign->filters);
             if($filterSql != "")
             {
               $filterSql = ' AND ' . $filterSql;

@@ -96,13 +96,12 @@
                                 <td>Value</td>
                                 <td></td>
                             </tr>
-                            <?php if($campaign->filters): ?>
-                            <?php $filters = json_decode($campaign->filters); ?>
-                            <?php $filtersCount = count($filters->filter_field); ?>
+                            <?php if(is_array($campaign->filters)): $filters = $campaign->filters; ?>
+                            <?php $filtersCount = count($filters['filter_field']); ?>
                             <?php for($i = 0; $i < $filtersCount; $i++): ?>
-                            <?php $field = $filters->filter_field[$i]; ?>
-                            <?php $operator = $filters->filter_operator[$i]; ?>
-                            <?php $value = $filters->filter_value[$i]; ?>
+                            <?php $field = $filters['filter_field'][$i]; ?>
+                            <?php $operator = $filters['filter_operator'][$i]; ?>
+                            <?php $value = $filters['filter_value'][$i]; ?>
                             <tr class="filter-row" data-row-id="<?= $i+1; ?>">
                                 <td>
                                     <select name="filters[filter_field][]" class="filter-field" style="width:100px;">

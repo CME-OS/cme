@@ -14,7 +14,7 @@ $path = Request::path();
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{ URL::route('home') }}">CME Logo</a>
+      <a class="navbar-brand" href="{{ URL::route('home') }}">CME</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -55,7 +55,7 @@ $path = Request::path();
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= Auth::user(
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" id="username"><?= Auth::user(
             )->email ?> <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="/logout" class="navbar-link">Logout</a></li>

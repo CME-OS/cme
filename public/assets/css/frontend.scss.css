@@ -13,7 +13,7 @@
     margin-bottom: 20px; }
 
 .navbar {
-  text-transform: uppercase; }
+  text-transform: capitalize; }
 
 .navbar-default {
   background: #454652; }

@@ -159,9 +159,13 @@ class CampaignsController extends BaseController
     $campaign               = CmeKernel::Campaign()->get($id);
     $campaign->brand        = CmeKernel::Brand()->get($campaign->brandId);
     $campaign->list         = CmeKernel::EmailList()->get($campaign->listId);
-    $campaign->smtpProvider = CmeKernel::SmtpProvider()->get(
-      $campaign->smtpProviderId
-    );
+    $campaign->smtpProvider = null;
+    if($campaign->smtpProviderId)
+    {
+      $campaign->smtpProvider = CmeKernel::SmtpProvider()->get(
+        $campaign->smtpProviderId
+      );
+    }
 
     $data['campaign']   = $campaign;
     $data['sentEmails'] = CmeKernel::CampaignEvent()->getSentMessages(

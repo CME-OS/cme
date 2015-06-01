@@ -9,9 +9,10 @@
     <h2>Add a Subscriber</h2>
     <form role="form" action="/lists/add-subscriber" method="post">
       <input type="hidden" name="id" value="<?= $id ?>"/>
-      <div class="form-group">
-        <label for="subscriber-email">Email</label>
+      <div class="form-group <?= isset($errors['email'])? 'has-error has-feedback': '' ?>">
+        <label for="subscriber-email">Email <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['email'])? ' - '.$errors['email']->message: '' ?></span></label>
         <input type="text" name="email" class="form-control" id="subscriber-email" placeholder="">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['email'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
       <?php foreach($columns as $column): ?>
         <?php if($column['value'] != 'date_created'): ?>

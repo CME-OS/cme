@@ -6,12 +6,14 @@ use CmeData\ListImportQueueData;
 use CmeData\SubscriberData;
 use CmeKernel\Core\CmeDatabase;
 use CmeKernel\Core\CmeKernel;
+use CmeKernel\Exceptions\InvalidDataException;
 use CmeKernel\Helpers\ListHelper;
 use CmeKernel\Helpers\ListsSchemaHelper;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class ListsController extends BaseController
@@ -24,14 +26,28 @@ class ListsController extends BaseController
 
   public function neww()
   {
-    return View::make('lists.new');
+    $data = Session::get('formData', ['input' => null, 'errors' => null]);
+    return View::make('lists.new', $data);
   }
 
   public function add()
   {
-    $data   = Input::all();
-    $listId = CmeKernel::EmailList()->create(ListData::hydrate($data));
-    return Redirect::to('/lists/view/' . $listId);
+    $listData = ListData::hydrate(Input::all());
+    try
+    {
+      $listId = CmeKernel::EmailList()->create($listData);
+      return Redirect::to('/lists/view/' . $listId);
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/lists/new')->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $listData->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function newSubscriber($id)
@@ -42,6 +58,11 @@ class ListsController extends BaseController
       $table           = ListHelper::getTable($id);
       $data['id']      = $id;
       $data['columns'] = ListsSchemaHelper::getColumnNames($table);
+      $data            = array_merge(
+        $data,
+        Session::get('formData', ['input' => null, 'errors' => null])
+      );
+
       return View::make('lists.new-subscriber', $data);
     }
     return Redirect::to('/lists');
@@ -49,16 +70,30 @@ class ListsController extends BaseController
 
   public function addSubscriber()
   {
-    $listId = (int)Input::get('id');
-    $added  = CmeKernel::EmailList()->addSubscriber(
-      SubscriberData::hydrate(Input::all()),
-      $listId
-    );
-    if($added)
+    $listId         = (int)Input::get('id');
+    $subscriberData = SubscriberData::hydrate(Input::all());
+    try
     {
-      return Redirect::to('/lists/view/' . $listId);
+      $added = CmeKernel::EmailList()->addSubscriber(
+        $subscriberData,
+        $listId
+      );
+      if($added)
+      {
+        return Redirect::to('/lists/view/' . $listId);
+      }
+      return Redirect::to('/lists');
     }
-    return Redirect::to('/lists');
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/lists/new-subscriber/' . $listId)->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $subscriberData->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function deleteSubscriber()
@@ -113,17 +148,34 @@ class ListsController extends BaseController
   public function edit($id)
   {
     $data['list'] = CmeKernel::EmailList()->get($id);
+    $data         = array_merge(
+      $data,
+      Session::get('formData', ['input' => null, 'errors' => null])
+    );
     return View::make('lists.edit', $data);
   }
 
   public function update()
   {
-    $data = Input::all();
-    CmeKernel::EmailList()->update(ListData::hydrate($data));
-    return Redirect::to('/lists/edit/' . $data['id'])->with(
-      'msg',
-      'List has been updated'
-    );
+    $listData = ListData::hydrate(Input::all());
+    try
+    {
+      CmeKernel::EmailList()->update($listData);
+      return Redirect::to('/lists/edit/' . $listData->id)->with(
+        'msg',
+        'List has been updated'
+      );
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/lists/edit/' . $listData->id)->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $listData->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function delete($id)

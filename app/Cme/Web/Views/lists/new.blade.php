@@ -8,27 +8,30 @@
   <div class="col-md-12 well">
     <h2>Add a List</h2>
     <form role="form" action="/lists/add" method="post">
-      <div class="form-group">
-        <label for="list-name">Name</label>
-        <input type="text" name="name" class="form-control" id="list-name" placeholder="Name">
+      <div class="form-group <?= isset($errors['name'])? 'has-error has-feedback': '' ?>">
+        <label for="list-name">Name <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['name'])? ' - '.$errors['name']->message: '' ?></span></label>
+        <input type="text" name="name" class="form-control" id="list-name" placeholder="Name" value="<?= isset($input['name'])? $input['name'] : '' ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['name'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="list-api">API EndPoint</label>
-        <input type="text" name="endpoint" class="form-control" id="list-api" placeholder="http://">
+      <div class="form-group <?= isset($errors['endpoint'])? 'has-error has-feedback': '' ?>">
+        <label for="list-api">API EndPoint <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['endpoint'])? ' - '.$errors['endpoint']->message: '' ?></span></label>
+        <input type="text" name="endpoint" class="form-control" id="list-api" placeholder="http://" value="<?= isset($input['endpoint'])? $input['endpoint'] : '' ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['endpoint'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="list-refresh-interval">Refresh Interval (For API List Only)</label>
+      <div class="form-group <?= isset($errors['refresh_interval'])? 'has-error has-feedback': '' ?>">
+        <label for="list-refresh-interval">Refresh Interval (For API List Only) <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['refresh_interval'])? ' - '.$errors['refresh_interval']->message: '' ?></span></label>
         <select name="refresh_interval" id="list-refresh-interval" class="form-control">
           <option value="">Not Applicable</option>
-          <option value="60">Every minute</option>
-          <option value="300">Every 5 minutes</option>
-          <option value="600">Every 10 minutes</option>
-          <option value="3600">Every hour</option>
+          <option value="60" <?= (isset($input['refresh_interval']) && $input['refresh_interval'] == 60)? 'selected="selected"' : '' ?>>Every minute</option>
+          <option value="300" <?= (isset($input['refresh_interval']) && $input['refresh_interval'] == 300)? 'selected="selected"' : '' ?>>Every 5 minutes</option>
+          <option value="600" <?= (isset($input['refresh_interval']) && $input['refresh_interval'] == 600)? 'selected="selected"' : '' ?>>Every 10 minutes</option>
+          <option value="3600" <?= (isset($input['refresh_interval']) && $input['refresh_interval'] == 3600)? 'selected="selected"' : '' ?>>Every hour</option>
         </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['refresh_interval'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
+      <div class="form-group ">
         <label for="list-description">Description</label>
-        <textarea name="description" id="list-description" class="form-control" style="width: 100%;" cols="50" rows="4"></textarea>
+        <textarea name="description" id="list-description" class="form-control" style="width: 100%;" cols="50" rows="4"><?= isset($input['description'])? $input['description'] : '' ?></textarea>
       </div>
       <button type="submit" class="btn btn-success">Submit</button>
     </form>

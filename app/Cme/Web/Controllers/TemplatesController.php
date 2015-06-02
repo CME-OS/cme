@@ -3,9 +3,11 @@ namespace Cme\Web\Controllers;
 
 use CmeData\TemplateData;
 use CmeKernel\Core\CmeKernel;
+use CmeKernel\Exceptions\InvalidDataException;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class TemplatesController extends BaseController
@@ -18,14 +20,28 @@ class TemplatesController extends BaseController
 
   public function neww()
   {
-    return View::make('templates.new');
+    $data = Session::get('formData', ['input' => null, 'errors' => null]);
+    return View::make('templates.new', $data);
   }
 
   public function add()
   {
-    $data     = Input::all();
-    CmeKernel::Template()->create(TemplateData::hydrate($data));
-    return Redirect::to('/templates');
+    $data = TemplateData::hydrate(Input::all());
+    try
+    {
+      CmeKernel::Template()->create($data);
+      return Redirect::to('/templates');
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/templates/new')->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $data->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function edit($id)
@@ -33,7 +49,11 @@ class TemplatesController extends BaseController
     $template = CmeKernel::Template()->get($id);
     if($template)
     {
-      $data['template']      = $template;
+      $data['template'] = $template;
+      $data             = array_merge(
+        $data,
+        Session::get('formData', ['input' => null, 'errors' => null])
+      );
       return View::make('templates.edit', $data);
     }
 
@@ -62,11 +82,23 @@ class TemplatesController extends BaseController
 
   public function update()
   {
-    $data     = Input::all();
-    CmeKernel::Template()->update(TemplateData::hydrate($data));
-    return Redirect::to('/templates/preview/' . $data['id']);
+    $data = TemplateData::hydrate(Input::all());
+    try
+    {
+      CmeKernel::Template()->update($data);
+      return Redirect::to('/templates/preview/' . $data->id);
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/templates/edit/' . $data->id)->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $data->getValidationErrors()
+        ]
+      );
+    }
   }
-
 
   public function delete()
   {

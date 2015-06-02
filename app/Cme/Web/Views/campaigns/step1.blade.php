@@ -31,7 +31,7 @@
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
-            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brandId)? 'selected="selected"' : '' ?>>
+            <option value="<?= $brand->id ?>" <?= ($brand->id == (isset($input['brand_id'])? $input['brand_id'] : $campaign->brandId))? 'selected="selected"' : '' ?>>
               <?= $brand->brandName; ?>
             </option>
           <?php endforeach; ?>
@@ -48,7 +48,7 @@
         <select name="list_id" id="campaign-list-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($lists as $list): ?>
-            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->listId)? 'selected="selected"' : '' ?>>
+            <option value="<?= $list->id ?>" <?= ($list->id == (isset($input['list_id'])? $input['list_id'] : $campaign->listId))? 'selected="selected"' : '' ?>>
               <?= $list->name; ?>
             </option>
           <?php endforeach; ?>

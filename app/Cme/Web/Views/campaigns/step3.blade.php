@@ -13,10 +13,10 @@
       <div class="form-group">
         <label for="campaign-priority">Send Priority:</label>
         <select name="send_priority" id="campaign-priority" class="form-control">
-          <option value="2" <?= ($campaign->sendPriority == 2)? 'selected="selected"' : '' ?>>Normal</option>
-          <option value="1" <?= ($campaign->sendPriority == 1)? 'selected="selected"' : '' ?>>Low</option>
-          <option value="3" <?= ($campaign->sendPriority == 3)? 'selected="selected"' : '' ?>>Medium</option>
-          <option value="4" <?= ($campaign->sendPriority == 4)? 'selected="selected"' : '' ?>>High</option>
+          <option value="2" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority) == 2)? 'selected="selected"' : '' ?>>Normal</option>
+          <option value="1" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority) == 1)? 'selected="selected"' : '' ?>>Low</option>
+          <option value="3" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority) == 3)? 'selected="selected"' : '' ?>>Medium</option>
+          <option value="4" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority) == 4)? 'selected="selected"' : '' ?>>High</option>
         </select>
       </div>
       <div class="form-group <?= isset($errors['send_time'])? 'has-error has-feedback': '' ?>">
@@ -33,7 +33,7 @@
         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
           <option value="0">Use Default</option>
           <?php foreach($smtpProviders as $provider): ?>
-          <option value="<?= $provider->id; ?>" <?= (($campaign->smtpProviderId == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
+          <option value="<?= $provider->id; ?>" <?= (((isset($input['smtp_provider_id'])? $input['smtp_provider_id'] : $campaign->smtpProviderId) == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
           <?php endforeach; ?>
         </select>
       </div>

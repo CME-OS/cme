@@ -21,19 +21,21 @@
             <div class="row">
                 <div class="col-md-8">
 
-                    <div class='form-group'>
-                        {{ Form::label('name', 'Name') }}
-                        {{ Form::text('name', $campaign->name, ['class' => 'form-control']) }}
+                    <div class='form-group <?= isset($errors['name'])? 'has-error has-feedback': '' ?>'>
+                        <label for="campaign-name">Name <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['name'])? ' - '.$errors['name']->message: '' ?></span></label>
+                        <input type="text" name="name" class="form-control" id="campaign-name" value="<?= isset($input['name'])? $input['name'] : $campaign->name ?>">
+                        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['name'])? '': 'hidden' ?>" aria-hidden="true"></span>
                     </div>
 
-                    <div class='form-group'>
-                        {{ Form::label('subject', 'Subject') }}
-                        {{ Form::text('subject', $campaign->subject, ['class' => 'form-control']) }}
+                    <div class='form-group <?= isset($errors['subject'])? 'has-error has-feedback': '' ?>'>
+                        <label for="campaign-subject">Subject <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['subject'])? ' - '.$errors['subject']->message: '' ?></span></label>
+                        <input type="text" name="subject" class="form-control" id="campaign-subject" value="<?= isset($input['subject'])? $input['subject'] : $campaign->subject ?>">
+                        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['subject'])? '': 'hidden' ?>" aria-hidden="true"></span>
                     </div>
 
-                    <div class='form-group'>
-                        {{ Form::label('html_content', 'Message') }}
-                        {{ Form::textarea('html_content', $campaign->htmlContent, ['class' => 'form-control', 'id' => 'campaign-message']) }}
+                    <div class='form-group <?= isset($errors['html_content'])? 'has-error has-feedback': '' ?>'>
+                        <label for="sender-name">Message <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['html_content'])? ' - '.$errors['html_content']->message: '' ?></span></label>
+                        <textarea name="html_content" class="form-control" id="campaign-message" cols="30" rows="10"><?= isset($input['html_content'])? $input['html_content'] : $campaign->htmlContent ?></textarea>
                     </div>
                 </div>
 
@@ -54,7 +56,7 @@
                                 class="form-control">
                             <option value="">SELECT</option>
                             <?php foreach($brands as $brand): ?>
-                            <option value="<?= $brand->id ?>" <?= ($brand->id == $campaign->brandId) ? 'selected="selected"' : ''; ?>><?= $brand->brandName; ?></option>
+                            <option value="<?= $brand->id ?>" <?= ($brand->id == (isset($input['brand_id'])? $input['brand_id'] : $campaign->brandId)) ? 'selected="selected"' : ''; ?>><?= $brand->brandName; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -75,7 +77,7 @@
                                 class="form-control">
                             <option value="">SELECT</option>
                             <?php foreach($lists as $list): ?>
-                            <option value="<?= $list->id ?>" <?= ($list->id == $campaign->listId) ? 'selected="selected"' : ''; ?>><?= $list->name; ?></option>
+                            <option value="<?= $list->id ?>" <?= ($list->id == (isset($input['list_id'])?  $input['list_id'] : $campaign->listId)) ? 'selected="selected"' : ''; ?>><?= $list->name; ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -138,10 +140,10 @@
                         <label for="campaign-priority">Send Priority:</label>
                         <select name="send_priority" id="campaign-priority"
                                 class="form-control">
-                            <option value="2" <?= ($campaign->sendPriority == 2)? 'selected="selected"' : '' ?>>Normal</option>
-                            <option value="1" <?= ($campaign->sendPriority == 1)? 'selected="selected"' : '' ?>>Low</option>
-                            <option value="3" <?= ($campaign->sendPriority == 3)? 'selected="selected"' : '' ?>>Medium</option>
-                            <option value="4" <?= ($campaign->sendPriority == 4)? 'selected="selected"' : '' ?>>High</option>
+                            <option value="2" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority == 2))? 'selected="selected"' : '' ?>>Normal</option>
+                            <option value="1" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority == 1))? 'selected="selected"' : '' ?>>Low</option>
+                            <option value="3" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority == 3))? 'selected="selected"' : '' ?>>Medium</option>
+                            <option value="4" <?= ((isset($input['send_priority'])? $input['send_priority'] : $campaign->sendPriority == 4))? 'selected="selected"' : '' ?>>High</option>
                         </select>
                     </div>
 
@@ -164,22 +166,10 @@
                         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
                             <option value="0">Use Default</option>
                             <?php foreach($smtpProviders as $provider): ?>
-                            <option value="<?= $provider->id; ?>" <?= (($campaign->smtpProviderId == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
+                            <option value="<?= $provider->id; ?>" <?= (( (isset($input['smtp_provider_id'])? $input['smtp_provider_id'] :$campaign->smtpProviderId) == $provider->id) || $provider->default)? 'selected="selected"' : '' ?>><?= $provider->name ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-
-                    <!--<div class="well">
-                        <p><strong>Available PlaceHolders</strong></p>
-                        <div class="placeholders" id="placeholders">
-                            <ul>
-                                <?php foreach($placeholders as $placeholder): ?>
-                                <li>[<?= $placeholder ?>]</li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </div> -->
-
                     <button type="submit" class="btn btn-success">Update</button>
 
                 </div>

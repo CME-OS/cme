@@ -7,17 +7,20 @@
 <div class="row">
   <div class="col-md-12 well">
     <h2>Update User</h2>
-    <form role="form" action="/lists/update" method="post">
+    <form role="form" action="/users/update" method="post">
       <input type="hidden" name="id" value="<?= $user->id ?>"/>
-      <div class="form-group">
-        <label for="list-name">Email</label>
-        <input type="text" name="email" class="form-control" id="email" value="<?= $user->email ?>">
+      <div class="form-group <?= isset($errors['email'])? 'has-error has-feedback': '' ?>">
+        <label for="list-name">Email <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['email'])? ' - '.$errors['email']->message: '' ?></span></label>
+        <input type="text" name="email" class="form-control" id="email" value="<?= isset($input['email'])? $input['email'] : $user->email ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['email'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="list-api">Password</label>
-        <input type="password" name="password" class="form-control" id="password" value="">
+      <div class="form-group <?= isset($errors['password'])? 'has-error has-feedback': '' ?>">
+        <label for="list-api">Password <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['password'])? ' - '.$errors['password']->message: '' ?></span></label>
+        <input type="password" name="password" class="form-control" id="password" value="<?= isset($input['password'])? $input['password'] : '' ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['password'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <button type="submit" class="btn btn-default">Submit</button>
+      <button type="submit" class="btn btn-success">Submit</button>
+    </form>
     </form>
   </div>
 </div>

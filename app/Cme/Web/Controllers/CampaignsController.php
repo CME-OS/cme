@@ -3,10 +3,10 @@ namespace Cme\Web\Controllers;
 
 use CmeData\CampaignData;
 use CmeData\MessageQueueData;
-use CmeKernel\Core\CmeDatabase;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Core\CmeMessage;
 use CmeKernel\Enums\CampaignPriority;
+use CmeKernel\Exceptions\InvalidDataException;
 use CmeKernel\Helpers\CampaignHelper;
 use CmeKernel\Helpers\ListHelper;
 use CmeKernel\Helpers\ListsSchemaHelper;
@@ -49,35 +49,61 @@ class CampaignsController extends BaseController
       case 2:
         $campaign = ($campaignId) ?
           CmeKernel::Campaign()->get($campaignId) : new CampaignData();
-        if(Request::isMethod('post'))
+        try
         {
-          $campaign->name    = Input::get('name');
-          $campaign->subject = Input::get('subject');
-          $campaign->from    = Input::get('from');
-          $campaign->listId  = Input::get('list_id');
-          $campaign->brandId = Input::get('brand_id');
-          $campaign->type    = Input::get('type');
-          if(Input::get('filters'))
+          if(Request::isMethod('post'))
           {
-            $campaign->filters = Input::get('filters');
+            $campaign->name    = Input::get('name');
+            $campaign->subject = Input::get('subject');
+            $campaign->from    = Input::get('from');
+            $campaign->listId  = Input::get('list_id');
+            $campaign->brandId = Input::get('brand_id');
+            $campaign->type    = Input::get('type');
+            if(Input::get('filters'))
+            {
+              $campaign->filters = Input::get('filters');
+            }
+            $campaign->id = CmeKernel::Campaign()->create($campaign);
+            Session::put('newCampaignId', $campaign->id);
           }
-          $campaign->id = CmeKernel::Campaign()->create($campaign);
-          Session::put('newCampaignId', $campaign->id);
-        }
 
-        $stepView = $this->_step2($campaign->id);
+          $stepView = $this->_step2($campaign->id);
+        }
+        catch(\Exception $e)
+        {
+          return Redirect::to('/campaigns/new')->with(
+            'formData',
+            [
+              'input'  => Input::all(),
+              'errors' => $campaign->getValidationErrors()
+            ]
+          );
+        }
         break;
       case 3:
         $campaign = CmeKernel::Campaign()->get($campaignId);
-        if($campaign)
+        try
         {
-          $campaign->htmlContent = Input::get('html_content');
-          CmeKernel::Campaign()->update($campaign);
-          $stepView = $this->_step3($campaign->id);
+          if($campaign)
+          {
+            $campaign->htmlContent = Input::get('html_content');
+            CmeKernel::Campaign()->update($campaign);
+            $stepView = $this->_step3($campaign->id);
+          }
+          else
+          {
+            $stepView = $this->_step1($campaign->id);
+          }
         }
-        else
+        catch(InvalidDataException $e)
         {
-          $stepView = $this->_step1($campaign->id);
+          return Redirect::to('/campaigns/new/2')->with(
+            'formData',
+            [
+              'input'  => Input::all(),
+              'errors' => $campaign->getValidationErrors()
+            ]
+          );
         }
         break;
       default:
@@ -101,6 +127,11 @@ class CampaignsController extends BaseController
     $data['brands'] = CmeKernel::Brand()->all();
     $data['lists']  = CmeKernel::EmailList()->all();
 
+    $data = array_merge(
+      $data,
+      Session::get('formData', ['input' => null, 'errors' => null])
+    );
+
     return View::make('campaigns.step1', $data);
   }
 
@@ -111,13 +142,28 @@ class CampaignsController extends BaseController
     $data['templates']    = CmeKernel::Template()->getKeyedListFor('name');
     $data['placeholders'] = $this->_getPlaceHolders($campaign->listId);
 
+    $data = array_merge(
+      $data,
+      Session::get('formData', ['input' => null, 'errors' => null])
+    );
+
     return View::make('campaigns.step2', $data);
   }
 
   private function _step3($campaignId)
   {
-    $data['campaign']      = CmeKernel::Campaign()->get($campaignId);
+    $campaign              = CmeKernel::Campaign()->get($campaignId);
+    $campaign->sendTime    = ((int)$campaign->sendTime) ? date(
+      'Y-m-d H:i:s',
+      $campaign->sendTime
+    ) : '';
+    $data['campaign']      = $campaign;
     $data['smtpProviders'] = CmeKernel::SmtpProvider()->all();
+
+    $data = array_merge(
+      $data,
+      Session::get('formData', ['input' => null, 'errors' => null])
+    );
 
     return View::make('campaigns.step3', $data);
   }
@@ -129,10 +175,22 @@ class CampaignsController extends BaseController
     $campaign->sendTime       = strtotime(Input::get('send_time'));
     $campaign->smtpProviderId = Input::get('smtp_provider_id');
 
-    CmeKernel::Campaign()->update($campaign);
-
-    Session::forget('newCampaignId');
-    return Redirect::to('/campaigns/preview/' . $campaign->id);
+    try
+    {
+      CmeKernel::Campaign()->update($campaign);
+      Session::forget('newCampaignId');
+      return Redirect::to('/campaigns/preview/' . $campaign->id);
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/campaigns/new/3')->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $campaign->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function edit($id)
@@ -148,6 +206,10 @@ class CampaignsController extends BaseController
       $data['placeholders']  = $this->_getPlaceHolders($campaign->listId);
       $data['filterData']    = $this->_getSegmentOptions($campaign->listId);
 
+      $data = array_merge(
+        $data,
+        Session::get('formData', ['input' => null, 'errors' => null])
+      );
       return View::make('campaigns.edit', $data);
     }
 
@@ -191,9 +253,22 @@ class CampaignsController extends BaseController
   public function update()
   {
     $data = CampaignData::hydrate(Input::all());
-    CmeKernel::Campaign()->update($data);
-
-    return Redirect::to('/campaigns/preview/' . $data->id);
+    try
+    {
+      $data->sendTime = strtotime($data->sendTime);
+      CmeKernel::Campaign()->update($data);
+      return Redirect::to('/campaigns/preview/' . $data->id);
+    }
+    catch(InvalidDataException $e)
+    {
+      return Redirect::to('/campaigns/edit/' . $data->id)->with(
+        'formData',
+        [
+          'input'  => Input::all(),
+          'errors' => $data->getValidationErrors()
+        ]
+      );
+    }
   }
 
   public function copy($id)

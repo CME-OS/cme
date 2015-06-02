@@ -39,7 +39,7 @@
 
                 <div class="col-md-4">
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['type'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-type">What type of campaign is this?</label>
                         <select name="type" id="campaign-type" class="form-control">
                             <option value="default">One Off - Send campaign once</option>
@@ -47,7 +47,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['brand_id'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-brand-id">Which Brand is this
                                                        campaign for?</label>
                         <select name="brand_id" id="campaign-brand-id"
@@ -59,7 +59,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['from'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-from">Send Campaign As:</label>
                         <input type="text" name="from" class="form-control"
                                id="campaign-from"
@@ -68,7 +68,7 @@
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['list_id'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-list-id">Which list should campaign
                                                       be sent to?</label>
                         <select name="list_id" id="campaign-list-id"
@@ -134,7 +134,7 @@
                         </table>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['send_priority'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-priority">Send Priority:</label>
                         <select name="send_priority" id="campaign-priority"
                                 class="form-control">
@@ -145,7 +145,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['send_time'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-send-time">When do you want to send
                                                         this campaign?</label>
 
@@ -159,7 +159,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group <?= isset($errors['smtp_provider_id'])? 'has-error has-feedback': '' ?>">
                         <label for="campaign-smtp-provider">SMTP Provider:</label>
                         <select name="smtp_provider_id" id="campaign-smtp-provider" class="form-control">
                             <option value="0">Use Default</option>

@@ -19,10 +19,10 @@
           <option value="4" <?= ($campaign->sendPriority == 4)? 'selected="selected"' : '' ?>>High</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="campaign-send-time">When do you want to send this campaign?</label>
+      <div class="form-group <?= isset($errors['send_time'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-send-time">When do you want to send this campaign? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['send_time'])? ' - '.$errors['send_time']->message: '' ?></span></label>
         <div id="datetimepicker" class="input-group date">
-          <input type="text" name="send_time" class="form-control" id="campaign-send-time" value="<?= ($campaign->sendTime)? date('Y-m-d H:i:s', $campaign->sendTime) : '' ?>">
+          <input type="text" name="send_time" class="form-control" id="campaign-send-time" value="<?= isset($input['send_time'])? $input['send_time'] : $campaign->sendTime ?>">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-time"></span>
           </span>

@@ -8,23 +8,26 @@
   <input type="hidden" name="step" value="2"/>
   <div class="row">
     <div class="col-md-12 well">
-      <div class="form-group">
-        <label for="campaign-type">What type of campaign is this?</label>
+      <div class="form-group <?= isset($errors['type'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-type">What type of campaign is this? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['type'])? ' - '.$errors['type']->message: '' ?></span></label>
         <select name="type" id="campaign-type" class="form-control">
           <option value="default">One Off - Send campaign once</option>
           <option value="rolling">Rolling - An ongoing campaign sent on a regular interval</option>
         </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['type'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="campaign-name">What is the name of this campaign?</label>
-        <input type="text" name="name" class="form-control" id="campaign-name" value="<?= $campaign->name ?>">
+      <div class="form-group <?= isset($errors['name'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-name">What is the name of this campaign? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['name'])? ' - '.$errors['name']->message: '' ?></span></label>
+        <input type="text" name="name" class="form-control" id="campaign-name" value="<?= isset($input['name'])? $input['name'] : $campaign->name ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['name'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="campaign-subject">What is the subject of this campaign?</label>
-        <input type="text" name="subject" class="form-control" id="campaign-subject" value="<?= $campaign->subject ?>">
+      <div class="form-group <?= isset($errors['subject'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-subject">What is the subject of this campaign? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['subject'])? ' - '.$errors['subject']->message: '' ?></span></label>
+        <input type="text" name="subject" class="form-control" id="campaign-subject" value="<?= isset($input['subject'])? $input['subject'] : $campaign->subject ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['subject'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="campaign-brand-id">Which Brand is this campaign for?</label>
+      <div class="form-group <?= isset($errors['brand_id'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-brand-id">Which Brand is this campaign for? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['brand_id'])? ' - '.$errors['brand_id']->message: '' ?></span></label>
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
@@ -33,12 +36,14 @@
             </option>
           <?php endforeach; ?>
         </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['brand_id'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
-        <label for="campaign-from">Send Campaign As:</label>
-        <input type="text" name="from" class="form-control" id="campaign-from" placeholder="<name> email@domain.com" value="<?= $campaign->from ?>">
+      <div class="form-group <?= isset($errors['from'])? 'has-error has-feedback': '' ?>">
+        <label for="campaign-from">Send Campaign As: <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['from'])? ' - '.$errors['from']->message: '' ?></span></label>
+        <input type="text" name="from" class="form-control" id="campaign-from" placeholder="<name> email@domain.com" value="<?= isset($input['from'])? $input['from'] : $campaign->from ?>">
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['from'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
-      <div class="form-group">
+      <div class="form-group <?= isset($errors['list_id'])? 'has-error has-feedback': '' ?>">
         <label for="campaign-list-id">Which list should campaign be sent to?</label>
         <select name="list_id" id="campaign-list-id" class="form-control">
           <option value="">SELECT</option>
@@ -48,6 +53,7 @@
             </option>
           <?php endforeach; ?>
         </select>
+        <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['list_id'])? '': 'hidden' ?>" aria-hidden="true"></span>
       </div>
       <div class="form-group" id="campaign-target-div" <?= (!$campaign->listId)? 'style="display: none;"' : '' ?>>
         <label for="campaign-target">Who do you want to?</label>

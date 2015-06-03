@@ -104,17 +104,17 @@
   function buildRows(data)
   {
     $('#subscribers-list tbody').remove();
-    $.each(data.subscribers, function(){
-      var s = this;
+    for(var i = 0; i < data.subscribers.length; i++)
+    {
       var row = '<tr>';
-      $.each(data.columns, function(){
-        var c = this.name;
-        row += '<td>' + s[c] + '</td>';
-      });
-      row += '<td><a href="/lists/<?= $list->id ?>/delete-subscriber/' + s['id'] +'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></td>';
+      for(var x = 0; x < data.columns.length; x++)
+      {
+        row += '<td>' + data.subscribers[i][data.columns[x]['name']] + '</td>';
+      }
+      row += '<td><a href="/lists/<?= $list->id ?>/delete-subscriber/' + data.subscribers[i]['id'] +'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></td>';
       row += '</tr>';
       $('#subscribers-list').append(row);
-    })
+    }
   }
 
   $('#list-search').on('keyup', function(){

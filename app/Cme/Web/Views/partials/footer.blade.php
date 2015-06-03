@@ -42,25 +42,41 @@
       getFilterData(listIdVal);
     }
     var columns = window.cme.filterdata.columns;
-    generateSelect2('.filter-field', columns);
+    generateSelect('.filter-field', columns);
     $('.campaign-custom-target').show();
   }
 
-  function generateSelect(parentRow, target, data)
+  function generateSelect(/**parentRow, target, data **/)
   {
-    var targetX = parentRow.find(target);
-    targetX.empty();
-    buildSelectOptions(targetX, [{value: "", text : "Select"}]);
-    buildSelectOptions(targetX, data);
-    targetX.show();
-  }
+    if(arguments.length >=2 && arguments.length <= 3)
+    {
+      var parentRow = null;
+      var target = arguments[0];
+      var data = arguments[1];
+      if(arguments.length > 2)
+      {
+        parentRow = arguments[0];
+        target = arguments[1];
+        data = arguments[2];
+      }
 
-  function generateSelect2(target, data)
-  {
-    $(target).empty();
-    buildSelectOptions(target, [{value: "", text : "Select"}]);
-    buildSelectOptions(target, data);
-    $(target).show();
+      if(parentRow != null)
+      {
+        target = parentRow.find(target);
+      }
+      else
+      {
+        target = $(target)
+      }
+      target.empty();
+      buildSelectOptions(target, [{value: "", text : "Select"}]);
+      buildSelectOptions(target, data);
+      target.show();
+    }
+    else
+    {
+      throw "Incorrect number of parameters";
+    }
   }
 
   function buildSelectOptions(target, data)

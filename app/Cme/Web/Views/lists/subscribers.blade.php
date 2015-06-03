@@ -97,7 +97,7 @@
       'list_id' : listId,
       'q' : q
     };
-    $.post('/lsearch', postData, function(data){
+    return $.post('/lsearch', postData, function(data){
       console.log(data);
 
       buildRows(data);
@@ -109,27 +109,30 @@
     $('#subscribers-list tbody').remove();
     $.each(data.subscribers, function(){
       var s = this;
-      var row = $('<tr></tr>');
+      var row = '<tr>';
       $.each(data.columns, function(){
         var c = this.name;
-        var column = $('<td>' + s[c] + '</td>');
-        row.append(column);
+        row += '<td>' + s[c] + '</td>';
       });
-      column = $(
-              '<td><a href="/lists/<?= $list->id ?>/delete-subscriber/' + s['id'] +'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></td>'
-      );
-      row.append(column);
+      row += '<td><a href="/lists/<?= $list->id ?>/delete-subscriber/' + s['id'] +'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></td>';
+      row += '</tr>';
       $('#subscribers-list').append(row);
     })
   }
 
   $('#list-search').on('keyup', function(){
     var v = $(this).val();
-    if(v != "")
+    if(v.length >= 2)
     {
-      search(<?= $list->id ?>, v);
+      if(window.cme.searchTimeout)
+      {
+        clearTimeout(window.cme.searchTimeout);
+      }
+      window.cme.searchTimeout = setTimeout(function(){
+        search(<?= $list->id ?>, v)
+      }, 1000);
     }
-    else
+    else if(v == "")
     {
       fetchSubscribers(<?= $list->id ?>, <?= $page ?>);
     }

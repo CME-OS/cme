@@ -86,7 +86,6 @@
       'page' : page
     };
     $.post('/ls', postData, function(data){
-      console.log(data);
       buildRows(data);
     });
   }
@@ -98,8 +97,6 @@
       'q' : q
     };
     return $.post('/lsearch', postData, function(data){
-      console.log(data);
-
       buildRows(data);
     });
   }

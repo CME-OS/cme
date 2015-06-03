@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header"><?= $list->name ?> List</h1>
+<h1 class="page-header"><?= $list->name ?> List <small>(<?= number_format($list->getSize()) ?> subscribers)</small></h1>
 <?php if($subscribers): ?>
 <div class="row alert alert-info" style="border-radius: 0;">
   <div class="col-md-12">

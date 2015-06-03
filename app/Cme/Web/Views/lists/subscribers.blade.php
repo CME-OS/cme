@@ -119,12 +119,12 @@
 
   $('#list-search').on('keyup', function(){
     var v = $(this).val();
+    if(window.cme.searchTimeout)
+    {
+      clearTimeout(window.cme.searchTimeout);
+    }
     if(v.length >= 2)
     {
-      if(window.cme.searchTimeout)
-      {
-        clearTimeout(window.cme.searchTimeout);
-      }
       window.cme.searchTimeout = setTimeout(function(){
         search(<?= $list->id ?>, v)
       }, 1000);

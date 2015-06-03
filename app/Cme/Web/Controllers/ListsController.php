@@ -11,6 +11,7 @@ use CmeKernel\Helpers\ListHelper;
 use CmeKernel\Helpers\ListsSchemaHelper;
 use \Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Paginator;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\View;
 
 class ListsController extends BaseController
 {
+  private $_perPage = 500;
+
   public function index()
   {
     $data['lists'] = CmeKernel::EmailList()->all();
@@ -115,34 +118,85 @@ class ListsController extends BaseController
   {
     if(CmeKernel::EmailList()->exists($id))
     {
-      $page        = Input::get('page', 1);
-      $perPage     = 1000;
-      $offset      = ($page - 1) * $perPage;
-      $subscribers = CmeKernel::EmailList()->getSubscribers(
-        $id,
-        $offset,
-        $perPage
-      );
-
+      $page = Input::get('page', 1);
       Paginator::setViewName('pagination::simple');
-      $subscriberTotal     = CmeDatabase::conn()
+      $subscriberTotal = CmeDatabase::conn()
         ->table(ListHelper::getTable($id))
         ->count();
-      $pager               = Paginator::make(
-        $subscribers,
+      $pager           = Paginator::make(
+        [],
         $subscriberTotal,
-        $perPage
+        $this->_perPage
       );
-      $data['pager']       = $pager;
-      $data['list']        = CmeKernel::EmailList()->get($id);
-      $data['columns']     = CmeKernel::EmailList()->getColumns($id);
-      $data['subscribers'] = $subscribers;
+      $data['page']    = $page;
+      $data['pager']   = $pager;
+      $data['list']    = CmeKernel::EmailList()->get($id);
+
+      $data['columns']     = $this->_getListColumns($id);
+      $data['subscribers'] = $subscriberTotal > 0;
       return View::make('lists.subscribers', $data);
     }
     else
     {
       return Redirect::to('/lists')->with('msg', 'List does not exist');
     }
+  }
+
+  public function subscribers()
+  {
+    $listId              = Input::get('list_id');
+    $page                = Input::get('page', 1);
+    $data['subscribers'] = $this->_subscribers($listId, $page, $this->_perPage);
+    $data['columns']     = $this->_getListColumns($listId);
+    return Response::json($data);
+  }
+
+  public function search()
+  {
+    $listId = Input::get('list_id');
+    $query  = Input::get('q');
+    $result = CmeDatabase::conn()
+      ->table(ListHelper::getTable($listId))
+      ->whereRaw("email LIKE '$query%'")
+      ->get();
+
+    $subscribers = [];
+    foreach($result as $row)
+    {
+      $subscribers[] = SubscriberData::hydrate($row);
+    }
+
+    $data['subscribers'] = $subscribers;
+    $data['columns']     = $this->_getListColumns($listId);
+    return $data;
+  }
+
+  private function _subscribers($listId, $page, $perPage)
+  {
+    $subscribers = [];
+    if(CmeKernel::EmailList()->exists($listId))
+    {
+      $offset      = ($page - 1) * $perPage;
+      $subscribers = CmeKernel::EmailList()->getSubscribers(
+        $listId,
+        $offset,
+        $perPage
+      );
+    }
+    return $subscribers;
+  }
+
+  private function _getListColumns($listId)
+  {
+    $tempColumns = CmeKernel::EmailList()->getColumns($listId);
+    $columns     = [];
+    foreach($tempColumns as $k => $c)
+    {
+      $x         = camel_case($c);
+      $columns[] = ['name' => $x];
+    }
+
+    return $columns;
   }
 
   public function edit($id)

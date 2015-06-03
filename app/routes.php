@@ -92,6 +92,8 @@ Route::group(['before' => 'auth'], function(){
     Route::post('/ds', 'Cme\Web\Controllers\CampaignsController@getDefaultSender');
     Route::post('/so', 'Cme\Web\Controllers\CampaignsController@getSegmentOptions');
     Route::post('/tc', 'Cme\Web\Controllers\CampaignsController@getTemplate');
+    Route::post('/ls', 'Cme\Web\Controllers\ListsController@subscribers');
+    Route::post('/lsearch', 'Cme\Web\Controllers\ListsController@search');
 });
 
 //login

@@ -16,10 +16,10 @@
   text-transform: capitalize; }
 
 .navbar-default {
-  background: #454652; }
+  background: #426A90; }
   .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-default .navbar-nav > .active > a:hover,
   .navbar-default .navbar-default .navbar-nav > .active > a:focus {
-    background: #454652;
+    background: #426A90;
     color: white; }
   .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-default .navbar-nav > li > a:focus {
     color: white; }

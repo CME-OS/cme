@@ -228,7 +228,7 @@ return  [
     'username' => '[USERNAME]',
     'password' => '[PASSWORD]',
   ],
-  'key' => [KEY]
+  'key' => '[KEY]'
 ];
 ";
     return $template;

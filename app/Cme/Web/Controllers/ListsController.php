@@ -190,10 +190,9 @@ class ListsController extends BaseController
   {
     $tempColumns = CmeKernel::EmailList()->getColumns($listId);
     $columns     = [];
-    foreach($tempColumns as $k => $c)
+    foreach($tempColumns as $c)
     {
-      $x         = camel_case($c);
-      $columns[] = ['name' => $x];
+      $columns[] = ['name' => camel_case($c)];
     }
 
     return $columns;

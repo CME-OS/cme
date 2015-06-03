@@ -163,7 +163,7 @@ class ListsController extends BaseController
     $subscribers = [];
     foreach($result as $row)
     {
-      $subscribers[] = SubscriberData::hydrate($row);
+      $subscribers[] = SubscriberData::hydrate($row, false);
     }
 
     $data['subscribers'] = $subscribers;

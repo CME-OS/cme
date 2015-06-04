@@ -81,7 +81,7 @@ class InstallerHelper
     foreach($classes as $installClass)
     {
       $installClass = "Cme\\Install\\" . $installClass;
-      $m              = new $installClass;
+      $m            = new $installClass;
       if($m instanceof InstallTable)
       {
         $m->up();
@@ -97,7 +97,7 @@ class InstallerHelper
     foreach($classes as $installClass)
     {
       $installClass = "Cme\\Install\\" . $installClass;
-      $m              = new $installClass;
+      $m            = new $installClass;
       if($m instanceof InstallTable)
       {
         $m->down();
@@ -138,16 +138,16 @@ class InstallerHelper
     );
 
     self::$_key = Str::random(32);
-    $template = self::_getEvnFileTemplate();
-    $template = str_replace('[DOMAIN]', self::$domain, $template);
-    $template = str_replace('[HOST]', self::$dbHost, $template);
-    $template = str_replace('[DATABASE]', self::$dbName, $template);
-    $template = str_replace('[USERNAME]', self::$dbUser, $template);
-    $template = str_replace('[PASSWORD]', self::$dbPassword, $template);
-    $template = str_replace('[AWS_KEY]', self::$awsKey, $template);
-    $template = str_replace('[AWS_SECRET]', self::$awsSecret, $template);
-    $template = str_replace('[AWS_REGION]', self::$awsRegion, $template);
-    $template = str_replace('[KEY]', self::$_key, $template);
+    $template   = self::_getEvnFileTemplate();
+    $template   = str_replace('[DOMAIN]', self::$domain, $template);
+    $template   = str_replace('[HOST]', self::$dbHost, $template);
+    $template   = str_replace('[DATABASE]', self::$dbName, $template);
+    $template   = str_replace('[USERNAME]', self::$dbUser, $template);
+    $template   = str_replace('[PASSWORD]', self::$dbPassword, $template);
+    $template   = str_replace('[AWS_KEY]', self::$awsKey, $template);
+    $template   = str_replace('[AWS_SECRET]', self::$awsSecret, $template);
+    $template   = str_replace('[AWS_REGION]', self::$awsRegion, $template);
+    $template   = str_replace('[KEY]', self::$_key, $template);
 
     file_put_contents($envFile, $template);
     self::_reloadEnvConfig($env);
@@ -232,5 +232,55 @@ return  [
 ];
 ";
     return $template;
+  }
+
+  private static function _getBackgroundProcesses()
+  {
+    $processes = [
+      'list-import'    => 'ListImporter',
+      'list-refresh'   => 'ListRefresher',
+      'queue-messages' => 'QueueMessages'
+    ];
+
+    return $processes;
+  }
+
+  public static function generateCrontabConfig()
+  {
+    $config = "";
+    foreach(self::_getBackgroundProcesses() as $p)
+    {
+      $config .= "* * * * * /usr/bin/php " . app_path() . "/artisan " . $p . " inst1" . PHP_EOL;
+    }
+    //app_path();
+    return $config;
+  }
+
+  public static function generateMonitConfig()
+  {
+    $config = "";
+    foreach(self::_getBackgroundProcesses() as $p => $className)
+    {
+      $config .= "check process " . $className . "-Inst1" . PHP_EOL;
+      $config .= "\t" . 'with pidfile "' . storage_path()
+        . '/monit/Cme/Cli/' . $className . '/inst1.pid"' . PHP_EOL;
+      $config .= "\t" . "group CME" . PHP_EOL;
+      $config .= "\t" . 'start program = "/usr/bin/php ' . app_path()
+        . '/artisan --env=production cme:' . $p . ' inst1"' . PHP_EOL;
+      $config .= "\t" . 'stop program = "/bin/bash -c \'/bin/kill `/bin/cat '
+        . storage_path() . '/monit/Cme/Cli/' . $className . '/inst1.pid`\'"' . PHP_EOL;
+      $config .= "\t" . "if mem > 5% for 3 cycles then alert" . PHP_EOL;
+      $config .= "\t" . "if mem > 10% for 5 cycles then restart" . PHP_EOL;
+      $config .= PHP_EOL . PHP_EOL;
+    }
+
+    return $config;
+  }
+
+  public static function hostMeetsRequirements()
+  {
+    return !(PHP_VERSION >= '5.4.0') && extension_loaded('mcrypt')
+    && extension_loaded('mbstring') && extension_loaded('curl')
+    && is_writable(storage_path());
   }
 }

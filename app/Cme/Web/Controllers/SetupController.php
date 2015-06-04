@@ -15,7 +15,10 @@ class SetupController extends BaseController
     {
       return View::make('setup.installed');
     }
-    return View::make('setup.step1');
+    $data['installReady'] = InstallerHelper::hostMeetsRequirements();
+    $data['crontab']      = InstallerHelper::generateCrontabConfig();
+    $data['monit']        = InstallerHelper::generateMonitConfig();
+    return View::make('setup.step1', $data);
   }
 
   public function install()

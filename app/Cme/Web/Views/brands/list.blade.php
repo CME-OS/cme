@@ -17,13 +17,18 @@
         <table class="table table-striped table-hover">
           <thead>
           <tr>
-            <th>Name</th>
+            <th></th>
             <th></th>
           </tr>
           </thead>
           <?php foreach($brands as $brand): ?>
-            <tr>
-              <td>
+            <tr style="height:100px; padding:10px;">
+              <td width="200">
+                <?php if($brand->brandLogo != ""): ?>
+                <div style="width:100px; height:50px; overflow:hidden; padding:10px 0;">
+                  <img src="<?= $brand->brandLogo ?>" alt="" width="100%"/>
+                </div>
+                <?php endif; ?>
                 <a href="{{ URL::route('brands.campaigns', $brand->id) }}">
                   <strong><?= $brand->brandName; ?></strong>
                 </a>

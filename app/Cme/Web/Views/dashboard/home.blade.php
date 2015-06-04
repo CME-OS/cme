@@ -50,18 +50,28 @@
   @else
   <h1>Dashboard</h1>
   <?php ?>
-<div class="row">
-  <?php foreach($totalStats as $event): ?>
-  <div class="col-md-3">
-    <div class="well text-center <?= $event->event_type?>-well">
-        <div style="font-size:30px;"><?= $event->total; ?></div>
-        <span>Total <?= ucwords($event->event_type) ?></span>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="pull-left"><strong>Overview</strong></div>
+        <div class="pull-right">This Month</div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="panel-body">
+        <div class="row" style="color:#fff;">
+          <?php foreach($totalStats as $event): ?>
+          <div class="col-md-3">
+            <div class="well text-center <?= $event->event_type?>-well">
+              <div style="font-size:30px;"><?= $event->total; ?></div>
+              <span>Total <?= ucwords($event->event_type) ?></span>
 
+            </div>
+          </div>
+          <?php endforeach; ?>
+
+        </div>
+      </div>
     </div>
-  </div>
-  <?php endforeach; ?>
 
-</div>
     <?php
       $rows = array_chunk(array_keys($stats), 2);
       foreach($rows as $rowId => $data):

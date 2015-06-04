@@ -253,7 +253,7 @@ return  [
       for($i = 0; $i < $instances; $i++)
       {
         $x = $i + 1;
-        $config .= "* * * * * /usr/bin/php " . app_path()
+        $config .= "* * * * * /usr/bin/php " . base_path()
           . "/artisan " . $p . " inst" . $x . PHP_EOL;
       }
     }
@@ -273,7 +273,7 @@ return  [
         $config .= "\t" . 'with pidfile "' . storage_path()
           . '/monit/Cme/Cli/' . $className . '/inst'.$x.'.pid"' . PHP_EOL;
         $config .= "\t" . "group CME" . PHP_EOL;
-        $config .= "\t" . 'start program = "/usr/bin/php ' . app_path()
+        $config .= "\t" . 'start program = "/usr/bin/php ' . base_path()
           . '/artisan --env=production cme:' . $p . ' inst'.$x.'"' . PHP_EOL;
         $config .= "\t" . 'stop program = "/bin/bash -c \'/bin/kill `/bin/cat '
           . storage_path(
@@ -291,6 +291,6 @@ return  [
   {
     return (PHP_VERSION >= '5.4.0') && extension_loaded('mcrypt')
     && extension_loaded('mbstring') && extension_loaded('curl')
-    && is_writable(storage_path());
+    && is_writable(storage_path()) && is_writable(base_path());
   }
 }

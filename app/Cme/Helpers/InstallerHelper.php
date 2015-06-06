@@ -6,12 +6,11 @@
 namespace Cme\Helpers;
 
 use Cme\Install\InstallTable;
+use CmeData\UserData;
+use CmeKernel\Core\CmeKernel;
 use Illuminate\Config\EnvironmentVariables;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class InstallerHelper
@@ -58,7 +57,7 @@ class InstallerHelper
       [app_path(), 'Cme', 'Install', '']
     );
 
-    $files   = File::glob($installPath . '*.php');
+    $files   = glob($installPath . '*.php');
     $classes = [];
     foreach($files as $file)
     {
@@ -111,12 +110,10 @@ class InstallerHelper
    */
   public static function createUser($username, $password)
   {
-    $data['email']      = $username;
-    $data['password']   = Hash::make($password);
-    $data['created_at'] = date('Y-m-d H:i:s');
-    $data['updated_at'] = date('Y-m-d H:i:s');
-    $data['active']     = 1;
-    DB::table('users')->insert($data);
+    $user           = new UserData();
+    $user->email    = $username;
+    $user->password = $password;
+    CmeKernel::User()->create($user);
   }
 
   /**
@@ -269,15 +266,15 @@ return  [
       for($i = 0; $i < $instances; $i++)
       {
         $x = $i + 1;
-        $config .= "check process " . $className . "-Inst".$x . PHP_EOL;
+        $config .= "check process " . $className . "-Inst" . $x . PHP_EOL;
         $config .= "\t" . 'with pidfile "' . storage_path()
-          . '/monit/Cme/Cli/' . $className . '/inst'.$x.'.pid"' . PHP_EOL;
+          . '/monit/Cme/Cli/' . $className . '/inst' . $x . '.pid"' . PHP_EOL;
         $config .= "\t" . "group CME" . PHP_EOL;
         $config .= "\t" . 'start program = "/usr/bin/php ' . base_path()
-          . '/artisan --env=production cme:' . $p . ' inst'.$x.'"' . PHP_EOL;
+          . '/artisan --env=production cme:' . $p . ' inst' . $x . '"' . PHP_EOL;
         $config .= "\t" . 'stop program = "/bin/bash -c \'/bin/kill `/bin/cat '
           . storage_path(
-          ) . '/monit/Cme/Cli/' . $className . '/inst'.$x.'.pid`\'"' . PHP_EOL;
+          ) . '/monit/Cme/Cli/' . $className . '/inst' . $x . '.pid`\'"' . PHP_EOL;
         $config .= "\t" . "if mem > 5% for 3 cycles then alert" . PHP_EOL;
         $config .= "\t" . "if mem > 10% for 5 cycles then restart" . PHP_EOL;
         $config .= PHP_EOL . PHP_EOL;

@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * check if host meets requirements to run CME.
+ * Redirect to requirement checker if not. This way we avoid running through
+ * the entire framework and breaking things
+ **/
+$cmeReady = (PHP_VERSION >= '5.4.0') && extension_loaded('mcrypt')
+&& extension_loaded('mbstring') && extension_loaded('curl')
+&& is_writable('../app/storage') && is_writable('../');
+
+if(!$cmeReady)
+{
+  include_once 'setup.php';
+  die;
+}
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

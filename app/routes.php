@@ -108,8 +108,8 @@ Route::get('/track/click/{source}/{redirect}', 'Cme\Web\Controllers\TrackingCont
 
 //setup
 Route::get('/setup', 'Cme\Web\Controllers\SetupController@index');
-Route::get('/setup/{step}', 'Cme\Web\Controllers\SetupController@index');
 Route::get('/setup/skip', 'Cme\Web\Controllers\SetupController@skip');
+Route::get('/setup/{step}', 'Cme\Web\Controllers\SetupController@index');
 Route::post('/setup/install', 'Cme\Web\Controllers\SetupController@install');
 Route::get('/installed', 'Cme\Web\Controllers\SetupController@installed');
 

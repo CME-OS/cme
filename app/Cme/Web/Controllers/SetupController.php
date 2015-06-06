@@ -16,7 +16,7 @@ class SetupController extends BaseController
     {
       return Redirect::to('/installed');
     }
-    $step = Route::input('step', 1);
+    $step = Route::input('step', 2);
     if($step == 1 || ($step > 1 && InstallerHelper::hostMeetsRequirements()))
     {
       switch($step)

@@ -47,7 +47,6 @@ $path = Request::path();
             )->email ?> <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="/logout" class="navbar-link">Logout</a></li>
-            <li><a href="#">Notifications <span class="badge" style="background-color:red;">1</span></a></li>
           </ul>
         </li>
       </ul>

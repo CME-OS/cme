@@ -56,7 +56,7 @@ $installReady = InstallerHelper::hostMeetsRequirements();
             <td>PHP Version >=5.40</td><td class="<?= (PHP_VERSION >= '5.4.0')? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= (PHP_VERSION >= '5.4.0')? 'OK ('.PHP_VERSION.')' : PHP_VERSION; ?></td>
           </tr>
           <tr>
-            <td>php_mcrypt Module</td><td class="<?= !extension_loaded('mcrypt')? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= !extension_loaded('mcrypt')? 'OK': 'Missing' ?></td>
+            <td>php_mcrypt Module</td><td class="<?= extension_loaded('mcrypt')? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= extension_loaded('mcrypt')? 'OK': 'Missing' ?></td>
           </tr>
           <tr>
             <td>php_mbstring Module</td><td class="<?= extension_loaded('mbstring')? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= extension_loaded('mbstring')? 'OK': 'Missing' ?></td>
@@ -65,7 +65,10 @@ $installReady = InstallerHelper::hostMeetsRequirements();
             <td>php_curl Module</td><td class="<?= extension_loaded('curl')? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= extension_loaded('curl')? 'OK': 'Missing' ?></td>
           </tr>
           <tr>
-            <td>app/storage is writable</td><td class="<?= is_writable(storage_path())? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= is_writable(storage_path())? 'OK': 'not writable' ?></td>
+            <td><?= base_path() ?> is writable</td><td class="<?= is_writable(base_path())? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= is_writable(base_path())? 'OK': 'not writable' ?></td>
+          </tr>
+          <tr>
+            <td><?= storage_path() ?> is writable</td><td class="<?= is_writable(storage_path())? 'text-success': 'text-danger' ?>" style="font-weight: bold;"><?= is_writable(storage_path())? 'OK': 'not writable' ?></td>
           </tr>
         </table>
         <?php if($installReady): ?>

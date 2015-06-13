@@ -74,7 +74,7 @@ class ListsController extends BaseController
   public function addSubscriber()
   {
     $listId         = (int)Input::get('id');
-    $subscriberData = SubscriberData::hydrate(Input::all());
+    $subscriberData = SubscriberData::hydrate(Input::all(), false);
     try
     {
       $added = CmeKernel::EmailList()->addSubscriber(

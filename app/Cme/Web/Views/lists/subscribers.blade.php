@@ -4,8 +4,9 @@
 <?php if($subscribers): ?>
 <div class="row alert alert-info" style="border-radius: 0;">
   <div class="col-md-12">
-    <p style="font-weight: bold; font-size:18px;">Import more subscribers</p>
-    <div class="row">
+    <a href="/lists/new-subscriber/<?= $list->id ?>" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add a subscriber</a>
+    <a onclick="$('#import-forms').slideToggle();" class="btn btn-primary">Import more subscribers</a>
+    <div class="row" id="import-forms" style="display:none; margin-top:10px;">
       <div class="col-md-5">
         <form class="form-inline" role="form" action="/lists/import/api" method="post">
           <div class="form-group">

@@ -59,7 +59,7 @@ class ListsController extends BaseController
     if($list)
     {
       $table           = ListHelper::getTable($id);
-      $data['id']      = $id;
+      $data['list']      = $list;
       $data['columns'] = ListsSchemaHelper::getColumnNames($table);
       $data            = array_merge(
         $data,

@@ -22,7 +22,6 @@
               </td>
               <td>
                 <div class="pull-right">
-                <a href="{{ URL::route('lists.new-subscriber', $list->id) }}" class="btn btn-default" title="Add Subscriber"><span class="glyphicon glyphicon-plus"></span></a>
                 <a href="{{ URL::route('lists.edit', $list->id) }}" class="btn btn-default" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
                 <a href="{{ URL::route('lists.delete', $list->id) }}" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
                 </div>

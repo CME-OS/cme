@@ -1,14 +1,12 @@
 @extends('layouts.default')
 @section('content')
-<h1 class="page-header">Lists
-  <small>Manage your lists</small>
-</h1>
+<h1 class="page-header"><?= $list->name ?> List <small>(<?= number_format($list->getSize()) ?> subscribers)</small></h1>
 <div class="container">
 <div class="row">
   <div class="col-md-12 well">
     <h2>Add a Subscriber</h2>
     <form role="form" action="/lists/add-subscriber" method="post">
-      <input type="hidden" name="id" value="<?= $id ?>"/>
+      <input type="hidden" name="id" value="<?= $list->id ?>"/>
       <div class="form-group <?= isset($errors['email'])? 'has-error has-feedback': '' ?>">
         <label for="subscriber-email">Email <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['email'])? ' - '.$errors['email']->message: '' ?></span></label>
         <input type="text" name="email" class="form-control" id="subscriber-email" placeholder="">

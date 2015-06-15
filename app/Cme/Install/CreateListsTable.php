@@ -18,7 +18,7 @@ class CreateListsTable extends InstallTable
 		Schema::create($this->table, function(Blueprint $table)
 		{
 			$table->integer('id', true);
-			$table->string('name', 225)->default('0');
+			$table->string('name', 225);
 			$table->string('description', 225)->nullable();
 			$table->string('endpoint', 225)->nullable();
 			$table->integer('refresh_interval')->nullable();

@@ -33,19 +33,21 @@
 
   @if(!$stats)
 
-  <div class="row">
-    <div class="col-sm-12">
-      <h1>Welcome to CME</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        </div>
+        <h1>Welcome to CME</h1>
 
-      <p>
-        CME stands for Campaign Made Easy. CME allows you to manage
-        and schedule campaigns across all your brands.
-        CME is designed for high volume campaigns and is very
-        robust
-      </p>
+        <p>
+          CME stands for Campaign Made Easy. CME allows you to manage
+          and schedule campaigns across all your brands.
+          CME is designed for high volume campaigns and is very
+          robust
+        </p>
+      </div>
     </div>
   </div>
-
 
   @else
   <h1>Dashboard</h1>

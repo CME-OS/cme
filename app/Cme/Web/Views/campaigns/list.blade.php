@@ -1,15 +1,11 @@
 @extends('layouts.default')
 @section('content')
-  <h1>Campaigns <small>Manage your campaigns</small></h1>
-
-  <hr>
-
+  <h1 class="page-header">Campaigns <small>Manage your campaigns</small></h1>
   <div class="row">
     <div class="col-sm-12">
 
       @if($campaigns)
         <p><a href="/campaigns/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a Campaign</a></p>
-
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -49,6 +45,10 @@
       @else
         <div class="alert alert-info">
           <p>You do not have any campaigns in CME. <a href="/campaigns/new">Create your first campaign now</a></p>
+
+
+          <?= "list count: ".$listCount; ?>
+
         </div>
       @endif
 

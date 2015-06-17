@@ -28,6 +28,7 @@
       </div>
       <div class="form-group <?= isset($errors['brand_id'])? 'has-error has-feedback': '' ?>">
         <label for="campaign-brand-id">Which Brand is this campaign for? <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['brand_id'])? ' - '.$errors['brand_id']->message: '' ?></span></label>
+        <div class="pull-right"><strong><a href="#" data-toggle="modal" data-target="#addBrandModal">Add a brand</a></strong></div>
         <select name="brand_id" id="campaign-brand-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($brands as $brand): ?>
@@ -45,6 +46,7 @@
       </div>
       <div class="form-group <?= isset($errors['list_id'])? 'has-error has-feedback': '' ?>">
         <label for="campaign-list-id">Which list should campaign be sent to?</label>
+        <div class="pull-right"><strong><a href="#" data-toggle="modal" data-target="#addListModal">Add a list</a></strong></div>
         <select name="list_id" id="campaign-list-id" class="form-control">
           <option value="">SELECT</option>
           <?php foreach($lists as $list): ?>
@@ -133,6 +135,37 @@
         </td>
       </tr>
     </table>
+  </div>
+</div>
+
+
+<!--- modals -->
+
+<div class="modal fade" id="addBrandModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">New Brand</h4>
+      </div>
+      <div class="modal-body">
+        @include('brands.addform')
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">New List</h4>
+      </div>
+      <div class="modal-body">
+        @include('lists.addform')
+      </div>
+    </div>
   </div>
 </div>
 

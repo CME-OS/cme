@@ -59,7 +59,7 @@ class ListsController extends BaseController
     if($list)
     {
       $table           = ListHelper::getTable($id);
-      $data['list']      = $list;
+      $data['list']    = $list;
       $data['columns'] = ListsSchemaHelper::getColumnNames($table);
       $data            = array_merge(
         $data,
@@ -272,6 +272,7 @@ class ListsController extends BaseController
         $importRequest->listId = $listId;
         $importRequest->type   = $type;
         $importRequest->source = $source;
+        $importRequest->time   = time();
         CmeKernel::EmailList()->import($importRequest);
       }
 

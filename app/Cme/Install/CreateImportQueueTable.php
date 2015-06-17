@@ -22,6 +22,7 @@ class CreateImportQueueTable extends InstallTable
 			$table->enum('type', array('api','csv','file'));
 			$table->string('source', 225)->nullable();
 			$table->string('locked_by', 225)->nullable();
+			$table->integer('time')->nullable()->default(0);
 		});
 	}
 

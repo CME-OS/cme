@@ -1,38 +1,36 @@
 @extends('layouts.default')
 @section('content')
 <h1 class="page-header"><?= $list->name ?> List <small>(<?= number_format($list->getSize()) ?> subscribers)</small></h1>
-<?php if($subscribers): ?>
 <div class="row alert alert-info" style="border-radius: 0;">
   <div class="col-md-12">
     <a href="/lists/new-subscriber/<?= $list->id ?>" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add a subscriber</a>
-    <a onclick="$('#import-forms').slideToggle();" class="btn btn-primary">Import more subscribers</a>
+    <a onclick="$('#import-forms').slideToggle();" class="btn btn-primary"><?= ($subscribers)? "Import more subscribers" : "Import subscribers" ?></a>
     <div class="row" id="import-forms" style="display:none; margin-top:10px;">
-      <div class="col-md-5">
-        <form class="form-inline" role="form" action="/lists/import/api" method="post">
+      <div class="col-md-3">
+        <form class="form-inline" role="form" action="/lists/import/api" method="post" style="padding:10px;">
           <div class="form-group">
             <input type="hidden" name="listId" value="<?= $list->id ?>">
             <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php" value="<?= $list->endpoint ?>">
           </div>
-          <button type="submit" class="btn btn-default">Import From API</button>
+          <button type="submit" class="btn btn-success pull-right">Import From API</button>
         </form>
-      </div>
-      <div class="col-md-5">
-        <form class="form-inline" role="form" action="/lists/import/csv" method="post" enctype="multipart/form-data">
+        <form class="form-inline" role="form" action="/lists/import/csv" method="post" enctype="multipart/form-data" style="padding:10px; margin-top:5px; border-top:1px solid #ccc;">
           <input type="hidden" name="listId" value="<?= $list->id ?>">
           <div class="form-group">
             <input type="file" name="listFile" id="list-csv">
           </div>
-          <button type="submit" class="btn btn-default">Import From CSV</button>
+          <button type="submit" class="btn btn-info pull-right">Import From CSV</button>
+          <div class="clearfix"></div>
         </form>
       </div>
-      <div class="col-md-offset-2"></div>
+      <div class="col-md-offset-9">
+      </div>
     </div>
   </div>
 </div>
-<?php endif; ?>
 <div class="row">
   <div class="col-md-12">
-    <?php if($subscribers): ?>
+
       <div class="row">
         <div class="col-md-10">
           <form action="" style="margin-top:20px;">
@@ -52,30 +50,7 @@
           <th></th>
         </tr>
         </thead>
-
       </table>
-    <?php else: ?>
-      <div class="alert alert-info">
-        <p>You do not have any subscribers in <?= $list->name ?> list</p>
-      </div>
-      <h2>Import From API</h2>
-      <form role="form" action="/lists/import/api" method="post">
-        <div class="form-group">
-          <input type="hidden" name="listId" value="<?= $list->id ?>">
-          <input type="text" name="endpoint" class="form-control" id="brand-name" placeholder="http://domain.com/list.php" value="<?= $list->endpoint ?>">
-        </div>
-        <button type="submit" class="btn btn-default">Import</button>
-      </form>
-      <h2>Import From CSV</h2>
-      <form role="form" action="/lists/import/csv" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="listId" value="<?= $list->id ?>">
-        <div class="form-group">
-          <label for="list-csv">CSV File</label>
-          <input type="file" name="listFile" id="list-csv">
-        </div>
-        <button type="submit" class="btn btn-default">Import</button>
-      </form>
-    <?php endif; ?>
   </div>
 </div>
 <script>

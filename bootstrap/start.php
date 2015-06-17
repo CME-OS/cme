@@ -37,7 +37,7 @@ $env = $app->detectEnvironment(function()
     }
     elseif(!$env)
     {
-      $env = 'development';
+      $env = 'production';
     }
 
     return $env;

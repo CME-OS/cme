@@ -38,11 +38,20 @@ class CreateUser extends CmeCommand
    */
   public function fire()
   {
-    $username = $this->ask("Username:", "admin");
+    $username = $this->ask("Username:");
     $password = $this->secret("Password:");
 
-    InstallerHelper::createUser($username, $password);
-
-    $this->info("User $username created successfully!");
+    try
+    {
+      InstallerHelper::createUser($username, $password);
+      $this->info("User $username created successfully!");
+    }
+    catch(\Exception $e)
+    {
+      $this->error(
+        "An error occurred while trying to create user."
+        . " See error below:" . PHP_EOL . $e->getMessage()
+      );
+    }
   }
 }

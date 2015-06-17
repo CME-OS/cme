@@ -8,6 +8,7 @@ namespace Cme\Helpers;
 use Cme\Install\InstallTable;
 use CmeData\UserData;
 use CmeKernel\Core\CmeKernel;
+use CmeKernel\Exceptions\InvalidDataException;
 use Illuminate\Config\EnvironmentVariables;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\App;
@@ -113,7 +114,20 @@ class InstallerHelper
     $user           = new UserData();
     $user->email    = $username;
     $user->password = $password;
-    CmeKernel::User()->create($user);
+    try
+    {
+      CmeKernel::User()->create($user);
+    }
+    catch(InvalidDataException $e)
+    {
+      $message = "";
+      foreach($user->getValidationErrors() as $error)
+      {
+        $message .= $error->message . PHP_EOL;
+      }
+
+      throw new \Exception($message);
+    }
   }
 
   /**

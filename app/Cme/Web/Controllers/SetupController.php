@@ -50,7 +50,7 @@ class SetupController extends BaseController
     InstallerHelper::createEnvFile('production');
     InstallerHelper::createCommanderConfigFile();
     InstallerHelper::installDb(InstallerHelper::getInstallClasses());
-    InstallerHelper::createUser('admin', 'admin');
+    InstallerHelper::createUser('admin@'.InstallerHelper::$domain, 'admin');
 
     return Redirect::to('/setup/3');
   }

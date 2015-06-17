@@ -45,10 +45,6 @@
       @else
         <div class="alert alert-info">
           <p>You do not have any campaigns in CME. <a href="/campaigns/new">Create your first campaign now</a></p>
-
-
-          <?= "list count: ".$listCount; ?>
-
         </div>
       @endif
 

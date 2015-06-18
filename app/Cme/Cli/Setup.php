@@ -92,7 +92,7 @@ class Setup extends CmeCommand
           ''
         );
         //test db connection
-        if(mysqli_connect($dbHost, $dbUser, $dbPassword))
+        if(@mysqli_connect($dbHost, $dbUser, $dbPassword))
         {
           $dbDetailsAreWrong = false;
         }

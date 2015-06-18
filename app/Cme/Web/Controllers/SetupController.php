@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class SetupController extends BaseController
@@ -25,7 +26,11 @@ class SetupController extends BaseController
           $data['installReady'] = InstallerHelper::hostMeetsRequirements();
           return View::make('setup.step1', $data);
         case 2:
-            return View::make('setup.step2');
+          $data = Session::get(
+            'redirectData',
+            ['error' => null, 'formData' => null]
+          );
+          return View::make('setup.step2', $data);
         case 3:
           $data['crontab'] = InstallerHelper::generateCrontabConfig();
           $data['monit']   = InstallerHelper::generateMonitConfig();
@@ -38,21 +43,40 @@ class SetupController extends BaseController
 
   public function install()
   {
-    InstallerHelper::$domain     = Request::server('HTTP_HOST');
-    InstallerHelper::$dbName     = Input::get('dbName');
-    InstallerHelper::$dbHost     = Input::get('dbHost');
-    InstallerHelper::$dbUser     = Input::get('dbUser');
+    InstallerHelper::$domain = Request::server('HTTP_HOST');
+    InstallerHelper::$dbName = Input::get('dbName');
+    InstallerHelper::$dbHost = Input::get('dbHost');
+    InstallerHelper::$dbUser = Input::get('dbUser');
     InstallerHelper::$dbPassword = Input::get('dbPass');
-    InstallerHelper::$awsKey     = Input::get('awsKey');
-    InstallerHelper::$awsSecret  = Input::get('awsSecret');
-    InstallerHelper::$awsRegion  = Input::get('awsRegion');
+    InstallerHelper::$awsKey = Input::get('awsKey');
+    InstallerHelper::$awsSecret = Input::get('awsSecret');
+    InstallerHelper::$awsRegion = Input::get('awsRegion');
 
-    InstallerHelper::createEnvFile('production');
-    InstallerHelper::createCommanderConfigFile();
-    InstallerHelper::installDb(InstallerHelper::getInstallClasses());
-    InstallerHelper::createUser('admin@'.InstallerHelper::$domain, 'admin');
+    //test db connection
+    if(@mysqli_connect(
+      InstallerHelper::$dbHost,
+      InstallerHelper::$dbUser,
+      InstallerHelper::$dbPassword
+    )
+    )
+    {
+      InstallerHelper::createEnvFile('production');
+      InstallerHelper::createCommanderConfigFile();
+      InstallerHelper::installDb(InstallerHelper::getInstallClasses());
+      InstallerHelper::createUser('admin@' . InstallerHelper::$domain, 'admin');
 
-    return Redirect::to('/setup/3');
+      return Redirect::to('/setup/3');
+    }
+    else
+    {
+      $error = "CME cannot seem to connect to your database. "
+        . "Please check that you have entered the right details";
+
+      return Redirect::to('/setup')->with(
+        'redirectData',
+        ['error' => $error, 'formData' => Input::all()]
+      );
+    }
   }
 
   public function installed()

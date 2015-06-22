@@ -1,9 +1,11 @@
 <?php
 namespace Cme\Web\Controllers;
 
+use Cme\Lib\Campaign\MessageId;
 use CmeData\CampaignEventData;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Enums\EventType;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 
@@ -11,14 +13,13 @@ class TrackingController extends BaseController
 {
   public function trackOpen($source)
   {
-    list($campaignId, $listId, $subscriberId) = explode('_', $source);
-
-    if($campaignId && $listId && $subscriberId)
+    $mid = $this->_getMessageId($source);
+    if($mid->campaignId && $mid->listId && $mid->subscriberId)
     {
       $data = [
-        'campaign_id'   => $campaignId,
-        'list_id'       => $listId,
-        'subscriber_id' => $subscriberId,
+        'campaign_id'   => $mid->campaignId,
+        'list_id'       => $mid->listId,
+        'subscriber_id' => $mid->subscriberId,
         'event_type'    => EventType::OPENED,
         'reference'     => $this->_getIpAddress(),
         'time'          => time()
@@ -29,13 +30,13 @@ class TrackingController extends BaseController
 
   public function trackUnsubscribe($source, $redirect)
   {
-    list($campaignId, $listId, $subscriberId) = explode('_', $source);
-    if($campaignId && $listId && $subscriberId)
+    $mid = $this->_getMessageId($source);
+    if($mid->campaignId && $mid->listId && $mid->subscriberId)
     {
       $data = [
-        'campaign_id'   => $campaignId,
-        'list_id'       => $listId,
-        'subscriber_id' => $subscriberId,
+        'campaign_id'   => $mid->campaignId,
+        'list_id'       => $mid->listId,
+        'subscriber_id' => $mid->subscriberId,
         'event_type'    => EventType::UNSUBSCRIBED,
         'time'          => time()
       ];
@@ -48,14 +49,14 @@ class TrackingController extends BaseController
 
   public function trackClick($source, $redirect)
   {
-    list($campaignId, $listId, $subscriberId) = explode('_', $source);
+    $mid        = $this->_getMessageId($source);
     $redirectTo = base64_decode($redirect);
-    if($campaignId && $listId && $subscriberId)
+    if($mid->campaignId && $mid->listId && $mid->subscriberId)
     {
       $data = [
-        'campaign_id'   => $campaignId,
-        'list_id'       => $listId,
-        'subscriber_id' => $subscriberId,
+        'campaign_id'   => $mid->campaignId,
+        'list_id'       => $mid->listId,
+        'subscriber_id' => $mid->subscriberId,
         'event_type'    => EventType::CLICKED,
         'reference'     => $redirectTo,
         'time'          => time()
@@ -75,5 +76,31 @@ class TrackingController extends BaseController
       )
     );
     return $ip;
+  }
+
+  /**
+   * @param $source
+   *
+   * @return MessageId
+   */
+  private function _getMessageId($source)
+  {
+    //check if source is the old un-encrypted version
+    if(count(explode('_', $source)) == 3)
+    {
+      list($campaignId, $listId, $subscriberId) = explode('_', $source);
+    }
+    else
+    {
+      $parts = Crypt::decrypt(base64_decode($source));
+      list($campaignId, $listId, $subscriberId) = explode('_', $parts);
+    }
+
+    $mid               = new MessageId();
+    $mid->campaignId   = (int)$campaignId;
+    $mid->listId       = (int)$listId;
+    $mid->subscriberId = (int)$subscriberId;
+
+    return $mid;
   }
 }

@@ -43,14 +43,14 @@ class SetupController extends BaseController
 
   public function install()
   {
-    InstallerHelper::$domain = Request::server('HTTP_HOST');
-    InstallerHelper::$dbName = Input::get('dbName');
-    InstallerHelper::$dbHost = Input::get('dbHost');
-    InstallerHelper::$dbUser = Input::get('dbUser');
+    InstallerHelper::$domain     = Request::server('HTTP_HOST');
+    InstallerHelper::$dbName     = Input::get('dbName');
+    InstallerHelper::$dbHost     = Input::get('dbHost');
+    InstallerHelper::$dbUser     = Input::get('dbUser');
     InstallerHelper::$dbPassword = Input::get('dbPass');
-    InstallerHelper::$awsKey = Input::get('awsKey');
-    InstallerHelper::$awsSecret = Input::get('awsSecret');
-    InstallerHelper::$awsRegion = Input::get('awsRegion');
+    InstallerHelper::$awsKey     = Input::get('awsKey');
+    InstallerHelper::$awsSecret  = Input::get('awsSecret');
+    InstallerHelper::$awsRegion  = Input::get('awsRegion');
 
     //test db connection
     if(@mysqli_connect(
@@ -81,7 +81,8 @@ class SetupController extends BaseController
 
   public function installed()
   {
-    return View::make('setup.installed');
+    $data['username'] = 'admin@' . Request::server('HTTP_HOST');
+    return View::make('setup.installed', $data);
   }
 
   public function skip()

@@ -113,14 +113,14 @@ class Setup extends CmeCommand
       $awsSecret = $this->ask("Enter AWS secret. Leave blank to skip: ", '');
       $awsRegion = $this->ask("Enter AWS region. Leave blank to skip: ", '');
 
-      InstallerHelper::$domain = $domain;
-      InstallerHelper::$dbName = $dbName;
-      InstallerHelper::$dbHost = $dbHost;
-      InstallerHelper::$dbUser = $dbUser;
+      InstallerHelper::$domain     = $domain;
+      InstallerHelper::$dbName     = $dbName;
+      InstallerHelper::$dbHost     = $dbHost;
+      InstallerHelper::$dbUser     = $dbUser;
       InstallerHelper::$dbPassword = $dbPassword;
-      InstallerHelper::$awsKey = $awsKey;
-      InstallerHelper::$awsSecret = $awsSecret;
-      InstallerHelper::$awsRegion = $awsRegion;
+      InstallerHelper::$awsKey     = $awsKey;
+      InstallerHelper::$awsSecret  = $awsSecret;
+      InstallerHelper::$awsRegion  = $awsRegion;
 
       $this->info("Welldone! I am now generating your env file");
       InstallerHelper::createEnvFile($env);
@@ -132,8 +132,8 @@ class Setup extends CmeCommand
 
       //create user account
       $this->info("Creating a user account");
-      InstallerHelper::createUser('admin', 'admin');
-      $this->info("Username: admin");
+      InstallerHelper::createUser('admin@' . $domain, 'admin');
+      $this->info("Username: admin@" . $domain);
       $this->info("Password: admin");
       $this->info(
         "Please make sure you create a different user and delete this one"

@@ -33,3 +33,23 @@ h1{
 {
   text-transform: lowercase;
 }
+
+.wizard .btn
+{
+  font-size:18px;
+  padding:10px;
+  width:250px;
+}
+
+.btn-cme
+{
+  background-color:#426A90;
+  color:#fff;
+}
+
+.btn-cme:hover
+{
+  background-color: #45779f;
+  color:#fff;
+}
+

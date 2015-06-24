@@ -17,7 +17,10 @@ class HomeController extends BaseController
     // so we unset them here
     foreach($eventTypes as $i => $type)
     {
-      if(in_array($type, [EventType::CLICKED, EventType::TEST, EventType::UNKNOWN]))
+      if(in_array(
+        $type,
+        [EventType::CLICKED, EventType::TEST, EventType::UNKNOWN]
+      ))
       {
         unset($eventTypes[$i]);
       }
@@ -35,6 +38,7 @@ class HomeController extends BaseController
       $stats[$campaign->id] = CmeKernel::Analytics()->getEventCounts(
         $campaign->id
       );
+
       $stats[$campaign->id]['opened_rate'] = $this->_percentage(
         $stats[$campaign->id]['opened']['unique'],
         $stats[$campaign->id]['sent']['unique']
@@ -97,7 +101,6 @@ class HomeController extends BaseController
     }
 
     $data['totalStats'] = $totalStats;
-
     return View::make('dashboard.home', $data);
   }
 

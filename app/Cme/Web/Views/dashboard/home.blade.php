@@ -34,18 +34,33 @@
   @if(!$stats)
 
   <div class="container">
-    <div class="row">
-      <div class="col-sm-12">
+    <h1 class="text-center" style="font-size:40px; margin-top:40px;">Start sending amazing campaigns in 3 easy steps!</h1>
+    <div class="row wizard" style="margin-top:80px;">
+      <div class="col-sm-4">
+        <div class="text-center" style="background:url('/assets/img/icon_email_list.png') no-repeat center top; padding-top:140px; <?= ($state->enableList)? '' : 'opacity: 0.5' ?>">
+           <p style="font-size: 30px;">1. Create a List</p>
+           <p>Import your list from a CSV file or an API</p>
+           <a <?= ($state->enableList)? 'href="/lists/new"' : '' ?> class="btn <?= ($state->enableList)? 'btn-cme' : 'btn-success disabled' ?>"><?= (!$state->listCompleted)? 'Create a List' : 'Completed!' ?></a>
         </div>
-        <h1>Welcome to CME</h1>
 
-        <p>
-          CME stands for Campaign Made Easy. CME allows you to manage
-          and schedule campaigns across all your brands.
-          CME is designed for high volume campaigns and is very
-          robust
-        </p>
       </div>
+
+      <div class="col-sm-4">
+        <div class="text-center" style="background:url('/assets/img/icon_brand.png') no-repeat center top; padding-top:140px; <?= ($state->enableBrand)? '' : 'opacity: 0.5' ?>">
+          <p style="font-size: 30px;">2. Create a Brand</p>
+          <p>To help keep things organized.</p>
+          <a <?= ($state->enableBrand)? 'href="/brands/new"' : '' ?> class="btn <?= ($state->enableBrand)? 'btn-cme' : 'btn-success disabled' ?>"><?= (!$state->brandCompleted)? 'Create a Brand' : 'Completed!' ?></a>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="text-center" style="background:url('/assets/img/icon_campaign.png') no-repeat center top; padding-top:140px; <?= ($state->enableCampaign)? '' : 'opacity: 0.5' ?>">
+          <p style="font-size: 30px;">3. Create a campaign</p>
+          <p>Send emails and see results</p>
+          <a <?= ($state->enableCampaign)? 'href="/campaigns/new"' : '' ?> class="btn <?= ($state->enableCampaign)? 'btn-cme' : 'btn-default' ?>">Create a Campaign</a>
+        </div>
+      </div>
+
     </div>
   </div>
 

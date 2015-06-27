@@ -2,6 +2,7 @@
 namespace Cme\Web\Controllers;
 
 use Cme\Helpers\InstallerHelper;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -9,8 +10,22 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
-class SetupController extends BaseController
+class SetupController extends Controller
 {
+
+  /**
+   * Setup the layout used by the controller.
+   *
+   * @return void
+   */
+  protected function setupLayout()
+  {
+    if(!is_null($this->layout))
+    {
+      $this->layout = View::make($this->layout);
+    }
+  }
+
   public function index()
   {
     if(InstallerHelper::isCMEInstalled())

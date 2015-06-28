@@ -3,6 +3,7 @@ namespace Cme\Web\Controllers;
 
 use Cme\Helpers\InstallerHelper;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,26 +54,34 @@ class SetupController extends BaseController
     InstallerHelper::$awsRegion  = Input::get('awsRegion');
 
     //test db connection
-    if(@mysqli_connect(
-      InstallerHelper::$dbHost,
-      InstallerHelper::$dbUser,
-      InstallerHelper::$dbPassword
-    )
-    )
+    try
     {
-      InstallerHelper::createEnvFile();
-      InstallerHelper::createCommanderConfigFile();
-      InstallerHelper::installDb(InstallerHelper::getInstallClasses());
-      InstallerHelper::createUser('admin@' . InstallerHelper::$domain, 'admin');
+      if(mysqli_connect(
+        InstallerHelper::$dbHost,
+        InstallerHelper::$dbUser,
+        InstallerHelper::$dbPassword
+      )
+      )
+      {
+        InstallerHelper::createEnvFile();
+        InstallerHelper::createCommanderConfigFile();
+        InstallerHelper::installDb(InstallerHelper::getInstallClasses());
+        InstallerHelper::createUser(
+          'admin@' . InstallerHelper::$domain,
+          'admin'
+        );
 
-      return Redirect::to('/setup/3');
+        return Redirect::to('/setup/3');
+      }
     }
-    else
+    catch(\Exception $e)
     {
       $error = "CME cannot seem to connect to your database. "
         . "Please check that you have entered the right details";
 
-      return Redirect::to('/setup')->with(
+      Log::error("MySQL ERROR: " . $e->getMessage());
+
+      return Redirect::to('/setup/2')->with(
         'redirectData',
         ['error' => $error, 'formData' => Input::all()]
       );

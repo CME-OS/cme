@@ -142,6 +142,7 @@ class InstallerHelper
 
     self::$_key = Str::random(32);
     $template   = self::_getEvnFileTemplate();
+    $template   = str_replace('[DEBUG]', 'false', $template);
     $template   = str_replace('[DOMAIN]', self::$domain, $template);
     $template   = str_replace('[HOST]', self::$dbHost, $template);
     $template   = str_replace('[DATABASE]', self::$dbName, $template);
@@ -153,6 +154,7 @@ class InstallerHelper
     $template   = str_replace('[KEY]', self::$_key, $template);
 
     file_put_contents($envFile, $template);
+    chmod($envFile, 0777);
     self::_reloadEnvConfig('production');
   }
 
@@ -200,6 +202,7 @@ class InstallerHelper
     $template = "<?php
 
 return array(
+  'debug'            => [DEBUG],
   'domain'           => '[DOMAIN]',
   'mysql'            => array(
     'driver'    => 'mysql',

@@ -16,11 +16,6 @@ $app->instance('app', $app);
 \Illuminate\Support\Facades\Facade::setFacadeApplication($app);
 
 $installReady = InstallerHelper::hostMeetsRequirements();
-if($installReady)
-{
-  file_put_contents(base_path().'/ready', '..');
-}
-
 ?>
 
 <!doctype html>

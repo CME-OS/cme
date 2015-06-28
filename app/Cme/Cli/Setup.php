@@ -99,7 +99,8 @@ class Setup extends CmeCommand
         else
         {
           $this->error(
-            "I can't seem to connect to your database. " . "Please check that you have entered the right details"
+            "I can't seem to connect to your database. "
+            . "Please check that you have entered the right details"
           );
           $this->ask("Press any key to retry");
         }
@@ -123,7 +124,7 @@ class Setup extends CmeCommand
       InstallerHelper::$awsRegion  = $awsRegion;
 
       $this->info("Welldone! I am now generating your env file");
-      InstallerHelper::createEnvFile($env);
+      InstallerHelper::createEnvFile();
       InstallerHelper::createCommanderConfigFile();
 
       //install db
@@ -131,14 +132,28 @@ class Setup extends CmeCommand
       $this->call('cme:install-db');
 
       //create user account
-      $email = 'admin@' . $domain;
-      $this->info("Creating a user account: $email");
-      InstallerHelper::createUser($email, 'admin');
-      $this->info("Username: $email");
-      $this->info("Password: admin");
-      $this->info(
-        "Please make sure you create a different user and delete this one"
-      );
+      $this->info("Create a user account:");
+
+      $username = $this->ask("Username:");
+      $password = $this->secret("Password:");
+
+      try
+      {
+        InstallerHelper::createUser($username, $password);
+        $this->info("User $username created successfully!");
+      }
+      catch(\Exception $e)
+      {
+        $this->error(
+          "An error occurred while trying to create user."
+          . " See error below:" . PHP_EOL . $e->getMessage()
+        );
+
+        $this->info(
+          "Try again by running the following "
+          . "command: php artisan cme:create-user"
+        );
+      }
       InstallerHelper::writeInstallFlag();
     }
   }

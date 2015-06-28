@@ -44,11 +44,6 @@ class InstallerHelper
   {
     $installFile = self::_getInstallFile();
     file_put_contents($installFile, "{}");
-    $readyFile = implode(DIRECTORY_SEPARATOR, [base_path(), 'ready']);
-    if(file_exists($readyFile))
-    {
-      unlink($readyFile);
-    }
   }
 
   /**
@@ -136,21 +131,13 @@ class InstallerHelper
   }
 
   /**
-   * $env could be any of the following: development|stage|production
-   *
-   * @param string $env
+   * Create's a .env.php file with db config
    */
-  public static function createEnvFile($env)
+  public static function createEnvFile()
   {
-    $envFile = ".env";
-    if($env !== 'production')
-    {
-      $envFile = ".env." . $env;
-    }
-
     $envFile = implode(
       DIRECTORY_SEPARATOR,
-      [base_path(), strtolower($envFile . '.php')]
+      [base_path(), strtolower('.env.php')]
     );
 
     self::$_key = Str::random(32);
@@ -166,7 +153,7 @@ class InstallerHelper
     $template   = str_replace('[KEY]', self::$_key, $template);
 
     file_put_contents($envFile, $template);
-    self::_reloadEnvConfig($env);
+    self::_reloadEnvConfig('production');
   }
 
   /**

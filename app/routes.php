@@ -137,26 +137,3 @@ Route::post(
     return \Illuminate\Support\Facades\Response::json($return);
   }
 );
-
-Route::post(
-  '/test2',
-  function ()
-  {
-
-    $data = [];
-
-    $user['email']    = "fobilow@gmail.com";
-    $user['name']     = "Okechukwu";
-    $user['discount'] = "50";
-
-    $data[] = $user;
-
-    $user['email']    = "oke.ugwu@simplifye.com";
-    $user['name']     = "John";
-    $user['discount'] = "50";
-
-    $data[] = $user;
-
-    return \Illuminate\Support\Facades\Response::json($data);
-  }
-);

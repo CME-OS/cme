@@ -1,6 +1,7 @@
 <?php
 namespace Cme\Web\Controllers;
 
+use Cme\Helpers\InstallerHelper;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -11,7 +12,10 @@ class BaseController extends Controller
 
   public function __construct()
   {
-    $this->_getCMEState();
+    if(InstallerHelper::isCMEInstalled())
+    {
+      $this->_getCMEState();
+    }
   }
 
   /**

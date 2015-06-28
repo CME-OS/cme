@@ -26,21 +26,7 @@ $app = new Illuminate\Foundation\Application;
 
 $env = $app->detectEnvironment(function()
   {
-    $env = getenv('CME_ENV');
-    if(!$env && isset($_SERVER['CME_ENV']))
-    {
-      $env = $_SERVER['CME_ENV'];
-    }
-    elseif(!$env &&  isset($_ENV['CME_ENV']))
-    {
-      $env = $_SERVER['CME_ENV'];
-    }
-    elseif(!$env)
-    {
-      $env = 'production';
-    }
-
-    return $env;
+    return 'production';
   });
 
 /*

@@ -9,7 +9,7 @@ $cmeReady = (PHP_VERSION >= '5.4.0') && extension_loaded('mcrypt')
 && extension_loaded('mbstring') && extension_loaded('curl')
 && is_writable('../app/storage') && is_writable('../');
 
-if(!file_exists('../installed.json') && !file_exists('../ready'))
+if(!$cmeReady)
 {
   include_once 'setup.php';
   die;

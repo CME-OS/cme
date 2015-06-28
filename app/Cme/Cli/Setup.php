@@ -131,9 +131,10 @@ class Setup extends CmeCommand
       $this->call('cme:install-db');
 
       //create user account
-      $this->info("Creating a user account");
-      InstallerHelper::createUser('admin@' . $domain, 'admin');
-      $this->info("Username: admin@" . $domain);
+      $email = 'admin@' . $domain;
+      $this->info("Creating a user account: $email");
+      InstallerHelper::createUser($email, 'admin');
+      $this->info("Username: $email");
       $this->info("Password: admin");
       $this->info(
         "Please make sure you create a different user and delete this one"

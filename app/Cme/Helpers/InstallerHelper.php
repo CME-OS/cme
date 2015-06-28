@@ -44,7 +44,11 @@ class InstallerHelper
   {
     $installFile = self::_getInstallFile();
     file_put_contents($installFile, "{}");
-    unlink(implode(DIRECTORY_SEPARATOR, [base_path(), 'ready']));
+    $readyFile = implode(DIRECTORY_SEPARATOR, [base_path(), 'ready']);
+    if(file_exists($readyFile))
+    {
+      unlink($readyFile);
+    }
   }
 
   /**

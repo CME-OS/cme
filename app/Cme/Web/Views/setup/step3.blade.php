@@ -17,7 +17,7 @@
                 </div>
                 <div class="form-group" <?= isset($errors['password'])? 'has-error has-feedback': '' ?>>
                     <label for="password">Password: <span class="text-danger" style="font-size: 11px; font-style: italic;"><?= isset($errors['password'])? ' - '.$errors['password']->message: '' ?></span></label>
-                    <input type="text" name="password" class="form-control" id="password" value="<?= isset($formData['password'])? $formData['password'] : '' ?>">
+                    <input type="password" name="password" class="form-control" id="password" value="<?= isset($formData['password'])? $formData['password'] : '' ?>">
                     <span class="glyphicon glyphicon-remove form-control-feedback <?= isset($errors['password'])? '': 'hidden' ?>" aria-hidden="true"></span>
                 </div>
 

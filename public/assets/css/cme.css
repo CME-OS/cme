@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 h1{
   font-size:20px;
 }
@@ -53,10 +57,13 @@ h1{
   color:#fff;
 }
 
-.footer
-{
-  font-size: 10px;
-  background-color: #fff;
-  position: absolute;
-  bottom:0;
+.content{
+  min-height: 100%;
+  height: auto !important; /* This line and the next line are not necessary unless you need IE6 support */
+  height: 100%;
+  margin: 0 auto -30px; /* the bottom margin is the negative value of the footer's height */
+}
+
+.footer, .push {
+  height: 30px; /* .push must be the same height as .footer */
 }

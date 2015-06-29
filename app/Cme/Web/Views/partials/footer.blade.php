@@ -1,3 +1,8 @@
+<div class="footer">
+   <?php $versionFile = base_path().'/version'; if(file_exists($versionFile)): ?>
+    You are running CME <?= file_get_contents($versionFile) ?>
+  <?php endif; ?>
+</div>
 <script src="/assets/js/bootstrap.min.js"></script>
 <script src="/assets/js/custom.js"></script>
 <script src="/assets/datetimepicker/js/datetimepicker.min.js"></script>

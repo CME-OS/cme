@@ -53,3 +53,10 @@ h1{
   color:#fff;
 }
 
+.footer
+{
+  font-size: 10px;
+  background-color: #fff;
+  position: absolute;
+  bottom:0;
+}

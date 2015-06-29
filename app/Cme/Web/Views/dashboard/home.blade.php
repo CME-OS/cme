@@ -40,7 +40,7 @@
         <div class="text-center" style="background:url('/assets/img/icon_email_list.png') no-repeat center top; padding-top:140px; <?= ($state->enableList)? '' : 'opacity: 0.5' ?>">
            <p style="font-size: 30px;">1. Create a List</p>
            <p>Import your list from a CSV file or an API</p>
-           <a <?= ($state->enableList)? 'href="/lists/new"' : '' ?> class="btn <?= ($state->enableList)? 'btn-cme' : 'btn-success disabled' ?>"><?= (!$state->listCompleted)? 'Create a List' : 'Completed!' ?></a>
+           <a <?= ($state->enableList)? 'href="/lists/new"' : '' ?> class="btn <?= ($state->enableList)? 'btn-cme' : ((!$state->listCompleted)? 'btn-default' : 'btn-success').' disabled' ?>"><?= (!$state->listCompleted)? 'Create a List' : 'Completed!' ?></a>
         </div>
 
       </div>
@@ -49,7 +49,7 @@
         <div class="text-center" style="background:url('/assets/img/icon_brand.png') no-repeat center top; padding-top:140px; <?= ($state->enableBrand)? '' : 'opacity: 0.5' ?>">
           <p style="font-size: 30px;">2. Create a Brand</p>
           <p>To help keep things organized.</p>
-          <a <?= ($state->enableBrand)? 'href="/brands/new"' : '' ?> class="btn <?= ($state->enableBrand)? 'btn-cme' : 'btn-success disabled' ?>"><?= (!$state->brandCompleted)? 'Create a Brand' : 'Completed!' ?></a>
+          <a <?= ($state->enableBrand)? 'href="/brands/new"' : '' ?> class="btn <?= ($state->enableBrand)? 'btn-cme' : ((!$state->brandCompleted)? 'btn-default' : 'btn-success').' disabled'  ?>"><?= (!$state->brandCompleted)? 'Create a Brand' : 'Completed!' ?></a>
         </div>
       </div>
 

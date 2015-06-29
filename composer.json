@@ -1,20 +1,21 @@
 {
-  "name":        "cme-os/cme",
-  "description": "Campaigns Made Easy",
-  "keywords":    [
+  "name":              "cme-os/cme",
+  "description":       "Campaigns Made Easy",
+  "keywords":          [
     "framework",
     "laravel"
   ],
-  "license":     "MIT",
-  "require":     {
+  "license":           "MIT",
+  "require":           {
     "laravel/framework":            "4.2.*",
     "rmccue/requests":              "1.6.1",
     "way/generators":               "~2.0",
     "xethron/migrations-generator": "1.2.2",
     "aws/aws-sdk-php":              "2.7.18",
-    "cme/cme-kernel":               "~1.0"
+    "cme/cme-kernel":               "~1.0",
+    "phpmailer/phpmailer":          "5.2.9"
   },
-  "autoload":    {
+  "autoload":          {
     "classmap": [
       "app/database/migrations",
       "app/database/seeds",
@@ -24,7 +25,7 @@
       "Cme\\": "app/Cme"
     }
   },
-  "scripts":     {
+  "scripts":           {
     "post-install-cmd":        [
       "php artisan clear-compiled",
       "php artisan optimize"
@@ -37,7 +38,7 @@
       "php artisan key:generate"
     ]
   },
-  "config":      {
+  "config":            {
     "preferred-install": "dist"
   },
   "minimum-stability": "stable"

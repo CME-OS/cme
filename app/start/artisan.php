@@ -11,6 +11,7 @@
 |
 */
 
+Artisan::add(new Cme\Cli\SendEmails);
 Artisan::add(new Cme\Cli\QueueMessages);
 Artisan::add(new Cme\Cli\ListImporter);
 Artisan::add(new Cme\Cli\ListRefresher);

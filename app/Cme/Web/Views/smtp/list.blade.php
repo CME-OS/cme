@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-  <h1>SMTP Providers <small>Manage your SMTP Providers</small></h1>
+  <h1 class="page-header">SMTP Providers <small>Manage your SMTP Providers</small></h1>
 
   <hr/>
 

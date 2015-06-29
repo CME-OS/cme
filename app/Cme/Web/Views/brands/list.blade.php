@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-  <h1>Brands <small>Manage your brands</small></h1>
+  <h1 class="page-header">Brands <small>Manage your brands</small></h1>
 
   <hr/>
 

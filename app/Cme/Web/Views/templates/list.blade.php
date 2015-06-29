@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-  <h1>Templates <small>Manage your templates</small></h1>
+  <h1 class="page-header">Templates <small>Manage your templates</small></h1>
 
   <hr>
 

@@ -57,7 +57,7 @@
         <div class="text-center" style="background:url('/assets/img/icon_campaign.png') no-repeat center top; padding-top:140px; <?= ($state->enableCampaign)? '' : 'opacity: 0.5' ?>">
           <p style="font-size: 30px;">3. Create a campaign</p>
           <p>Send emails and see results</p>
-          <a <?= ($state->enableCampaign)? 'href="/campaigns/new"' : '' ?> class="btn <?= ($state->enableCampaign)? 'btn-cme' : 'btn-default' ?>">Create a Campaign</a>
+          <a <?= ($state->enableCampaign)? 'href="/campaigns/new"' : '' ?> class="btn <?= ($state->enableCampaign)? 'btn-cme' : 'btn-default disabled' ?>">Create a Campaign</a>
         </div>
       </div>
 

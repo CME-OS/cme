@@ -6,12 +6,14 @@
 namespace Cme\Helpers;
 
 use Cme\Install\InstallTable;
+use CmeData\InitData;
 use CmeData\UserData;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Exceptions\InvalidDataException;
 use Illuminate\Config\EnvironmentVariables;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 
 class InstallerHelper
@@ -126,7 +128,10 @@ class InstallerHelper
         $message .= $error->message . PHP_EOL;
       }
 
-      throw new \Exception($message);
+      $e         = new \Exception($message);
+      $e->errors = $user->getValidationErrors();
+
+      throw $e;
     }
   }
 
@@ -195,6 +200,19 @@ class InstallerHelper
         App::getConfigLoader(), $env
       )
     );
+
+    //re-initialize kernel with new env details
+    $profile  = Config::get('database.default');
+    $dbConfig = Config::get('database.connections');
+
+    $initData             = new InitData();
+    $initData->cmeHost    = Config::get('app.domain');
+    $initData->key        = Config::get('app.key');
+    $initData->dbName     = $dbConfig[$profile]['database'];
+    $initData->dbUsername = $dbConfig[$profile]['username'];
+    $initData->dbPassword = $dbConfig[$profile]['password'];
+    $initData->dbHost     = $dbConfig[$profile]['host'];
+    CmeKernel::init($initData);
   }
 
   private static function _getEvnFileTemplate()

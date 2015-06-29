@@ -111,6 +111,7 @@ Route::get('/setup', 'Cme\Web\Controllers\SetupController@index');
 Route::get('/setup/skip', 'Cme\Web\Controllers\SetupController@skip');
 Route::get('/setup/{step}', 'Cme\Web\Controllers\SetupController@index');
 Route::post('/setup/install', 'Cme\Web\Controllers\SetupController@install');
+Route::post('/setup/create-user', 'Cme\Web\Controllers\SetupController@createUser');
 Route::get('/installed', 'Cme\Web\Controllers\SetupController@installed');
 
 

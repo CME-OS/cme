@@ -16,7 +16,7 @@ class SetupController extends BaseController
   {
     if(InstallerHelper::isCMEInstalled())
     {
-      return Redirect::to('/installed');
+      return Redirect::to('/login');
     }
     $step = Route::input('step', 1);
     if($step == 1 || ($step > 1 && InstallerHelper::hostMeetsRequirements()))
@@ -33,10 +33,17 @@ class SetupController extends BaseController
           );
           return View::make('setup.step2', $data);
         case 3:
+          $data = Session::get(
+            'redirectData',
+            ['errors' => null, 'formData' => null]
+          );
+          return View::make('setup.step3', $data);
+        case 4:
+
           $data['crontab'] = InstallerHelper::generateCrontabConfig();
           $data['monit']   = InstallerHelper::generateMonitConfig();
           InstallerHelper::writeInstallFlag();
-          return View::make('setup.step3', $data);
+          return View::make('setup.step4', $data);
       }
     }
     return Redirect::to('/setup');
@@ -44,14 +51,14 @@ class SetupController extends BaseController
 
   public function install()
   {
-    InstallerHelper::$domain     = Request::server('HTTP_HOST');
-    InstallerHelper::$dbName     = Input::get('dbName');
-    InstallerHelper::$dbHost     = Input::get('dbHost');
-    InstallerHelper::$dbUser     = Input::get('dbUser');
+    InstallerHelper::$domain = Request::server('HTTP_HOST');
+    InstallerHelper::$dbName = Input::get('dbName');
+    InstallerHelper::$dbHost = Input::get('dbHost');
+    InstallerHelper::$dbUser = Input::get('dbUser');
     InstallerHelper::$dbPassword = Input::get('dbPass');
-    InstallerHelper::$awsKey     = Input::get('awsKey');
-    InstallerHelper::$awsSecret  = Input::get('awsSecret');
-    InstallerHelper::$awsRegion  = Input::get('awsRegion');
+    InstallerHelper::$awsKey = Input::get('awsKey');
+    InstallerHelper::$awsSecret = Input::get('awsSecret');
+    InstallerHelper::$awsRegion = Input::get('awsRegion');
 
     //test db connection
     try
@@ -66,11 +73,6 @@ class SetupController extends BaseController
         InstallerHelper::createEnvFile();
         InstallerHelper::createCommanderConfigFile();
         InstallerHelper::installDb(InstallerHelper::getInstallClasses());
-        InstallerHelper::createUser(
-          'admin@' . InstallerHelper::$domain,
-          'admin'
-        );
-
         return Redirect::to('/setup/3');
       }
     }
@@ -84,6 +86,25 @@ class SetupController extends BaseController
       return Redirect::to('/setup/2')->with(
         'redirectData',
         ['error' => $error, 'formData' => Input::all()]
+      );
+    }
+  }
+
+  public function createUser()
+  {
+    try
+    {
+      InstallerHelper::createUser(
+        Input::get('email'),
+        Input::get('password')
+      );
+      return Redirect::to('/setup/4');
+    }
+    catch(\Exception $e)
+    {
+      return Redirect::to('/setup/3')->with(
+        'redirectData',
+        ['errors' => $e->errors, 'formData' => Input::all()]
       );
     }
   }

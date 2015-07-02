@@ -272,7 +272,7 @@ return  [
   public static function generateCrontabConfig($instances = 1)
   {
     $config = "";
-    foreach(self::_getBackgroundProcesses() as $p)
+    foreach(self::_getBackgroundProcesses() as $p => $className)
     {
       for($i = 0; $i < $instances; $i++)
       {

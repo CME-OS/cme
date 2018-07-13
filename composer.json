@@ -4,6 +4,16 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+      {
+        "type": "path",
+        "url": "../cme-kernel"
+      },
+      {
+        "type": "path",
+        "url": "../cme-data"
+      }
+    ],
     "require": {
         "php": "^7.1.3",
         "fideloper/proxy": "^4.0",

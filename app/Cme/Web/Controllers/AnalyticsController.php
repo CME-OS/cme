@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Models\CMECampaign;
+use App\Cme\Models\CMECampaign;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Enums\EventType;
 use Illuminate\Support\Facades\Route;

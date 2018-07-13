@@ -1,10 +1,10 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
 use Aws\Ses\SesClient;
 use Aws\Sns\SnsClient;
 use Aws\Sqs\SqsClient;
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
@@ -67,7 +67,7 @@ class SesTool extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_validateAws();
     $task = $this->argument('task');

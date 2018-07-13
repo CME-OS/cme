@@ -1,5 +1,5 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
 use CmeKernel\Core\CmeKernel;
 use Illuminate\Support\Facades\View;

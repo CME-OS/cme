@@ -3,7 +3,7 @@
  * @author  User
  */
 
-namespace Cme\Lib\SmtpProviders;
+namespace App\Cme\Lib\SmtpProviders;
 
 class Mandrill
 {

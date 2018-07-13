@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Helpers\InstallerHelper;
+use App\Cme\Helpers\InstallerHelper;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;

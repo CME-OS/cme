@@ -1,8 +1,8 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Helpers\ApiImporter;
-use Cme\Lib\Cli\LongRunningScript;
+use App\Cme\Helpers\ApiImporter;
+use App\Cme\Lib\Cli\LongRunningScript;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -38,7 +38,7 @@ class ListRefresher extends LongRunningScript
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_init();
     $this->_createPIDFile();

@@ -1,5 +1,5 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
 use Way\Generators\Commands\GeneratorCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -80,14 +80,12 @@ class GenerateInstallFiles extends GeneratorCommand
    */
   protected $table;
 
-  public function __construct(
-    Config $config
-  )
+  public function __construct()
   {
     $this->file     = new Filesystem();
     $generator      = new Generator($this->file);
     $this->compiler = new TemplateCompiler();
-    $this->config   = $config;
+    $this->config   = config();
 
     parent::__construct($generator);
   }
@@ -97,7 +95,7 @@ class GenerateInstallFiles extends GeneratorCommand
    *
    * @return void
    */
-  public function fire()
+  public function handle()
   {
     $this->info('Using connection: ' . $this->option('connection') . "\n");
     $this->schemaGenerator = new SchemaGenerator(

@@ -3,7 +3,7 @@
  * @author  oke.ugwu
  */
 
-namespace Cme\Lib\Cli;
+namespace App\Cme\Lib\Cli;
 
 
 use Illuminate\Console\Command;

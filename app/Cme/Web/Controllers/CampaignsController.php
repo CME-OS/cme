@@ -1,5 +1,5 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
 use CmeData\CampaignData;
 use CmeData\MessageQueueData;

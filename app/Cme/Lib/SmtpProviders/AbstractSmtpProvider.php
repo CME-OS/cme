@@ -3,9 +3,9 @@
  * @author  User
  */
 
-namespace Cme\Lib\SmtpProviders;
+namespace App\Cme\Lib\SmtpProviders;
 
-use Cme\Lib\Campaign\MessageId;
+use App\Cme\Lib\Campaign\MessageId;
 
 abstract class AbstractSmtpProvider
 {

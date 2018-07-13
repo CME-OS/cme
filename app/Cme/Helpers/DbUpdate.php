@@ -3,7 +3,7 @@
  * @author  oke.ugwu
  */
 
-namespace Cme\Helpers;
+namespace App\Cme\Helpers;
 
 class DbUpdate
 {

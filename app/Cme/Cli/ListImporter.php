@@ -1,9 +1,9 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Helpers\ApiImporter;
-use Cme\Helpers\CsvImporter;
-use Cme\Lib\Cli\LongRunningScript;
+use App\Cme\Helpers\ApiImporter;
+use App\Cme\Helpers\CsvImporter;
+use App\Cme\Lib\Cli\LongRunningScript;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Input\InputArgument;
@@ -40,7 +40,7 @@ class ListImporter extends LongRunningScript
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_init();
     $this->_createPIDFile();

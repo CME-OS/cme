@@ -1,9 +1,9 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Models\CMEUser;
 use CmeData\UserData;
 use CmeKernel\Core\CmeKernel;
+use CmeKernel\Core\CmeUser;
 use CmeKernel\Exceptions\InvalidDataException;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
@@ -16,7 +16,7 @@ class UsersController extends BaseController
 {
   public function index()
   {
-    $data['users'] = CMEUser::all();
+    $data['users'] = CmeKernel::User()->all();
     return View::make('users.list', $data);
   }
 
@@ -30,6 +30,7 @@ class UsersController extends BaseController
   {
     $data             = Input::all();
     $userData         = UserData::hydrate($data);
+    $userData->password = Hash::make($userData->password);
     try
     {
       CmeKernel::User()->create($userData);

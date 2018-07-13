@@ -1,8 +1,8 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Brands\Validation\AddBrandValidation;
-use Cme\Models\CMEBrand;
+use App\Cme\Brands\Validation\AddBrandValidation;
+use App\Cme\Models\CMEBrand;
 use CmeData\BrandData;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Exceptions\InvalidDataException;
@@ -29,6 +29,7 @@ class BrandsController extends BaseController
 
   public function add()
   {
+    dd(Input::all());
     $brandData = BrandData::hydrate(Input::all());
     try
     {

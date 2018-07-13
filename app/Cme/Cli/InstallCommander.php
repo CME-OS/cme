@@ -1,8 +1,8 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
 use Aws\Ec2\Ec2Client;
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -75,7 +75,7 @@ class InstallCommander extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_validateAws();
     $this->_ec2Client = Ec2Client::factory($this->_awsCredentials);

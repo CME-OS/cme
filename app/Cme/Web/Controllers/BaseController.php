@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Helpers\InstallerHelper;
+use App\Cme\Helpers\InstallerHelper;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;

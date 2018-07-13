@@ -2,7 +2,7 @@
 /**
  * @author  oke.ugwu
  */
-namespace Cme\Helpers;
+namespace App\Cme\Helpers;
 
 use CmeKernel\Helpers\ListHelper;
 use Illuminate\Support\Facades\File;

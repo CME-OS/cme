@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
 
 class DbSnapshot extends CmeCommand
@@ -36,7 +36,7 @@ class DbSnapshot extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $snapshotFile = implode(
       DIRECTORY_SEPARATOR,

@@ -1,11 +1,9 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
 use CmeData\SmtpProviderData;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Exceptions\InvalidDataException;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Crypt;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -30,10 +28,11 @@ class SmtpProvidersController extends BaseController
     $smtpData = SmtpProviderData::hydrate(Input::all());
     try
     {
-      CmeKernel::SmtpProvider()->create(
-        $smtpData,
-        Config::get('app.key')
-      );
+
+      $smtpData->username = encrypt($smtpData->username);
+      $smtpData->password = encrypt($smtpData->password);
+
+      CmeKernel::SmtpProvider()->create($smtpData);
       return Redirect::route('smtp-providers');
     }
     catch(InvalidDataException $e)
@@ -51,7 +50,7 @@ class SmtpProvidersController extends BaseController
   public function edit($id)
   {
     $provider             = CmeKernel::SmtpProvider()->get($id);
-    $provider->username   = Crypt::decrypt($provider->username);
+    $provider->username   = decrypt($provider->username);
     $data['smtpProvider'] = $provider;
 
     $data = array_merge(
@@ -67,10 +66,11 @@ class SmtpProvidersController extends BaseController
     $smtpData = SmtpProviderData::hydrate(Input::all());
     try
     {
-      CmeKernel::SmtpProvider()->update(
-        $smtpData,
-        Config::get('app.key')
-      );
+      $smtpData->username = encrypt($smtpData->username);
+      $smtpData->password = encrypt($smtpData->password);
+
+      CmeKernel::SmtpProvider()->update($smtpData);
+
       return Redirect::to('/smtp-providers/edit/' . $smtpData->id)->with(
         'msg',
         'SMTP Provider has been updated'

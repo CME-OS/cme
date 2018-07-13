@@ -1,15 +1,11 @@
 <?php
-namespace Cme\Models;
+namespace App\Cme\Models;
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
 
-class CMEUser extends Model implements UserInterface, RemindableInterface
+
+class CMEUser extends Model
 {
 
-  use UserTrait, RemindableTrait;
 
   /**
    * The database table used by the model.

@@ -3,7 +3,7 @@
  * @author  oke.ugwu
  */
 
-namespace Cme\Install;
+namespace App\Cme\Install;
 
 abstract class InstallTable
 {

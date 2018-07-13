@@ -3,9 +3,9 @@
  * @author  oke.ugwu
  */
 
-namespace Cme\Helpers;
+namespace App\Cme\Helpers;
 
-use Cme\Install\InstallTable;
+use App\Cme\Install\InstallTable;
 use CmeData\InitData;
 use CmeData\UserData;
 use CmeKernel\Core\CmeKernel;
@@ -14,6 +14,7 @@ use Illuminate\Config\EnvironmentVariables;
 use Illuminate\Config\Repository;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class InstallerHelper
@@ -82,7 +83,7 @@ class InstallerHelper
   {
     foreach($classes as $installClass)
     {
-      $installClass = "Cme\\Install\\" . $installClass;
+      $installClass = "App\\Cme\\Install\\" . $installClass;
       $m            = new $installClass;
       if($m instanceof InstallTable)
       {
@@ -115,7 +116,7 @@ class InstallerHelper
   {
     $user           = new UserData();
     $user->email    = $username;
-    $user->password = $password;
+    $user->password = Hash::make($password);
     try
     {
       CmeKernel::User()->create($user);

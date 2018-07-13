@@ -17,23 +17,23 @@
                     <div class="alert alert-danger">{{ $message }}</div>
                 @endif
 
-                {{ Form::open(['route' => 'login']) }}
-
+                <form action="/login" method="post">
+                    {{ csrf_field() }}
                     <div class='form-group'>
-                        {{ Form::label('email', 'Email:') }}
-                        {{ Form::text('email', null, ['class' => 'form-control']) }}
+                        <label for="email">Email:</label>
+                        <input type="text" name="email" class="form-control">
                     </div>
 
                     <div class='form-group'>
-                        {{ Form::label('password', 'Password:') }}
-                        {{ Form::password('password', ['class' => 'form-control']) }}
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" class="form-control">
                     </div>
 
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Login!</button>
                     </div>
 
-                {{ Form::close() }}
+                </form>
 
                 <p><a href="">Forgotten Password?</a></p>
             </div>

@@ -1,5 +1,5 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
 use CmeData\ListData;
 use CmeData\ListImportQueueData;
@@ -9,8 +9,8 @@ use CmeKernel\Core\CmeKernel;
 use CmeKernel\Exceptions\InvalidDataException;
 use CmeKernel\Helpers\ListHelper;
 use CmeKernel\Helpers\ListsSchemaHelper;
+use Illuminate\Pagination\Paginator;
 use \Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Paginator;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use \Illuminate\Support\Facades\Redirect;
@@ -119,15 +119,12 @@ class ListsController extends BaseController
     if(CmeKernel::EmailList()->exists($id))
     {
       $page = Input::get('page', 1);
-      Paginator::setViewName('pagination::simple');
+      Paginator::defaultView('pagination::simple');
       $subscriberTotal = CmeDatabase::conn()
         ->table(ListHelper::getTable($id))
         ->count();
-      $pager           = Paginator::make(
-        [],
-        $subscriberTotal,
-        $this->_perPage
-      );
+      $pager           = new Paginator([], $this->_perPage);
+
       $data['page']    = $page;
       $data['pager']   = $pager;
       $data['list']    = CmeKernel::EmailList()->get($id);

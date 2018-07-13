@@ -1,8 +1,8 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Helpers\InstallerHelper;
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Helpers\InstallerHelper;
+use App\Cme\Lib\Cli\CmeCommand;
 use Symfony\Component\Console\Input\InputArgument;
 
 class InstallDb extends CmeCommand
@@ -37,7 +37,7 @@ class InstallDb extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $table   = $this->argument('table');
     $classes = [];

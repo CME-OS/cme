@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Lib\Cli\LongRunningScript;
+use App\Cme\Lib\Cli\LongRunningScript;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -49,7 +49,7 @@ class SendEmails extends LongRunningScript
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_init();
     $this->_createPIDFile();

@@ -1,5 +1,5 @@
 <?php
-namespace Cme\Install;
+namespace App\Cme\Install;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

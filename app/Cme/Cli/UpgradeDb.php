@@ -1,10 +1,10 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Helpers\DbUpdate;
-use Cme\Helpers\SchemaHelper;
-use Cme\Install\InstallTable;
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Helpers\DbUpdate;
+use App\Cme\Helpers\SchemaHelper;
+use App\Cme\Install\InstallTable;
+use App\Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -40,7 +40,7 @@ class UpgradeDb extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $update     = new DbUpdate();
     $installDir = app_path() . '/Cme/Install/';

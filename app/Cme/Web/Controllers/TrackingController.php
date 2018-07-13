@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Web\Controllers;
+namespace App\Cme\Web\Controllers;
 
-use Cme\Lib\Campaign\MessageId;
+use App\Cme\Lib\Campaign\MessageId;
 use CmeData\CampaignEventData;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Enums\EventType;

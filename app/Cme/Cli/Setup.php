@@ -1,8 +1,8 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Helpers\InstallerHelper;
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Helpers\InstallerHelper;
+use App\Cme\Lib\Cli\CmeCommand;
 
 class Setup extends CmeCommand
 {
@@ -36,7 +36,7 @@ class Setup extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->info(
       "Welcome to CME Setup. This tool will help you install CME on your system"

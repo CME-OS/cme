@@ -20,7 +20,7 @@
                 <a href="{{ URL::route('users.view', $user->id) }}" ><strong><?= $user->email; ?></strong></a>
               </td>
               <td><?= $user->active; ?></td>
-              <td><?= $user->created_at; ?></td>
+              <td><?= $user->createdAt; ?></td>
               <td>
                 <div class="pull-right">
                 <a href="{{ URL::route('users.edit', $user->id) }}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>

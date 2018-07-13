@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Lib\Cli\CmeCommand;
+use App\Cme\Lib\Cli\CmeCommand;
 use Illuminate\Support\Facades\DB;
 
 class GenerateMigrationFiles extends CmeCommand
@@ -45,7 +45,7 @@ class GenerateMigrationFiles extends CmeCommand
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     //load snapshot
     $snapshotFile = implode(

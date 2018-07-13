@@ -1,7 +1,7 @@
 <?php
-namespace Cme\Cli;
+namespace App\Cme\Cli;
 
-use Cme\Lib\Cli\LongRunningScript;
+use App\Cme\Lib\Cli\LongRunningScript;
 use CmeKernel\Core\CmeKernel;
 use CmeKernel\Helpers\CampaignHelper;
 use CmeKernel\Helpers\FilterHelper;
@@ -42,7 +42,7 @@ class QueueMessages extends LongRunningScript
    *
    * @return mixed
    */
-  public function fire()
+  public function handle()
   {
     $this->_init();
     $this->_createPIDFile();

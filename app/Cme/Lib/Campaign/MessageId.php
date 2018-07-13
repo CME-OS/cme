@@ -3,7 +3,7 @@
  * @author  User
  */
 
-namespace Cme\Lib\Campaign;
+namespace App\Cme\Lib\Campaign;
 
 class MessageId
 {

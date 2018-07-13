@@ -2,9 +2,11 @@
 /**
  * @author  oke.ugwu
  */
-namespace Cme\Models;
+namespace App\Cme\Models;
 
-class Model extends \Eloquent
+use Illuminate\Auth\EloquentUserProvider;
+
+class Model extends EloquentUserProvider
 {
 
 }
